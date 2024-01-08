@@ -8,7 +8,11 @@ book:
   date: "January 2024"
   chapters:
     - index.qmd
-    - basics.qmd
+    - part: "The Basics"
+      chapters: 
+        - basics.qmd
+        - decomp.qmd
+    - part: "ARIMA Model"
     - summary.qmd
     - references.qmd
 

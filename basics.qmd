@@ -1,6 +1,4 @@
-# Basics
-
-## Time Series Data
+# Time Series Data
 
 **Raw data**: The raw values without any transformation. We are not so
 interested in the raw data, as it is hard to read information from it.
@@ -38,7 +36,7 @@ to remove the seasonal fluctuations. This is called *seasonally
 adjustment*. We won't cover seasonally adjustment in detail, but the
 next section will give some intuitions on how this can possibly be done.
 After seasonally adjusting the time series, we can calculate the growth
-rate based on two consecutive values (annualized by multiplying 4). The
+rate based on two consecutive values (annualized by multiplying $4$). The
 bottom-right panel of @fig-gdpts is the seasonally-adjusted quarterly
 growth. Note that it is no longer biased upward in 2021 as the YoY
 growth.
@@ -53,7 +51,7 @@ Spain, and so on.
 ```{r}
 #| echo: false
 #| warning: false
-#| fig-cap: "Quarterly GDP Data in Different Formats"
+#| fig-cap: "Quarterly GDP Time Series"
 #| label: fig-gdpts
 
 library(zoo)
@@ -61,26 +59,25 @@ library(ggplot2)
 library(patchwork)
 
 data = read.csv("data/gdp.csv")
-data = transform(data, date = as.yearqtr(date, format="%m/%Y"))
 
-raw = ggplot(data, aes(x = date)) +
+raw = ggplot(data, aes(x = time)) +
   geom_line(aes(y = GDP)) +
   scale_x_continuous(breaks = pretty) +
   labs(x=NULL, y="GDP (RMB Billion)")
 
-sa = ggplot(data, aes(x = date)) +
+sa = ggplot(data, aes(x = time)) +
   geom_line(aes(y = GDP)) +
   geom_line(aes(y = GDPSA), col = "red") +
   scale_x_continuous(breaks = pretty) +
   labs(x=NULL, y="GDP (RMB Billion)")
 
-yoy = ggplot(data, aes(x = date)) +
+yoy = ggplot(data, aes(x = time)) +
   geom_line(aes(y = GDPYoY - 100)) +
   scale_x_continuous(breaks = pretty) +
   labs(x=NULL, y="GDP Growth (YoY %)")
 
-qoq = subset(data, date > 2011) |>
-  ggplot(aes(x = date)) +
+qoq = subset(data, time > 2011) |>
+  ggplot(aes(x = time)) +
   geom_line(aes(y = GDPQoQ-100)) +
   scale_x_continuous(breaks = pretty) +
   labs(x=NULL, y="GDP Growth (YoY %)")
@@ -108,5 +105,3 @@ want to recover the level values from a series of percentage growth.
 $$
 \ln x_t = x_0 + \sum_{j=1}^{t} (\ln x_j - \ln x_{j-1}).
 $$
-
-## Time Series Decomposition
