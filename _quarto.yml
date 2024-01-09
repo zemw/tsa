@@ -12,6 +12,7 @@ book:
         - basics.qmd
         - decomp.qmd
         - autocov.qmd
+        - stationary.qmd
     - part: "ARIMA Model"
     - summary.qmd
     - references.qmd

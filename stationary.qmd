@@ -1,0 +1,107 @@
+# Stationarity
+
+## Stationary Process
+
+::: {#def-stationary}
+A stochastic process is said to be **strictly stationary** if its
+properties are unaffected by a change of time origin. In other words,
+the joint distribution at any set of time is not affect by an arbitrary
+shift along the time axis.
+:::
+
+::: {#def-covstationary}
+A stochastic process is called **covariance stationary** (or **weak
+stationary**) if its means, variances, and covariances are independent
+of time. Formally, a process $\{y_t\}$ is covariance stationary if for
+all $t$ it holds that
+
+-   $\mathbb{E}(y_t) = \mu < \infty$;
+-   $\text{var}(y_t) = \gamma_{_0} < \infty$;
+-   $\text{cov}(y_t,y_{t-k})=\gamma_k$, for $k=1,2,3,\dots$
+:::
+
+Stationarity is an important concept in time series analysis. It
+basically says the statistical properties of a time series are stable
+over time. Otherwise, if the statistical properties vary with time,
+statistics estimated from past values, such autocorrelations, would be
+much less meaningful. Strict stationarity requires the joint
+distribution being stable, that is moments of any order would be stable
+over time. In practice, mostly we only care about the first- and
+second-order moments, that is means and variances and covariances.
+Therefore, covariance stationary is sufficient.
+
+@fig-stationary shows some examples of stationary and non-stationary
+time series. Only the first one is stationary (it is generated from
+$i.i.d$ normal distribution). The second one is not stationary as its
+mean is not constant over time. The third one is not stationary as its
+variance is not constant. The last one is not stationary either, because
+its covariance is not constant.
+
+```{r}
+#| include: false
+library(zoo)
+```
+
+```{r}
+#| echo: false
+#| fig-cap: "Stationary and non-stationary time series"
+#| label: fig-stationary
+x = seq(1,100, 0.1)
+par(mfrow=c(2,2), mar=rep(2,4))
+plot(rnorm(500), type='l', xlab='', ylab='')
+plot(cumsum(.1+rnorm(100)), type='l', xlab='', ylab='')
+plot(x, sin(x-50)/(x-50), type='l', xlab='', ylab='')
+plot(x, sin(10000/x), type='l', xlab='', ylab='')
+```
+
+Real-life time series are rarely stationary. But they can be transformed
+to (quasi) stationary by differencing. @fig-stationary-real shows some
+examples of the first-order (log) differences of real-life time series.
+They more or less exhibit some properties of stationarity, but not
+perfectly stationary. The series can be further "stationarized" by
+taking a second-order difference. But these examples are acceptable to
+be treated as stationary in our models. Even if they are not perfectly
+stationary, the model can be thought of being used to "extract" their
+stationary properties.
+
+```{r}
+#| echo: false
+#| warning: false
+#| fig-cap: "Stationary and non-stationary time series (real life)"
+#| label: fig-stationary-real
+md = readRDS("data/md.Rds")
+par(mfrow=c(2,2), mar=rep(2,4))
+plot(md$CPI, main="CPI", xlab='', ylab='')
+plot(md$Export, main="Export", xlab='', ylab='')
+plot(md$TBond1Y, main="Interest Rate", xlab='', ylab='')
+plot(md$SHSE, main="Stock Market", xlab='', ylab='')
+```
+
+## White Noise
+
+White noise is a special stationary process that is an important
+building block of many time series models.
+
+::: {#def-whitenoise}
+A stochastic process $w_t$ is called **white noise** if its has constant
+mean $0$ and variance $\sigma^2$ and no serial correlation
+$\text{cov}(w_t, w_{t-k})=0$ for any $k \neq 0$. The white noise process
+is denoted as
+
+$$
+w_t \sim \text{WN}(0, \sigma^2).
+$$
+:::
+
+This is the weakest requirement for while noise. It only requires no
+serial correlation. We may impose further assumptions. If every $w_t$ is
+independent, it becomes independent white noise
+$w_t \sim \perp\text{WN}(0, \sigma^2)$. Independence does not imply
+identical distribution. If every $w_t$ is independently and identically
+distributed, it is called $i.i.d$ white noise,
+$w_t \overset{iid}{\sim} \text{WN}(0, \sigma^2)$. If the distribution is
+normal, it becomes the most perfect white noise, that is $i.i.d$
+Gaussian white noise, $w_t \overset{iid}{\sim} N(0, \sigma^2)$. The
+first plot of @fig-stationary is a demonstration of the $i.i.d$ Gaussian
+white noise. In most cases, the weakest form of white noise is
+sufficient.
