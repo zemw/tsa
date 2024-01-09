@@ -2,27 +2,40 @@
 
 ## Time Series Components
 
-It is helpful to think about a time series as composed of different components: a trend component, a seasonal component, and a remainder.
+It is helpful to think about a time series as composed of different
+components: a trend component, a seasonal component, and a remainder.
 
 $$x_t = T_t + S_t + R_t.$$
 
-The formula assumes the "additive" composition. This assumption is appropriate if the magnitude of the fluctuations does not vary with the absolute levels of the time series. If the magnitude of fluctuations is proportional to the absolute levels, a "multiplicative" decomposition is more appropriate:
+The formula assumes the "additive" composition. This assumption is
+appropriate if the magnitude of the fluctuations does not vary with the
+absolute levels of the time series. If the magnitude of fluctuations is
+proportional to the absolute levels, a "multiplicative" decomposition is
+more appropriate:
 
 $$
 x_t = T_t \times S_t \times R_t.
 $$
 
-Note that a multiplicative decomposition of a time series is equivalent to an additive decomposition on its log levels:
+Note that a multiplicative decomposition of a time series is equivalent
+to an additive decomposition on its log levels:
 
 $$
 \ln x_t = \ln T_t + \ln S_t + \ln R_t.
 $$
 
-Decomposing a time series allows us to extract information that is not obvious from the original time series. It also allows us to manipulate the time series. For example, if the seasonal component can be estimated, we can remove it to obtain seasonally-adjusted series, $x_t^{SA} = x_t - S_t$, or $x_t^{SA} = x_t/S_t$. The question is how to estimate the components given a time series.
+Decomposing a time series allows us to extract information that is not
+obvious from the original time series. It also allows us to manipulate
+the time series. For example, if the seasonal component can be
+estimated, we can remove it to obtain seasonally-adjusted series,
+$x_t^{SA} = x_t - S_t$, or $x_t^{SA} = x_t/S_t$. The question is how to
+estimate the components given a time series.
 
 ## Moving Averages
 
-Moving averages turn out to be handy in estiming trend-cycles by averaging out noisy fluctuations. A moving average of order $m$ (assuming $m$ is an odd number) is defined as
+Moving averages turn out to be handy in estiming trend-cycles by
+averaging out noisy fluctuations. A moving average of order $m$
+(assuming $m$ is an odd number) is defined as
 
 $$
 \text{MA}(x_t,m) = \frac{1}{m}\sum_{j=-k}^{k} x_{t+j},
@@ -34,7 +47,14 @@ $$
 \text{MA}(x_t, 3) = \frac{1}{3}(x_{t-1} + x_t + x_{t+1}).
 $$
 
-Note that $x_t$ is centered right in the middle and the average is symmetric. This also means, if we apply this formula to real data, the first and last observation will have to be discarded. If the order $m$ is an even number, the formula will no longer be symmetric. To overcome this, we can estimate a moving average over another moving average. For example, we can estimate a moving average of order $4$, followed by a moving average of order $2$. This is denoted as $2 \times 4$-MA. Mathematically,
+Note that $x_t$ is centered right in the middle and the average is
+symmetric. This also means, if we apply this formula to real data, the
+first and last observation will have to be discarded. If the order $m$
+is an even number, the formula will no longer be symmetric. To overcome
+this, we can estimate a moving average over another moving average. For
+example, we can estimate a moving average of order $4$, followed by a
+moving average of order $2$. This is denoted as $2 \times 4$-MA.
+Mathematically,
 
 $$
 \begin{aligned}
@@ -44,78 +64,94 @@ $$
 \end{aligned}
 $$
 
-Note that how the $2\times4$-MA averages out the seasonality for time series with seasonal period $4$, e.g. quarterly series. The formula puts equal weight on every quarter — the first and last terms refer the same quarter and their weights combined to $\frac{1}{4}$.
+Note that how the $2\times4$-MA averages out the seasonality for time
+series with seasonal period $4$, e.g. quarterly series. The formula puts
+equal weight on every quarter --- the first and last terms refer the
+same quarter and their weights combined to $\frac{1}{4}$.
 
-In general, we can use $m$-MA to estimate the trend if the seasonal period is an odd number, and use $2\times m$-MA if the seasonal period is an even number.
+In general, we can use $m$-MA to estimate the trend if the seasonal
+period is an odd number, and use $2\times m$-MA if the seasonal period
+is an even number.
+
+```{r}
+#| include: false
+library(zoo)
+library(forecast)
+```
 
 ```{r}
 #| echo: true
 #| warning: false
 #| fig-cap: "Quarterly GDP with 2x4-MA estimate of the trend-cycle"
 #| label: fig-gdpma
-
-
-library(zoo)
-library(ggplot2)
-library(forecast)
-
-data = read.csv.zoo("data/gdp.csv")
-gdp2x4MA = ma(ma(data$GDP, 4), 2)
-
-autoplot(data$GDP, series = "Data") +
-  autolayer(gdp2x4MA, series = "2x4 MA") + 
-  labs(x = "Year", y = "GDP (RMB Billion)") +
-  scale_x_continuous(breaks = pretty)
+data = readRDS("data/gdp.Rds")  # a `zoo` object
+gdp2x4MA = ma(ma(data$GDP,4),2) # from `forecast` package
+ts.plot(cbind(data$GDP, gdp2x4MA), col=1:2)
 ```
 
 ## Classical Decomposition
 
-Moving averages give us everything we need to perform classical decomposition. Classical decomposition, invented 1920s, is the simplest method decompose a time series into trend, seasonality and remainder. It is outdated nowadays and has been replaced by more advanced algorithms. Nonetheless, it serves as a good example for introductory purpose on how time series decomposition could possibly be achieved.
+Moving averages give us everything we need to perform classical
+decomposition. Classical decomposition, invented 1920s, is the simplest
+method decompose a time series into trend, seasonality and remainder. It
+is outdated nowadays and has been replaced by more advanced algorithms.
+Nonetheless, it serves as a good example for introductory purpose on how
+time series decomposition could possibly be achieved.
 
 The algorithm for additive decomposition is as follows.
 
-1.  Estimate the trend component $T_t$ by applying moving averages. If the seasonal period is an odd number, apply the $m$-th order MA. If the seasonal period is even, apply the $2\times m$ MA.
+1.  Estimate the trend component $T_t$ by applying moving averages. If
+    the seasonal period is an odd number, apply the $m$-th order MA. If
+    the seasonal period is even, apply the $2\times m$ MA.
 2.  Calculate the detrended series $x_t - T_t$.
-3.  Calculate the seasonal component $S_t$ by averaging all the detrended values of the season. For example, for quarterly series, the value of $S_t$ for Q1 would be the average of all values in Q1. This assumes the seasonal component is constant over time. $S_t$ is then adjusted to ensure all values summed up to zero.
-4.  Subtracting the seasonal component to get the remainder $R_t = x_t-T_t-S_t$.
+3.  Calculate the seasonal component $S_t$ by averaging all the
+    detrended values of the season. For example, for quarterly series,
+    the value of $S_t$ for Q1 would be the average of all values in Q1.
+    This assumes the seasonal component is constant over time. $S_t$ is
+    then adjusted to ensure all values summed up to zero.
+4.  Subtracting the seasonal component to get the remainder
+    $R_t = x_t-T_t-S_t$.
 
 ```{r}
 #| fig-cap: "Classical multiplicative decomposition of quarterly GDP"
 #| label: fig-gdpdecomp
-#| 
-as.ts(log(data$GDP)) %>% 
-  decompose() %>% 
-  autoplot()
+#| warning: false
+log(data$GDP) |> decompose() |> plot()
 ```
 
-The example performs additive decomposition to the logged quarterly GDP series. Note how the constant seasonal component is removed, leaving the smooth and nice-looking up-growing trend. The remainder component tells us the irregular ups and downs of the economy around the trend-cycle. Isn't it amazing that a simple decomposition of the time series tells us a lot about the economy?
+The example performs additive decomposition to the logged quarterly GDP
+series. Note how the constant seasonal component is removed, leaving the
+smooth and nice-looking up-growing trend. The remainder component tells
+us the irregular ups and downs of the economy around the trend-cycle.
+Isn't it amazing that a simple decomposition of the time series tells us
+a lot about the economy?
 
 ## Seasonal Adjustment
 
-By decomposing a time series into trend, seasonality and remainder, it readily gives us a method for seasonal adjustment. Simply substracting the seasonal component from the original data, or equivalently, summing up the trend and the remainder components, would give us the seasonally-adjusted series.
+By decomposing a time series into trend, seasonality and remainder, it
+readily gives us a method for seasonal adjustment. Simply subtracting
+the seasonal component from the original data, or equivalently, summing
+up the trend and the remainder components, would give us the
+seasonally-adjusted series.
 
-The following example compares the seasonally-adjusted series using the classical decomposition with the state-of-the-art [X-13ARIMA-SEATS](https://www.census.gov/data/software/x13as.html) algorithm. Despite the former is far more rudimentary than the latter, they look quite close if we simply eye-balling the plot. By taking first-order differences, we can see the series based on classical decomposition is more volatile, suggesting the classical decomposition is less robust to unusual values.
+The following example compares the seasonally-adjusted series using the
+classical decomposition with the state-of-the-art
+[X-13ARIMA-SEATS](https://www.census.gov/data/software/x13as.html)
+algorithm. Despite the former is far more rudimentary than the latter,
+they look quite close if we simply eye-balling the plot. By taking
+first-order differences, we can see the series based on classical
+decomposition is more volatile, suggesting the classical decomposition
+is less robust to unusual values.
 
 ```{r}
-#| include: true
+#| echo: true
+#| warning: false
 #| fig-cap: "Comparing classical decomposition and X-13"
-#| fig-asp: 0.45
-logdata = as.ts(log(data)) %>% window(start=2000)
+#| fig-asp: 0.5
+logdata = log(data) |> window(start=2000)
+seasadj = as.ts(logdata$GDP) - decompose(logdata$GDP)$seasonal
 
-plotLevel = decompose(logdata[,'GDP']) %>% 
-  seasadj() %>% 
-  autoplot(series = "Classical") +
-  autolayer(logdata[,'GDPSA'], series = "X-13") +
-  scale_color_manual(values = 1:2)
-
-plotDiff = decompose(logdata[,'GDP']) %>% 
-  seasadj() %>% diff() %>%  
-  autoplot(series = "Classical") +
-  autolayer(logdata[,'GDPSA'] %>% diff(), series = "X-13") +
-  scale_color_manual(values = 1:2)
-
-library(patchwork)
-plotLevel + plotDiff + 
-  plot_layout(guides = "collect") 
-
+par(mfrow=c(1,2), mar=rep(2,4))
+ts.plot(cbind(seasadj, logdata$GDPSA), col=1:2)
+ts.plot(diff(cbind(seasadj, logdata$GDPSA)), col=1:2)
 ```

@@ -36,10 +36,10 @@ to remove the seasonal fluctuations. This is called *seasonally
 adjustment*. We won't cover seasonally adjustment in detail, but the
 next section will give some intuitions on how this can possibly be done.
 After seasonally adjusting the time series, we can calculate the growth
-rate based on two consecutive values (annualized by multiplying $4$). The
-bottom-right panel of @fig-gdpts is the seasonally-adjusted quarterly
-growth. Note that it is no longer biased upward in 2021 as the YoY
-growth.
+rate based on two consecutive values (annualized by multiplying $4$).
+The bottom-right panel of @fig-gdpts is the seasonally-adjusted
+quarterly growth. Note that it is no longer biased upward in 2021 as the
+YoY growth.
 
 **Seasonally-adjusted series**: This is usually the data format we
 prefer in time series analysis. FRED reports both seasonally-adjusted
@@ -49,40 +49,21 @@ the United States Census Bureau, TRAMO/SEATS developed by the Bank of
 Spain, and so on.
 
 ```{r}
+#| include: false
+library(zoo)
+```
+
+```{r}
 #| echo: false
 #| warning: false
-#| fig-cap: "Quarterly GDP Time Series"
+#| fig-cap: "Quarterly GDP Time Series (Unit: RMB Billion or %)"
 #| label: fig-gdpts
-
-library(zoo)
-library(ggplot2)
-library(patchwork)
-
-data = read.csv("data/gdp.csv")
-
-raw = ggplot(data, aes(x = time)) +
-  geom_line(aes(y = GDP)) +
-  scale_x_continuous(breaks = pretty) +
-  labs(x=NULL, y="GDP (RMB Billion)")
-
-sa = ggplot(data, aes(x = time)) +
-  geom_line(aes(y = GDP)) +
-  geom_line(aes(y = GDPSA), col = "red") +
-  scale_x_continuous(breaks = pretty) +
-  labs(x=NULL, y="GDP (RMB Billion)")
-
-yoy = ggplot(data, aes(x = time)) +
-  geom_line(aes(y = GDPYoY - 100)) +
-  scale_x_continuous(breaks = pretty) +
-  labs(x=NULL, y="GDP Growth (YoY %)")
-
-qoq = subset(data, time > 2011) |>
-  ggplot(aes(x = time)) +
-  geom_line(aes(y = GDPQoQ-100)) +
-  scale_x_continuous(breaks = pretty) +
-  labs(x=NULL, y="GDP Growth (YoY %)")
-
-(raw + sa) / (yoy + qoq)
+data = readRDS("data/gdp.Rds")
+par(mfrow=c(2,2), mar=rep(2,4))
+ts.plot(data$GDP)
+ts.plot(data[, c("GDP","GDPSA")], col=1:2)
+ts.plot(data$YoY)
+ts.plot(window(data$QoQ, start=2011, end=2022))
 ```
 
 **Log levels and log growth rates**: We like to work with log levels. A
@@ -97,11 +78,26 @@ $$
 $$
 
 So it is very handy to just difference the log levels to get the growth
-rates. Log growth is even preferred to percentage growth, because it has
-the property of summability: summing up a series of log growth rates
-gives the log level given the initial level. It is not as handy if you
-want to recover the level values from a series of percentage growth.
+rates. Log difference can also be interpreted as the continuously
+compounded rate of change, if assuming
+
+$$
+\frac{x_t}{x_{t-1}}=e^g \implies g = \ln x_t - \ln x_{t-1}.
+$$
+
+Log difference also has the property of summability: summing up a series
+of log differences gives the log level provided the initial level. It is
+not as handy if you want to recover the level values from a series of
+percentage growth.
 
 $$
 \ln x_t = x_0 + \sum_{j=1}^{t} (\ln x_j - \ln x_{j-1}).
 $$
+
+::: callout-tip
+Buying vs. renting a home, which is better? Compute the NPV:
+
+$$
+\text{NPV}=\sum_{t=0}^T \frac{C_t}{(1+r)^t}=\int_0^T C(t) e^{-rt} dt.
+$$
+:::
