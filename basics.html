@@ -114,7 +114,17 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./decomp.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Time Series Decomposition</span></a>
+  <a href="./decomp.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decomposition</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./autocov.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ACF and PACF</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./stationary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stationarity</span></a>
   </div>
 </li>
       </ul>
@@ -124,7 +134,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -168,7 +178,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="fig-gdpts" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="basics_files/figure-html/fig-gdpts-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;1.1: Quarterly GDP Time Series</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;1.1: Quarterly GDP Time Series (Unit: RMB Billion or %)</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -177,10 +187,30 @@ ul.task-list li input[type="checkbox"] {
 <p><span class="math display">\[
 \ln x_t - \ln x_{t-1} = \ln\left(\frac{x_t}{x_{t-1}}\right) = \ln\left(\frac{x_t-x_{t-1}}{x_{t-1}}+1\right) \approx \frac{x_t-x_{t-1}}{x_{t-1}}.
 \]</span></p>
-<p>So it is very handy to just difference the log levels to get the growth rates. Log growth is even preferred to percentage growth, because it has the property of summability: summing up a series of log growth rates gives the log level given the initial level. It is not as handy if you want to recover the level values from a series of percentage growth.</p>
+<p>So it is very handy to just difference the log levels to get the growth rates. Log difference can also be interpreted as the continuously compounded rate of change, if assuming</p>
+<p><span class="math display">\[
+\frac{x_t}{x_{t-1}}=e^g \implies g = \ln x_t - \ln x_{t-1}.
+\]</span></p>
+<p>Log difference also has the property of summability: summing up a series of log differences gives the log level provided the initial level. It is not as handy if you want to recover the level values from a series of percentage growth.</p>
 <p><span class="math display">\[
 \ln x_t = x_0 + \sum_{j=1}^{t} (\ln x_j - \ln x_{j-1}).
 \]</span></p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Buying vs.&nbsp;renting a home, which is better? Compute the NPV:</p>
+<p><span class="math display">\[
+\text{NPV}=\sum_{t=0}^T \frac{C_t}{(1+r)^t}=\int_0^T C(t) e^{-rt} dt.
+\]</span></p>
+</div>
+</div>
 
 
 
@@ -326,7 +356,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./decomp.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Time Series Decomposition</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decomposition</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

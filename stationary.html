@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Applied Time Series Analysis - 5&nbsp; Summary</title>
+<title>Applied Time Series Analysis - 4&nbsp; Stationarity</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
-<link href="./stationary.html" rel="prev">
+<link href="./summary.html" rel="next">
+<link href="./autocov.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -61,6 +61,7 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -70,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stationarity</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -123,7 +124,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./stationary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stationarity</span></a>
+  <a href="./stationary.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stationarity</span></a>
   </div>
 </li>
       </ul>
@@ -133,7 +134,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -146,14 +147,21 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#stationary-process" id="toc-stationary-process" class="nav-link active" data-scroll-target="#stationary-process"><span class="toc-section-number">4.1</span>  Stationary Process</a></li>
+  <li><a href="#white-noise" id="toc-white-noise" class="nav-link" data-scroll-target="#white-noise"><span class="toc-section-number">4.2</span>  White Noise</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stationarity</span></h1>
 </div>
 
 
@@ -168,9 +176,56 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>In summary, this book has no content whatsoever.</p>
+<section id="stationary-process" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="stationary-process"><span class="header-section-number">4.1</span> Stationary Process</h2>
+<div id="def-stationary" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4.1 </strong></span>A stochastic process is said to be <strong>strictly stationary</strong> if its properties are unaffected by a change of time origin. In other words, the joint distribution at any set of time is not affect by an arbitrary shift along the time axis.</p>
+</div>
+<div id="def-covstationary" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4.2 </strong></span>A stochastic process is called <strong>covariance stationary</strong> (or <strong>weak stationary</strong>) if its means, variances, and covariances are independent of time. Formally, a process <span class="math inline">\(\{y_t\}\)</span> is covariance stationary if for all <span class="math inline">\(t\)</span> it holds that</p>
+<ul>
+<li><span class="math inline">\(\mathbb{E}(y_t) = \mu &lt; \infty\)</span>;</li>
+<li><span class="math inline">\(\text{var}(y_t) = \gamma_{_0} &lt; \infty\)</span>;</li>
+<li><span class="math inline">\(\text{cov}(y_t,y_{t-k})=\gamma_k\)</span>, for <span class="math inline">\(k=1,2,3,\dots\)</span></li>
+</ul>
+</div>
+<p>Stationarity is an important concept in time series analysis. It basically says the statistical properties of a time series are stable over time. Otherwise, if the statistical properties vary with time, statistics estimated from past values, such autocorrelations, would be much less meaningful. Strict stationarity requires the joint distribution being stable, that is moments of any order would be stable over time. In practice, mostly we only care about the first- and second-order moments, that is means and variances and covariances. Therefore, covariance stationary is sufficient.</p>
+<p><a href="#fig-stationary">Figure&nbsp;<span>4.1</span></a> shows some examples of stationary and non-stationary time series. Only the first one is stationary (it is generated from <span class="math inline">\(i.i.d\)</span> normal distribution). The second one is not stationary as its mean is not constant over time. The third one is not stationary as its variance is not constant. The last one is not stationary either, because its covariance is not constant.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-stationary" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="stationary_files/figure-html/fig-stationary-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;4.1: Stationary and non-stationary time series</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Real-life time series are rarely stationary. But they can be transformed to (quasi) stationary by differencing. <a href="#fig-stationary-real">Figure&nbsp;<span>4.2</span></a> shows some examples of the first-order (log) differences of real-life time series. They more or less exhibit some properties of stationarity, but not perfectly stationary. The series can be further “stationarized” by taking a second-order difference. But these examples are acceptable to be treated as stationary in our models. Even if they are not perfectly stationary, the model can be thought of being used to “extract” their stationary properties.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-stationary-real" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="stationary_files/figure-html/fig-stationary-real-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;4.2: Stationary and non-stationary time series (real life)</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="white-noise" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="white-noise"><span class="header-section-number">4.2</span> White Noise</h2>
+<p>White noise is a special stationary process that is an important building block of many time series models.</p>
+<div id="def-whitenoise" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 4.3 </strong></span>A stochastic process <span class="math inline">\(w_t\)</span> is called <strong>white noise</strong> if its has constant mean <span class="math inline">\(0\)</span> and variance <span class="math inline">\(\sigma^2\)</span> and no serial correlation <span class="math inline">\(\text{cov}(w_t, w_{t-k})=0\)</span> for any <span class="math inline">\(k \neq 0\)</span>. The white noise process is denoted as</p>
+<p><span class="math display">\[
+w_t \sim \text{WN}(0, \sigma^2).
+\]</span></p>
+</div>
+<p>This is the weakest requirement for while noise. It only requires no serial correlation. We may impose further assumptions. If every <span class="math inline">\(w_t\)</span> is independent, it becomes independent white noise <span class="math inline">\(w_t \sim \perp\text{WN}(0, \sigma^2)\)</span>. Independence does not imply identical distribution. If every <span class="math inline">\(w_t\)</span> is independently and identically distributed, it is called <span class="math inline">\(i.i.d\)</span> white noise, <span class="math inline">\(w_t \overset{iid}{\sim} \text{WN}(0, \sigma^2)\)</span>. If the distribution is normal, it becomes the most perfect white noise, that is <span class="math inline">\(i.i.d\)</span> Gaussian white noise, <span class="math inline">\(w_t \overset{iid}{\sim} N(0, \sigma^2)\)</span>. The first plot of <a href="#fig-stationary">Figure&nbsp;<span>4.1</span></a> is a demonstration of the <span class="math inline">\(i.i.d\)</span> Gaussian white noise. In most cases, the weakest form of white noise is sufficient.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -308,13 +363,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./stationary.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stationarity</span></span>
+      <a href="./autocov.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ACF and PACF</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./summary.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
