@@ -1,4 +1,4 @@
-# Time Series Decomposition
+# Decomposition
 
 ## Time Series Components
 
