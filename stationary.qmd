@@ -105,3 +105,9 @@ Gaussian white noise, $w_t \overset{iid}{\sim} N(0, \sigma^2)$. The
 first plot of @fig-stationary is a demonstration of the $i.i.d$ Gaussian
 white noise. In most cases, the weakest form of white noise is
 sufficient.
+
+::: callout-tip
+## Exercise
+
+Prove that a while noise process is stationary.
+:::
