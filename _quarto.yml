@@ -11,6 +11,7 @@ book:
       chapters: 
         - basics.qmd
         - decomp.qmd
+        - autocov.qmd
     - part: "ARIMA Model"
     - summary.qmd
     - references.qmd
