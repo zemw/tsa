@@ -14,6 +14,9 @@ book:
         - autocov.qmd
         - stationary.qmd
     - part: "ARIMA Model"
+      chapters: 
+        - models.qmd
+        - ar.qmd
     - summary.qmd
     - references.qmd
 

@@ -1,0 +1,217 @@
+# AR Model
+
+## AR(1) Process
+
+We start with the simplest time series model --- autoregressive model,
+or AR model. The simplest from of AR model is AR(1), which involves only
+one lag,
+
+$$
+y_t = \mu + \phi y_{t-1} + \epsilon_t,
+$$ {#eq-ar1mu}
+
+where $\epsilon_t \sim \text{WN}(0,\sigma^2)$. The model can be extended
+to include more lags. An AR(p) model is defined as
+
+$$
+y_t = \mu + \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} +  \epsilon_t.
+$$
+
+We focus on AR(1) first. The model states that the value of $y_t$ is
+determined by a constant, its previous value, and a random innovation.
+We call the last term $\epsilon_t$ *innovation*, not an error term. It
+is not an error, it is a random contribution that is unknown until time
+$t$. It should also not be confused with the so-called "structural
+shock", which is attached with a structural meaning and will be
+discussed in later chapters.
+
+The model is *probabilistic*, as oppose to *deterministic*, in the sense
+that some information is unknown or deliberately omitted, so that we do
+not know the deterministic outcome, but only a probability distribution.
+
+::: callout-note
+Think about tossing a coin: if every piece of information is
+incorporated in the model, including the initial speed and position, the
+air resistance, and so on; then we can figure out the exact outcome,
+whether the coin will land on its head or tail. But this is unrealistic.
+Omitting all these information, we can model the process as a Bernoulli
+distribution. The probability model will not give a deterministic
+outcome, but only a distribution with each possible value associated
+with a probability.
+:::
+
+::: callout-note
+The assumption that a process is only determined by its past values and
+a white noise innovation seems very restrictive. But it is not. Think
+about the three assumptions for technical analysis of the stock market
+(there are still many investors believing this): (1) The market
+discounts everything, (2) prices move in trends and counter-trends, and
+(3) price action is repetitive, with certain patterns reoccurring.
+Effectively, it is saying we can predict the stock market by the past
+price patterns. If we were to write a model for the stock market based
+on these assumptions, AR(p) isn't a bad choice at all.
+:::
+
+Note that the model can be rewritten as
+
+$$
+y_t - \frac{\mu}{1-\phi} = \phi\left(y_{t-1} - \frac{\mu}{1-\phi}\right) + \epsilon_t,
+$$
+
+assuming $\phi\neq 1$. If we define
+$\tilde{y_t}=y_t - \frac{\mu}{1-\phi}$, we can get rid of the constant
+term:
+
+$$
+\tilde{y}_t = \phi\tilde{y}_{t-1} + \epsilon_t.
+$$ {#eq-ar1}
+
+It can be easily shown, if $y_t$ is stationary, $\frac{\mu}{1-\phi}$ is
+the stationary mean. Because this mechanical transformation can always
+be done to remove the constant. We can simply ignore the constant term
+without lost of generality.
+
+::: callout-note
+Working with demeaned variables greatly simplify the notation. For
+example, assuming $\mathbb{E}(y_t)=0$, the variance is simply the
+second-order moment $\mathbb{E}(y_t^2)$; the covariance can be written
+as $\mathbb{E}(y_ty_{t-k})$.
+:::
+
+For a constant-free AR(1) model, we can rewrite the model as follows:
+
+$$
+\begin{aligned}
+y_t &= \phi y_{t-1} + \epsilon_t \\
+&= \phi( \phi y_{t-2} + \epsilon_{t-1}) + \epsilon_t \\
+&= \phi^2 y_{t-2} + \phi\epsilon_{t-1} + \epsilon_t \\
+&= \phi^2 (\phi y_{t-3} + \epsilon_{t-2}) + \phi\epsilon_{t-1} + \epsilon_t \\
+&= \phi^3 y_{t-3} + \phi^2\epsilon_{t-2} + \phi\epsilon_{t-1} + \epsilon_t \\
+&\;\vdots \\
+&= \phi^t y_0 + \sum_{j=0}^{t-1} \phi^j\epsilon_{t-j} \\
+&= \sum_{j=0}^{\infty} \phi^j\epsilon_{t-j}.
+\end{aligned}
+$$
+
+The exercise shows an AR(1) process can be reduced to an MA process,
+which will be discussed in the next section. It says the value of $y_t$
+is determined by its initial value (if it has one) and the accumulated
+innovations in the past. It is our deeds in history that shapes our
+world today.
+
+Now we focus our attention on the critical parameter $\phi$. If
+$|\phi|>1$, the process is explosive. We are not interested in explosive
+processes. If a real-world time series grows exponentially, we take
+logarithm to transform it to linear. So in most of our discussions, we
+rule out the case of explosive behaviour.
+
+If $|\phi|<1$, $\phi^j\to 0$ as $j\to\infty$. This means the influence
+of innovations far away in the past decays to zero. We will show that
+the series is stationary and ergodic.
+
+If $|\phi|=1$, we have
+$y_t = \sum_{j=0}^{\infty} \text{sgn}(\phi)^j\epsilon_{t-j} = \sum_{j=0}^{\infty}\tilde{\epsilon}_{t-j}$.
+This means the influence of past innovations will not decay no matter
+how distant away they are. This is known as a *unit root process*, which
+will be covered in later chapters. But it is clear that the process is
+not stationary. Consider the variance of $y_t$ conditioned on an initial
+value:
+
+$$
+\text{var}(y_t|y_0) = \text{var}(\sum_{j=0}^{t-1}\epsilon_{t-j})=\sum_{j=0}^{t-1}\text{var}(\epsilon_{t-j})=\sum_{j=0}^{t-1}\sigma^2=t\sigma^2.
+$$
+
+The variance is increasing with time. It is not constant. @fig-ar1
+simulates the AR(1) with $\phi=0.5$ and $\phi=1$ respectively.
+
+```{r}
+#| echo: true
+#| fig-cap: "Simulation of AR(1) processes"
+#| fig-asp: 0.5
+#| label: fig-ar1
+y = arima.sim(list(ar=0.5), n=1000)
+z = arima.sim(list(order=c(0,1,0)), n=1000)
+plot(cbind(y,z), plot.type="multiple", nc=2, ann=F, 
+     mar.multi=rep(2,4), oma.multi = rep(0,4))
+```
+
+::: {#prp-ar1stat}
+An AR(1) process with $|\phi|<1$ is covariance stationary.
+:::
+
+::: proof
+Let's compute the mean, variance and covariance for the AR(1) process.
+
+$$
+\mathbb{E}(y_t) = \mathbb{E}\left[\sum_{j=0}^{\infty} \phi^j\epsilon_{t-j}\right] = \sum_{j=0}^{\infty} \phi^j\mathbb{E}[\epsilon_{t-j}]=0.
+$$
+
+$$
+\begin{aligned}
+\text{var}(y_t) 
+&= \text{var}\left[\sum_{j=0}^{\infty} \phi^j\epsilon_{t-j}\right] 
+= \sum_{j=0}^{\infty} \phi^j\text{var}[\epsilon_{t-j}] \\
+&= \sigma^2 \sum_{j=0}^{\infty} \phi^j 
+=\frac{\sigma^2}{1-\phi}. 
+\end{aligned}
+$$
+
+For the covariances,
+
+$$
+\begin{aligned}
+\gamma_1 &= \mathbb{E}(y_ty_{t-1}) 
+= \mathbb{E}((\phi y_{t-1} + \epsilon_t)y_{t-1}) \\
+&= \mathbb{E}(\phi y_{t-1}^2 + \epsilon_t y_{t-1}) \\
+&= \phi\mathbb{E}(y_{t-1}^2) + 0 \\
+&= \frac{\phi\sigma^2}{1-\phi};
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+\gamma_2 &= \mathbb{E}(y_ty_{t-2}) 
+= \mathbb{E}((\phi y_{t-1} + \epsilon_t)y_{t-2}) \\
+&= \mathbb{E}(\phi y_{t-1}y_{t-2} + \epsilon_t y_{t-2}) \\
+&= \phi\mathbb{E}(y_{t-1}y_{t-2}) \\
+&= \phi\gamma_1 = \frac{\phi^2\sigma^2}{1-\phi};\\
+&\;\vdots \\
+\gamma_j &= \frac{\phi^j\sigma^2}{1-\phi}.
+\end{aligned}
+$$
+
+All of them are independent of time $t$. By @def-covstationary, the
+process is covariance stationary.
+:::
+
+::: {.callout-caution style="color: gray;" appearance="minimal"}
+## Remark
+
+It is not entirely rigorous to say the AR(1) process is explosive if
+$|\phi|>1$. Consider multiplying @eq-ar1 on both sides by $\phi^{-1}$,
+
+$$
+\phi^{-1} y_t = y_{t-1} + \phi^{-1}\epsilon_t,
+$$
+
+Rewrite it as an MA process,
+
+$$
+\begin{aligned}
+y_t &= \phi^{-1} y_{t+1} - \phi^{-1}\epsilon_{t+1} \\
+&= \phi^{-1} (\phi^{-1} y_{t+2} - \phi^{-1}\epsilon_{t+2}) - \phi^{-1}\epsilon_{t+1} \\
+&\;\vdots \\
+&= \sum_{j=1}^{\infty} -\phi^{-1}\epsilon_{t+j}.
+\end{aligned}
+$$
+
+If $|\phi|>1$, then $|\phi^{-1}|<1$. So the process is stationary,
+expressed as discounted innovations in the future (despite this looks
+quite odd).
+
+The problem is given @eq-ar1, it is not enough to uniquely pin down a
+stochastic process. Both the explosive process and the stationary
+process can be a solution to @eq-ar1. But for the stationary process, we
+can find an AR(1) process with $|\phi|<1$ and a different white noise
+sequence that generate the same ACF.
+:::
