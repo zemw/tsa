@@ -1,0 +1,60 @@
+# Model vs Spec
+
+## Classification
+
+Time series models can be broadly sorted into four categories based on
+whether we are dealing with stationary or non-stationary time series, or
+whether the model involves only one variable or multiple variables.
+
+|                  | Stationary | Nonstationary |
+|------------------|------------|---------------|
+| **Univariate**   | ARMA       | Unit root     |
+| **Multivariate** | VAR        | Cointegration |
+
+: Time series model classification
+
+## Model vs Spec
+
+We use the word "model" rather loosely in economics and econometrics.
+Anything that deals with the quantified relationships between variables
+can be called a model. A general equilibrium model is a model. A
+regression is also a model.
+
+To make things less confusing, we would use the word "model" more
+restrictively in this chapter. We reserve the word **model** to those
+representing the **data generating processes** (DGPs). That is, when we
+write down a model in an equation, we literally mean it. If we say $y_t$
+follows an AR(1) model:
+
+$$
+\begin{aligned}
+y_t &= \phi y_{t-1} + \epsilon_t,\\
+\epsilon_t &\sim N(0,\sigma^2). 
+\end{aligned}
+$$
+
+We literally mean $y_t$ is determined by its previous value and an
+contemporary innovation drawn from a Gaussian distribution.
+
+A model is distinguished from a **specification**. Suppose $\{y_t\}$
+represent the GDP series, we can estimate a regression:
+
+$$
+y_t = \phi y_{t-1} + e_t
+$$
+
+This is a specification not a model. Because the DGP of GDP data is
+unknown, definitely not an AR(1). We can nontheless fit this spec with
+the data and get an estimated $\hat\phi$. If $e_t$ satisfies some nice
+properties, for example, uncorrelated with the regressor, then we know
+this $\hat\phi$ is consistent.
+
+When we run regressions with real-life data, we are actually working
+with specifications. They are not the DGPs of the random variables. But
+they allow us to recover some useful information from the data when
+certain assumptions are met. Mostly we are interested in the
+relationships between variables. A specification describes this
+relationship, even though it does not describe the full DGP.
+
+This chapter deals with models in the abstract sense. The next chapter
+will discuss how to fit a model or a spec with real data.
