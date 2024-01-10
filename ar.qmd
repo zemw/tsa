@@ -11,7 +11,7 @@ y_t = \mu + \phi y_{t-1} + \epsilon_t,
 $$ {#eq-ar1mu}
 
 where $\epsilon_t \sim \text{WN}(0,\sigma^2)$. The model can be extended
-to include more lags. An AR(p) model is defined as
+to include more lags. An AR($p$) model is defined as
 
 $$
 y_t = \mu + \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} +  \epsilon_t.
@@ -49,7 +49,7 @@ discounts everything, (2) prices move in trends and counter-trends, and
 (3) price action is repetitive, with certain patterns reoccurring.
 Effectively, it is saying we can predict the stock market by the past
 price patterns. If we were to write a model for the stock market based
-on these assumptions, AR(p) isn't a bad choice at all.
+on these assumptions, AR($p$) isn't a bad choice at all.
 :::
 
 Note that the model can be rewritten as
@@ -91,13 +91,22 @@ y_t &= \phi y_{t-1} + \epsilon_t \\
 &= \phi^t y_0 + \sum_{j=0}^{t-1} \phi^j\epsilon_{t-j} \\
 &= \sum_{j=0}^{\infty} \phi^j\epsilon_{t-j}.
 \end{aligned}
-$$
+$$ {#eq-ar2ma}
 
 The exercise shows an AR(1) process can be reduced to an MA process,
 which will be discussed in the next section. It says the value of $y_t$
 is determined by its initial value (if it has one) and the accumulated
 innovations in the past. It is our deeds in history that shapes our
 world today.
+
+::: callout-note
+The property that an AR process can be rewritten as an infinite MA
+process with absolute summable coefficients
+$\sum_{j=0}^{\infty}|\phi^j|<\infty$ is called *causal*. This must not
+be confused with the causal effect in econometrics (defines in the
+*ceteris paribus* sense). To avoid confusion, we avoid use this term as
+much as possible.
+:::
 
 Now we focus our attention on the critical parameter $\phi$. If
 $|\phi|>1$, the process is explosive. We are not interested in explosive
@@ -184,6 +193,20 @@ All of them are independent of time $t$. By @def-covstationary, the
 process is covariance stationary.
 :::
 
+So the ACF decays gradually as $\phi^j \to 0$. What about the PACF?
+Estimating the PACF is equivalent to regressing $y_t$ on its lags. Since
+there is only one lag, the PACF should have non-zero value only for the
+first lag, and zeros for all other lags.
+
+```{r}
+#| echo: true
+#| fig-cap: ACF and PACF for AR(1) process
+#| fig-asp: 0.4
+#| label: fig-ar1acf
+par(mfrow=c(1,2), mar=c(2,4,1,1))
+acf(y); pacf(y)
+```
+
 ::: {.callout-caution style="color: gray;" appearance="minimal"}
 ## Remark
 
@@ -201,7 +224,7 @@ $$
 y_t &= \phi^{-1} y_{t+1} - \phi^{-1}\epsilon_{t+1} \\
 &= \phi^{-1} (\phi^{-1} y_{t+2} - \phi^{-1}\epsilon_{t+2}) - \phi^{-1}\epsilon_{t+1} \\
 &\;\vdots \\
-&= \sum_{j=1}^{\infty} -\phi^{-1}\epsilon_{t+j}.
+&= \sum_{j=1}^{\infty} -\phi^{-j}\epsilon_{t+j}.
 \end{aligned}
 $$
 
@@ -212,6 +235,147 @@ quite odd).
 The problem is given @eq-ar1, it is not enough to uniquely pin down a
 stochastic process. Both the explosive process and the stationary
 process can be a solution to @eq-ar1. But for the stationary process, we
-can find an AR(1) process with $|\phi|<1$ and a different white noise
-sequence that generate the same ACF.
+can find an AR(1) process with $|\tilde\phi|<1$ and a different white
+noise sequence $\{\tilde\epsilon_t\}$ that generate the same ACF.
+:::
+
+## Lag Operator
+
+To facilitate easy manipulation of lags, we introduce the lag operator:
+
+$$
+Ly_t = y_{t-1}.
+$$
+
+The AR(1) process can be written with the lag operator:
+
+$$
+y_t = \phi Ly_t+ \epsilon_t \implies (1-\phi L)y_t = \epsilon_t.
+$$
+
+The lag operator $L$ can be manipulated just as polynomials. It looks
+weird, but it actually works. Do a few exercises to convince yourself.
+
+$$
+L^2 y_t = L(Ly_t) = Ly_{t-1} = y_{t-2}.
+$$
+
+$$
+\begin{aligned}
+(1-L)^2y_t &= (1-L)(y_t - y_{t-1}) \\
+&= (y_t-y_{t-1})-(y_{t-1}-y_{t-2}) \\
+&= y_t - 2y_{t-1} + y_{t-2} \\
+&=(1-2L+L^2)y_t.
+\end{aligned}
+$$
+
+We can even inverse a lag polynomial (provided $|\phi|<1$),
+
+$$
+\begin{aligned}
+(1-\phi L)y_t &= \epsilon_t \\
+\implies y_t &= (1-\phi L)^{-1}\epsilon_t =\sum_{j=0}^{\infty} \phi^j L^j \epsilon_t = \sum_{j=0}^{\infty} \phi^j \epsilon_{t-j}.
+\end{aligned}
+$$
+
+We reach the same conclusion as @eq-ar2ma with the lag operator.
+
+## AR(p) Process
+
+We now generalize the conclusions above to AR($p$) processes. With the
+help of the lag operator, an AR($p$) process can be written as
+
+$$
+(1-\phi_1 L-\phi_2 L^2-\dots-\phi_p L^p) y_t = \epsilon_t,
+$$
+
+or even more parsimoniously,
+
+$$
+\phi(L)y_t = \epsilon_t.
+$$
+
+Note that we ignore the constant term, which can always be removed by
+redefine $\tilde{y}_t = y_t - \frac{\mu}{1-\phi_1-\phi_2-\dots-\phi_p}$.
+
+To derive the MA representation, we need to figure out $\phi^{-1}(L)$.
+By the Fundamental Theorem of Algebra, we know the polynomial $\phi(z)$
+has $p$ roots in the complex space. So the lag polynomial can be
+factored as
+
+$$
+(1-\lambda_1L)(1-\lambda_2L)\dots(1-\lambda_pL) y_t = \epsilon_t,
+$$
+
+where $z=\lambda_i^{-1}$ is the $i$-th root of $\phi(z)$. If the roots
+are outside the unit circle, $|\lambda_i|<1$ means each of the left hand
+terms is inversible.
+
+$$
+\begin{aligned}
+y_t &= \frac{1}{(1-\lambda_1L)(1-\lambda_2L)\dots(1-\lambda_pL)}\epsilon_t \\
+&= \left(\frac{c_1}{1-\lambda_1L} + \frac{c_2}{1-\lambda_2L} + \dots + \frac{c_p}{1-\lambda_pL}\right)\epsilon_t \\
+&= \sum_{j=0}^{\infty}(c_1\lambda_1^j+c_2\lambda_2^j+\dots+c_p\lambda_p^j)L^j\epsilon_t \\
+&= \sum_{j=0}^{\infty} \theta_j\epsilon_{t-j}, \text{ where }\theta_j=c_1\lambda_1^j+\dots+c_p\lambda_p^j.
+\end{aligned}
+$$
+
+It follows that this process has constant mean and variance. For the
+covariances, given
+
+$$
+y_t = \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} + \epsilon_t,
+$$
+
+Multiply both sides by $y_t$ and take expectation,
+
+$$
+\mathbb{E}[y_t^2] = \phi_1 \mathbb{E}[y_ty_{t-1}] + \phi_2 \mathbb{E}[y_ty_{t-2}] + \dots + \phi_p \mathbb{E}[y_ty_{t-p}],
+$$
+
+$$
+\gamma_0 = \phi_1\gamma_{-1} + \phi_2\gamma_{-2} + \dots + \phi_p\gamma_{-p}.
+$$
+
+Similarly, multiply both sides by $y_{t-1},\dots,y_{t-j}$, we have
+
+$$
+\begin{aligned}
+\gamma_1 &= \phi_1\gamma_{0} + \phi_2\gamma_{-1} + \dots + \phi_p\gamma_{-p+1},\\
+&\;\vdots\\
+\gamma_j &= \phi_1\gamma_{j-1} + \phi_2\gamma_{j-2} + \dots + \phi_p\gamma_{j-p}.
+\end{aligned}
+$$
+
+This is called the Yule-Walker equation. The first $p$ unknowns
+$\gamma_0,\dots,\gamma_{p-1}$ can be solved by the first $p$ equations.
+The rest can then be solved iteratively.
+
+It can be shown all of the covariances are invariant with time.
+Therefore, under the condition all $|\lambda_i|<1$, the AR($p$) process
+is stationary.
+
+For the PACF, a regression of $y_t$ over its lags would recover $p$
+non-zero coefficients. Longer lags should have coefficients
+insignificantly different from zero.
+
+```{r}
+#| echo: true
+#| fig-cap: ACF and PACF for AR(p) process
+#| fig-asp: 0.4
+#| label: fig-arpacf
+y = arima.sim(list(ar=c(2.4, -1.91, 0.5)), n=3000)
+par(mfrow=c(1,2), mar=c(2,4,1,1))
+acf(y); pacf(y)
+```
+
+::: {#prp-arpstat}
+An AR($p$) process is stationary if all the roots of $\phi(z)$ are
+outside the unit circle.
+:::
+
+::: {#prp-arpacf}
+An AR($p$) process is characterized by (i) an ACF that is infinite in
+extend but tails of gradually; and (ii) a PACF that is (close to) zero
+for lags after $p$.
 :::
