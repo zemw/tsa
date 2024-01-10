@@ -77,6 +77,70 @@ plot(md$TBond1Y, main="Interest Rate", xlab='', ylab='')
 plot(md$SHSE, main="Stock Market", xlab='', ylab='')
 ```
 
+::: {#prp-neggamma}
+For stationary series, it holds that $\gamma_k = \gamma_{-k}$.
+:::
+
+::: proof
+By definition,
+
+$$
+\gamma_k = \mathbb{E}[(y_t-\mu)(y_{t-k}-\mu)],
+$$
+
+$$
+\gamma_{-k} = \mathbb{E}[(y_t-\mu)(y_{t+k}-\mu)].
+$$
+
+Since $y_t$ is stationary, $\gamma_k$ is invariant with time. Let
+$t'=t+k$, we have
+
+$$
+\begin{aligned}
+\gamma_{k} &= \mathbb{E}[(y_{t'}-\mu)(y_{t'-k}-\mu)] \\
+&= \mathbb{E}[(y_{t+k}-\mu)(y_{t}-\mu)] \\
+&= \gamma_{-k}.
+\end{aligned}
+$$
+:::
+
+## Ergodicity
+
+Temporal dependence is an important feature of time series variables.
+This dependence is both a bless and a curve. Autocorrelation enables us
+to make predictions based on past experiences. However, as we will see
+in later chapters, it also invalidates theorems that usually require
+$iid$ assumptions. Ideally, we would like the temporal dependence to be
+not too strong. This is the property of ergodicity.
+
+::: {#def-ergodic}
+A stationary process $\{y_t\}$ is **ergodic** if
+
+$$
+\lim_{n\to\infty} |\mathbb{E}[f(y_t...y_{t+k})g(y_{t+n}...y_{t+n+k})]|=|\mathbb{E}[f(y_t...y_{t+k})]||\mathbb{E}[g(y_{t+n}...y_{t+n+k})]|.
+$$
+:::
+
+Heuristically, ergodicity means if two random variables are positioned
+far enough in the sequence, they become almost independent. In other
+words, ergodicity is a restriction on dependency. An ergodic process
+allows serial correlation, but the serial correlation disappears if the
+two observations are far apart. Ergodicity is important because as we
+will see in later chapters, the Law of Large Numbers or the Central
+Limit Theorem will not hold without it.
+
+::: {#thm-ergodic}
+A stationary time series is ergodic if
+$\sum_{k=0}^{\infty} |\gamma_k| < \infty$.
+:::
+
+::: proof
+A rigorous proof is not necessary. It is enough to give an intuition why
+autocorrelation disappears for far apart variables. Note that
+$\sum_{k=0}^{\infty} |\gamma_k|$ is monotonic and increasing, it
+converges. Therefore, $\gamma_k \to 0$ by Cauchy Criterion.
+:::
+
 ## White Noise
 
 White noise is a special stationary process that is an important
