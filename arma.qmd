@@ -1,0 +1,51 @@
+# ARMA Models
+
+## ARMA(p,q)
+
+ARMA($p$, $q$) is a mixed autoregressive and moving average process.
+
+$$
+y_t = \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} +
+\epsilon_t + \theta_1\epsilon_{t-1} + \dots + \theta_q\epsilon_{t-q},
+$$
+
+or
+
+$$
+\phi(L) y_t = \theta(L) \epsilon_t,
+$$
+
+where $\{\epsilon_{t}\} \sim \text{WN}(0, \sigma^2)$.
+
+The MA part is always stationary as shown in @prp-maqstat. The
+stationarity of an ARMA process solely depends on the AR part. The
+condition is the same as @prp-arpstat.
+
+Assume $\phi^{-1}(L)$ exist, then the ARMA($p$,$q$) process can be
+reduce to MA($\infty$) process:
+
+$$
+y_t = \phi^{-1}(L)\theta(L)\epsilon_t = \psi(L) \epsilon_t,
+$$
+
+where $\psi(L) = \phi^{-1}(L)\theta(L)$.
+
+::: callout-tip
+## Exercise
+
+Compute the MA equivalence for ARMA(1,1).
+:::
+
+## ARIMA(p,d,q)
+
+ARMA($p$,$q$) is used to model stationary time series. If $y_t$ is not
+stationary, we can transform it to stationary and model it with an ARMA
+model. If the first-order difference $(1-L)y_t = y_t - y_{t-1}$ is
+stationary, then we say $y_t$ is **integrated** of order 1. If it
+requires $d$-th order difference to be stationary, $(1-L)^dy_t$, we say
+it is integrated of order $d$. The ARMA model involves integrated time
+series is called ARIMA model:
+
+$$
+\phi(L)(1-L)^d y_t = \theta(L)\epsilon_t.
+$$

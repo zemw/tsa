@@ -17,6 +17,8 @@ book:
       chapters: 
         - models.qmd
         - ar.qmd
+        - ma.qmd
+        - arma.qmd
     - summary.qmd
     - references.qmd
 
