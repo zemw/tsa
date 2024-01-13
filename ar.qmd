@@ -1,4 +1,4 @@
-# AR Model
+# AR Models
 
 ## AR(1) Process
 
