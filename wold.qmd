@@ -1,0 +1,70 @@
+# Wold Theorem
+
+So far we have spent a lot of effort with ARMA models, which are the
+indispensable components of any time series textbook. The following
+theorem justifies its importance. The Wold Decomposition Theorem
+basically says every covariance-stationary process has an ARMA
+representation. Therefore, with long enough lags, any
+covariance-stationary process can be approximated arbitrarily well by
+ARMA models. This is a very bold conclusion to make. It does not seem
+straightforward at the first sight. Let's appreciate the theorem for a
+while.
+
+::: {#thm-wold}
+## Wold Decomposition Theorem
+
+Every covariance-stationary time series $y_t$ can be written as the sum
+of two time series, one *deterministic* and one *stochastic*. Formally,
+
+$$
+y_t = \eta_t + \sum_{j=0}^{\infty} b_j\epsilon_{t-j},
+$$
+
+where $\eta_t \in I_{-\infty}$ is a deterministic time series (such as
+one represented by a sine wave); $\epsilon_t$ is an uncorrelated
+innovation sequence with $\mathbb{E}[\epsilon_t]=0$,
+$\mathbb{E}[\epsilon_t\epsilon_{t-j}]=0$ for $j\neq 0$; and $\{b_j\}$
+are square summable, $\sum_{j=0}^{\infty}|b_j|^2<\infty$.
+:::
+
+::: proof
+We will prove the theorem by constructing the innovation sequence
+$\{e_t\}$ and showing it satisfies the conditions stated. Let
+$e_t = y_t - \hat{\mathbb{E}}(y_t|I_{t-1}) = y_t - a(L)y_{t-1}$, where
+$\hat{\mathbb{E}}(y_t|I_{t-1})$ is the best linear predictor (BLP) of
+$y_t$ based on information set at $t-1$. $a(L)$ does not depend on $t$
+because $y_t$ is covariance stationary. As the best linear predictor,
+$a(L)$ solves
+
+$$\min_{\{a_j\}} \mathbb{E} (y_t - \sum_{j=1}^{\infty}a_jy_{t-j})^2.$$
+The first-order conditions with respect to $a_j$ gives
+
+$$
+\begin{aligned}
+\mathbb{E}[y_{t-j}(y_t-\sum_{j=1}^{\infty}a_jy_{t-j})] &= 0, \\
+\implies \mathbb{E}[y_{t-j}e_t] &=0.
+\end{aligned}
+$$
+
+We now verify that $e_t$ satisfies the white noise conditions. Without
+loss of generality, we may assume $\mathbb{E}(y_t)=0$, it follows that
+$\mathbb{E}(e_t)=0$. $\text{var}(e_t)=\mathbb{E}(y_t-a(L)y_t)^2$ is a
+function of covariance of $y_t$ and $a_j$, none of which varies with
+time. So $\text{var}(e_t)=\sigma^2$ is constant. Utilizing the
+first-order condition,
+$\mathbb{E}[e_te_{t-j}] = \mathbb{E}[e_t(y_{t-j}-a(L)y_{t-j})] = 0.$
+
+Repeatedly substituting for $y_{t-k}$ gives
+
+$$
+\begin{aligned}
+y_t &= e_t + \sum_{k=1}^{\infty} a_ky_{t-k} \\
+&= e_t + a_1(e_{t-1} + \sum_{k=1}^{\infty} a_ky_{t-1-k}) + \sum_{k=2}^{\infty} a_ky_{t-k}\\
+&= e_t + a_1 e_{t-1} + \sum_{k=1}^{\infty} \tilde{a}_ky_{t-k-1} \\
+&= e_t + a_1 e_{t-1} + \eta_t^1 \\
+&\quad\vdots\\
+&= \sum_{j=0}^{k} c_j e_{t-j} + \eta_t^k,
+\end{aligned}
+$$ where $\eta_t^k \in I_{t-k-1}$. As $k\to\infty$, we have
+$v_t = y_t - \sum_{j=0}^{\infty}c_je_{t-j} \in I_{-\infty}$.
+:::

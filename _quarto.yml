@@ -19,6 +19,7 @@ book:
         - ar.qmd
         - ma.qmd
         - arma.qmd
+        - wold.qmd
     - summary.qmd
     - references.qmd
 
