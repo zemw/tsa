@@ -2,7 +2,7 @@ project:
   type: book
 
 book:
-  title: "Applied Time Series Analysis"
+  title: "Time Series Analysis for Economists"
   author: "Zem Wang"
   date: "January 2024"
   chapters:
