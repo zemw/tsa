@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time Series Analysis for Economists - References</title>
+<title>Time Series Analysis for Economists - 8&nbsp; ARMA Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,25 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
 </style>
 
 
@@ -49,7 +30,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./summary.html" rel="prev">
+<link href="./wold.html" rel="next">
+<link href="./ma.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -79,6 +61,7 @@ div.csl-indent {
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -88,7 +71,7 @@ div.csl-indent {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">References</h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">ARMA Models</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -171,7 +154,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./arma.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">ARMA Models</span></a>
+  <a href="./arma.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">ARMA Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -188,7 +171,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link active">References</a>
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
   </div>
 </li>
     </ul>
@@ -196,14 +179,21 @@ div.csl-indent {
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#armapq" id="toc-armapq" class="nav-link active" data-scroll-target="#armapq"><span class="toc-section-number">8.1</span>  ARMA(p,q)</a></li>
+  <li><a href="#arimapdq" id="toc-arimapdq" class="nav-link" data-scroll-target="#arimapdq"><span class="toc-section-number">8.2</span>  ARIMA(p,d,q)</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">References</h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">ARMA Models</span></h1>
 </div>
 
 
@@ -218,19 +208,47 @@ div.csl-indent {
 
 </header>
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography" style="display: none">
-<div id="ref-hamilton1994" class="csl-entry" role="doc-biblioentry">
-Hamilton, James D. 1994. <em>Time Series Analysis</em>. Princeton University Press.
+<section id="armapq" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="armapq"><span class="header-section-number">8.1</span> ARMA(p,q)</h2>
+<p>ARMA(<span class="math inline">\(p\)</span>, <span class="math inline">\(q\)</span>) is a mixed autoregressive and moving average process.</p>
+<p><span class="math display">\[
+y_t = \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} +
+\epsilon_t + \theta_1\epsilon_{t-1} + \dots + \theta_q\epsilon_{t-q},
+\]</span></p>
+<p>or</p>
+<p><span class="math display">\[
+\phi(L) y_t = \theta(L) \epsilon_t,
+\]</span></p>
+<p>where <span class="math inline">\(\{\epsilon_{t}\} \sim \text{WN}(0, \sigma^2)\)</span>.</p>
+<p>The MA part is always stationary as shown in <a href="ma.html#prp-maqstat">Proposition&nbsp;<span>7.1</span></a>. The stationarity of an ARMA process solely depends on the AR part. The condition is the same as <a href="ar.html#prp-arpstat">Proposition&nbsp;<span>6.2</span></a>.</p>
+<p>Assume <span class="math inline">\(\phi^{-1}(L)\)</span> exist, then the ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) process can be reduce to MA(<span class="math inline">\(\infty\)</span>) process:</p>
+<p><span class="math display">\[
+y_t = \phi^{-1}(L)\theta(L)\epsilon_t = \psi(L) \epsilon_t,
+\]</span></p>
+<p>where <span class="math inline">\(\psi(L) = \phi^{-1}(L)\theta(L)\)</span>.</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div id="ref-hyndman2018" class="csl-entry" role="doc-biblioentry">
-Hyndman, Rob J, and George Athanasopoulos. 2018. <em>Forecasting: Principles and Practice (2nd Edition)</em>. OTexts.com/fpp2.
-</div>
-<div id="ref-mikusheva2007" class="csl-entry" role="doc-biblioentry">
-Mikusheva, Anna, and Paul Schrimpf. 2007. <em>14.384 Time Series Analysis</em>. MIT OpenCourseWare (http://ocw.mit.edu).
+<div class="callout-caption-container flex-fill">
+Exercise
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<p>Compute the MA equivalence for ARMA(1,1).</p>
+</div>
+</div>
+</section>
+<section id="arimapdq" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="arimapdq"><span class="header-section-number">8.2</span> ARIMA(p,d,q)</h2>
+<p>ARMA(<span class="math inline">\(p\)</span>,<span class="math inline">\(q\)</span>) is used to model stationary time series. If <span class="math inline">\(y_t\)</span> is not stationary, we can transform it to stationary and model it with an ARMA model. If the first-order difference <span class="math inline">\((1-L)y_t = y_t - y_{t-1}\)</span> is stationary, then we say <span class="math inline">\(y_t\)</span> is <strong>integrated</strong> of order 1. If it requires <span class="math inline">\(d\)</span>-th order difference to be stationary, <span class="math inline">\((1-L)^dy_t\)</span>, we say it is integrated of order <span class="math inline">\(d\)</span>. The ARMA model involves integrated time series is called ARIMA model:</p>
+<p><span class="math display">\[
+\phi(L)(1-L)^d y_t = \theta(L)\epsilon_t.
+\]</span></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -368,11 +386,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./summary.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Summary</span></span>
+      <a href="./ma.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MA Models</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./wold.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Wold Theorem</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Time Series Analysis for Economists - 6&nbsp; AR Models</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ma.html" rel="next">
+<link href="./models.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">AR Models</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Time Series Analysis for Economists</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">The Basics</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./decomp.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decomposition</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./autocov.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ACF and PACF</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./stationary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stationarity</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">ARIMA Model</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./models.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model vs Spec</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ar.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">AR Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ma.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MA Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./arma.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">ARMA Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./wold.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Wold Theorem</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#ar1-process" id="toc-ar1-process" class="nav-link active" data-scroll-target="#ar1-process"><span class="toc-section-number">6.1</span>  AR(1) Process</a></li>
+  <li><a href="#lag-operator" id="toc-lag-operator" class="nav-link" data-scroll-target="#lag-operator"><span class="toc-section-number">6.2</span>  Lag Operator</a></li>
+  <li><a href="#arp-process" id="toc-arp-process" class="nav-link" data-scroll-target="#arp-process"><span class="toc-section-number">6.3</span>  AR(p) Process</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-ar-models" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">AR Models</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="ar1-process" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="ar1-process"><span class="header-section-number">6.1</span> AR(1) Process</h2>
+<p>We start with the simplest time series model — autoregressive model, or AR model. The simplest from of AR model is AR(1), which involves only one lag,</p>
+<p><span id="eq-ar1mu"><span class="math display">\[
+y_t = \mu + \phi y_{t-1} + \epsilon_t,
+\tag{6.1}\]</span></span></p>
+<p>where <span class="math inline">\(\epsilon_t \sim \text{WN}(0,\sigma^2)\)</span>. The model can be extended to include more lags. An AR(<span class="math inline">\(p\)</span>) model is defined as</p>
+<p><span class="math display">\[
+y_t = \mu + \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} +  \epsilon_t.
+\]</span></p>
+<p>We focus on AR(1) first. The model states that the value of <span class="math inline">\(y_t\)</span> is determined by a constant, its previous value, and a random innovation. We call the last term <span class="math inline">\(\epsilon_t\)</span> <em>innovation</em>, not an error term. It is not an error, it is a random contribution that is unknown until time <span class="math inline">\(t\)</span>. It should also not be confused with the so-called “structural shock”, which is attached with a structural meaning and will be discussed in later chapters.</p>
+<p>The model is <em>probabilistic</em>, as oppose to <em>deterministic</em>, in the sense that some information is unknown or deliberately omitted, so that we do not know the deterministic outcome, but only a probability distribution.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Think about tossing a coin: if every piece of information is incorporated in the model, including the initial speed and position, the air resistance, and so on; then we can figure out the exact outcome, whether the coin will land on its head or tail. But this is unrealistic. Omitting all these information, we can model the process as a Bernoulli distribution. The probability model will not give a deterministic outcome, but only a distribution with each possible value associated with a probability.</p>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The assumption that a process is only determined by its past values and a white noise innovation seems very restrictive. But it is not. Think about the three assumptions for technical analysis of the stock market (there are still many investors believing this): (1) The market discounts everything, (2) prices move in trends and counter-trends, and (3) price action is repetitive, with certain patterns reoccurring. Effectively, it is saying we can predict the stock market by the past price patterns. If we were to write a model for the stock market based on these assumptions, AR(<span class="math inline">\(p\)</span>) isn’t a bad choice at all.</p>
+</div>
+</div>
+<p>Note that the model can be rewritten as</p>
+<p><span class="math display">\[
+y_t - \frac{\mu}{1-\phi} = \phi\left(y_{t-1} - \frac{\mu}{1-\phi}\right) + \epsilon_t,
+\]</span></p>
+<p>assuming <span class="math inline">\(\phi\neq 1\)</span>. If we define <span class="math inline">\(\tilde{y_t}=y_t - \frac{\mu}{1-\phi}\)</span>, we can get rid of the constant term:</p>
+<p><span id="eq-ar1"><span class="math display">\[
+\tilde{y}_t = \phi\tilde{y}_{t-1} + \epsilon_t.
+\tag{6.2}\]</span></span></p>
+<p>It can be easily shown, if <span class="math inline">\(y_t\)</span> is stationary, <span class="math inline">\(\frac{\mu}{1-\phi}\)</span> is the stationary mean. Because this mechanical transformation can always be done to remove the constant. We can simply ignore the constant term without lost of generality.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Working with demeaned variables greatly simplify the notation. For example, assuming <span class="math inline">\(\mathbb{E}(y_t)=0\)</span>, the variance is simply the second-order moment <span class="math inline">\(\mathbb{E}(y_t^2)\)</span>; the covariance can be written as <span class="math inline">\(\mathbb{E}(y_ty_{t-k})\)</span>.</p>
+</div>
+</div>
+<p>For a constant-free AR(1) model, we can rewrite the model as follows:</p>
+<p><span id="eq-ar2ma"><span class="math display">\[
+\begin{aligned}
+y_t &amp;= \phi y_{t-1} + \epsilon_t \\
+&amp;= \phi( \phi y_{t-2} + \epsilon_{t-1}) + \epsilon_t \\
+&amp;= \phi^2 y_{t-2} + \phi\epsilon_{t-1} + \epsilon_t \\
+&amp;= \phi^2 (\phi y_{t-3} + \epsilon_{t-2}) + \phi\epsilon_{t-1} + \epsilon_t \\
+&amp;= \phi^3 y_{t-3} + \phi^2\epsilon_{t-2} + \phi\epsilon_{t-1} + \epsilon_t \\
+&amp;\;\vdots \\
+&amp;= \phi^t y_0 + \sum_{j=0}^{t-1} \phi^j\epsilon_{t-j} \\
+&amp;= \sum_{j=0}^{\infty} \phi^j\epsilon_{t-j}.
+\end{aligned}
+\tag{6.3}\]</span></span></p>
+<p>The exercise shows an AR(1) process can be reduced to an MA process, which will be discussed in the next section. It says the value of <span class="math inline">\(y_t\)</span> is determined by its initial value (if it has one) and the accumulated innovations in the past. It is our deeds in history that shapes our world today.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The property that an AR process can be rewritten as an infinite MA process with absolute summable coefficients <span class="math inline">\(\sum_{j=0}^{\infty}|\phi^j|&lt;\infty\)</span> is called <em>causal</em>. This must not be confused with the causal effect in econometrics (defines in the <em>ceteris paribus</em> sense). To avoid confusion, we avoid use this term as much as possible.</p>
+</div>
+</div>
+<p>Now we focus our attention on the critical parameter <span class="math inline">\(\phi\)</span>. If <span class="math inline">\(|\phi|&gt;1\)</span>, the process is explosive. We are not interested in explosive processes. If a real-world time series grows exponentially, we take logarithm to transform it to linear. So in most of our discussions, we rule out the case of explosive behaviour.</p>
+<p>If <span class="math inline">\(|\phi|&lt;1\)</span>, <span class="math inline">\(\phi^j\to 0\)</span> as <span class="math inline">\(j\to\infty\)</span>. This means the influence of innovations far away in the past decays to zero. We will show that the series is stationary and ergodic.</p>
+<p>If <span class="math inline">\(|\phi|=1\)</span>, we have <span class="math inline">\(y_t = \sum_{j=0}^{\infty} \text{sgn}(\phi)^j\epsilon_{t-j} = \sum_{j=0}^{\infty}\tilde{\epsilon}_{t-j}\)</span>. This means the influence of past innovations will not decay no matter how distant away they are. This is known as a <em>unit root process</em>, which will be covered in later chapters. But it is clear that the process is not stationary. Consider the variance of <span class="math inline">\(y_t\)</span> conditioned on an initial value:</p>
+<p><span class="math display">\[
+\text{var}(y_t|y_0) = \text{var}(\sum_{j=0}^{t-1}\epsilon_{t-j})=\sum_{j=0}^{t-1}\text{var}(\epsilon_{t-j})=\sum_{j=0}^{t-1}\sigma^2=t\sigma^2.
+\]</span></p>
+<p>The variance is increasing with time. It is not constant. <a href="#fig-ar1">Figure&nbsp;<span>6.1</span></a> simulates the AR(1) with <span class="math inline">\(\phi=0.5\)</span> and <span class="math inline">\(\phi=1\)</span> respectively.</p>
+<div class="cell" data-fig.asp="0.5">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ar=</span><span class="fl">0.5</span>), <span class="at">n=</span><span class="dv">1000</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">order=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)), <span class="at">n=</span><span class="dv">1000</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cbind</span>(y,z), <span class="at">plot.type=</span><span class="st">"multiple"</span>, <span class="at">nc=</span><span class="dv">2</span>, <span class="at">ann=</span>F, </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">mar.multi=</span><span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">4</span>), <span class="at">oma.multi =</span> <span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-ar1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ar_files/figure-html/fig-ar1-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;6.1: Simulation of AR(1) processes</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="prp-ar1stat" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 6.1 </strong></span>An AR(1) process with <span class="math inline">\(|\phi|&lt;1\)</span> is covariance stationary.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em>. </span>Let’s compute the mean, variance and covariance for the AR(1) process.</p>
+<p><span class="math display">\[
+\mathbb{E}(y_t) = \mathbb{E}\left[\sum_{j=0}^{\infty} \phi^j\epsilon_{t-j}\right] = \sum_{j=0}^{\infty} \phi^j\mathbb{E}[\epsilon_{t-j}]=0.
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{var}(y_t)
+&amp;= \text{var}\left[\sum_{j=0}^{\infty} \phi^j\epsilon_{t-j}\right]
+= \sum_{j=0}^{\infty} \phi^j\text{var}[\epsilon_{t-j}] \\
+&amp;= \sigma^2 \sum_{j=0}^{\infty} \phi^j
+=\frac{\sigma^2}{1-\phi}.
+\end{aligned}
+\]</span></p>
+<p>For the covariances,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\gamma_1 &amp;= \mathbb{E}(y_ty_{t-1})
+= \mathbb{E}((\phi y_{t-1} + \epsilon_t)y_{t-1}) \\
+&amp;= \mathbb{E}(\phi y_{t-1}^2 + \epsilon_t y_{t-1}) \\
+&amp;= \phi\mathbb{E}(y_{t-1}^2) + 0 \\
+&amp;= \frac{\phi\sigma^2}{1-\phi};
+\end{aligned}
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\gamma_2 &amp;= \mathbb{E}(y_ty_{t-2})
+= \mathbb{E}((\phi y_{t-1} + \epsilon_t)y_{t-2}) \\
+&amp;= \mathbb{E}(\phi y_{t-1}y_{t-2} + \epsilon_t y_{t-2}) \\
+&amp;= \phi\mathbb{E}(y_{t-1}y_{t-2}) \\
+&amp;= \phi\gamma_1 = \frac{\phi^2\sigma^2}{1-\phi};\\
+&amp;\;\vdots \\
+\gamma_j &amp;= \frac{\phi^j\sigma^2}{1-\phi}.
+\end{aligned}
+\]</span></p>
+<p>All of them are independent of time <span class="math inline">\(t\)</span>. By <a href="stationary.html#def-covstationary">Definition&nbsp;<span>4.2</span></a>, the process is covariance stationary.</p>
+</div>
+<p>So the ACF decays gradually as <span class="math inline">\(\phi^j \to 0\)</span>. What about the PACF? Estimating the PACF is equivalent to regressing <span class="math inline">\(y_t\)</span> on its lags. Since there is only one lag, the PACF should have non-zero value only for the first lag, and zeros for all other lags.</p>
+<div class="cell" data-fig.asp="0.4">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">mar=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(y); <span class="fu">pacf</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-ar1acf" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ar_files/figure-html/fig-ar1acf-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;6.2: ACF and PACF for AR(1) process</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="lag-operator" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="lag-operator"><span class="header-section-number">6.2</span> Lag Operator</h2>
+<p>To facilitate easy manipulation of lags, we introduce the lag operator:</p>
+<p><span class="math display">\[
+Ly_t = y_{t-1}.
+\]</span></p>
+<p>The AR(1) process can be written with the lag operator:</p>
+<p><span class="math display">\[
+y_t = \phi Ly_t+ \epsilon_t \implies (1-\phi L)y_t = \epsilon_t.
+\]</span></p>
+<p>The lag operator <span class="math inline">\(L\)</span> can be manipulated just as polynomials. It looks weird, but it actually works. Do a few exercises to convince yourself.</p>
+<p><span class="math display">\[
+L^2 y_t = L(Ly_t) = Ly_{t-1} = y_{t-2}.
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+(1-L)^2y_t &amp;= (1-L)(y_t - y_{t-1}) \\
+&amp;= (y_t-y_{t-1})-(y_{t-1}-y_{t-2}) \\
+&amp;= y_t - 2y_{t-1} + y_{t-2} \\
+&amp;=(1-2L+L^2)y_t.
+\end{aligned}
+\]</span></p>
+<p>We can even inverse a lag polynomial (provided <span class="math inline">\(|\phi|&lt;1\)</span>),</p>
+<p><span class="math display">\[
+\begin{aligned}
+(1-\phi L)y_t &amp;= \epsilon_t \\
+\implies y_t &amp;= (1-\phi L)^{-1}\epsilon_t =\sum_{j=0}^{\infty} \phi^j L^j \epsilon_t = \sum_{j=0}^{\infty} \phi^j \epsilon_{t-j}.
+\end{aligned}
+\]</span></p>
+<p>We reach the same conclusion as <a href="#eq-ar2ma">Equation&nbsp;<span>6.3</span></a> with the lag operator.</p>
+</section>
+<section id="arp-process" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="arp-process"><span class="header-section-number">6.3</span> AR(p) Process</h2>
+<p>We now generalize the conclusions above to AR(<span class="math inline">\(p\)</span>) processes. With the help of the lag operator, an AR(<span class="math inline">\(p\)</span>) process can be written as</p>
+<p><span class="math display">\[
+(1-\phi_1 L-\phi_2 L^2-\dots-\phi_p L^p) y_t = \epsilon_t,
+\]</span></p>
+<p>or even more parsimoniously,</p>
+<p><span class="math display">\[
+\phi(L)y_t = \epsilon_t.
+\]</span></p>
+<p>Note that we ignore the constant term, which can always be removed by redefine <span class="math inline">\(\tilde{y}_t = y_t - \frac{\mu}{1-\phi_1-\phi_2-\dots-\phi_p}\)</span>.</p>
+<p>To derive the MA representation, we need to figure out <span class="math inline">\(\phi^{-1}(L)\)</span>. By the Fundamental Theorem of Algebra, we know the polynomial <span class="math inline">\(\phi(z)\)</span> has <span class="math inline">\(p\)</span> roots in the complex space. So the lag polynomial can be factored as</p>
+<p><span class="math display">\[
+(1-\lambda_1L)(1-\lambda_2L)\dots(1-\lambda_pL) y_t = \epsilon_t,
+\]</span></p>
+<p>where <span class="math inline">\(z=\lambda_i^{-1}\)</span> is the <span class="math inline">\(i\)</span>-th root of <span class="math inline">\(\phi(z)\)</span>. If the roots are outside the unit circle, <span class="math inline">\(|\lambda_i|&lt;1\)</span> means each of the left hand terms is inversible.</p>
+<p><span class="math display">\[
+\begin{aligned}
+y_t &amp;= \frac{1}{(1-\lambda_1L)(1-\lambda_2L)\dots(1-\lambda_pL)}\epsilon_t \\
+&amp;= \left(\frac{c_1}{1-\lambda_1L} + \frac{c_2}{1-\lambda_2L} + \dots + \frac{c_p}{1-\lambda_pL}\right)\epsilon_t \\
+&amp;= \sum_{j=0}^{\infty}(c_1\lambda_1^j+c_2\lambda_2^j+\dots+c_p\lambda_p^j)L^j\epsilon_t \\
+&amp;= \sum_{j=0}^{\infty} \theta_j\epsilon_{t-j}, \text{ where }\theta_j=c_1\lambda_1^j+\dots+c_p\lambda_p^j.
+\end{aligned}
+\]</span></p>
+<p>It follows that this process has constant mean and variance. For the covariances, given</p>
+<p><span class="math display">\[
+y_t = \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} + \epsilon_t,
+\]</span></p>
+<p>Multiply both sides by <span class="math inline">\(y_t\)</span> and take expectation,</p>
+<p><span class="math display">\[
+\mathbb{E}[y_t^2] = \phi_1 \mathbb{E}[y_ty_{t-1}] + \phi_2 \mathbb{E}[y_ty_{t-2}] + \dots + \phi_p \mathbb{E}[y_ty_{t-p}],
+\]</span></p>
+<p><span class="math display">\[
+\gamma_0 = \phi_1\gamma_{-1} + \phi_2\gamma_{-2} + \dots + \phi_p\gamma_{-p}.
+\]</span></p>
+<p>Similarly, multiply both sides by <span class="math inline">\(y_{t-1},\dots,y_{t-j}\)</span>, we have</p>
+<p><span class="math display">\[
+\begin{aligned}
+\gamma_1 &amp;= \phi_1\gamma_{0} + \phi_2\gamma_{-1} + \dots + \phi_p\gamma_{-p+1},\\
+&amp;\;\vdots\\
+\gamma_j &amp;= \phi_1\gamma_{j-1} + \phi_2\gamma_{j-2} + \dots + \phi_p\gamma_{j-p}.
+\end{aligned}
+\]</span></p>
+<p>This is called the Yule-Walker equation. The first <span class="math inline">\(p\)</span> unknowns <span class="math inline">\(\gamma_0,\dots,\gamma_{p-1}\)</span> can be solved by the first <span class="math inline">\(p\)</span> equations. The rest can then be solved iteratively.</p>
+<p>It can be shown all of the covariances are invariant with time. Therefore, under the condition all <span class="math inline">\(|\lambda_i|&lt;1\)</span>, the AR(<span class="math inline">\(p\)</span>) process is stationary.</p>
+<p>For the PACF, a regression of <span class="math inline">\(y_t\)</span> over its lags would recover <span class="math inline">\(p\)</span> non-zero coefficients. Longer lags should have coefficients insignificantly different from zero.</p>
+<div class="cell" data-fig.asp="0.4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ar=</span><span class="fu">c</span>(<span class="fl">2.4</span>, <span class="sc">-</span><span class="fl">1.91</span>, <span class="fl">0.5</span>)), <span class="at">n=</span><span class="dv">3000</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">mar=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(y); <span class="fu">pacf</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-arpacf" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ar_files/figure-html/fig-arpacf-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;6.3: ACF and PACF for AR(p) process</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="prp-arpstat" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 6.2 </strong></span>An AR(<span class="math inline">\(p\)</span>) process is stationary if all the roots of <span class="math inline">\(\phi(z)\)</span> are outside the unit circle.</p>
+</div>
+<div id="prp-arpacf" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 6.3 </strong></span>An AR(<span class="math inline">\(p\)</span>) process is characterized by (i) an ACF that is infinite in extend but tails of gradually; and (ii) a PACF that is (close to) zero for lags after <span class="math inline">\(p\)</span>.</p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./models.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model vs Spec</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ma.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MA Models</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
