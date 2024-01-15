@@ -1,4 +1,4 @@
-# AR Models
+# AR Models {#sec-ar-models}
 
 ## AR(1) Process
 
@@ -206,38 +206,6 @@ first lag, and zeros for all other lags.
 par(mfrow=c(1,2), mar=c(2,4,1,1))
 acf(y); pacf(y)
 ```
-
-::: {.callout-caution style="color: gray;" appearance="minimal"}
-## Remark
-
-It is not entirely rigorous to say the AR(1) process is explosive if
-$|\phi|>1$. Consider multiplying @eq-ar1 on both sides by $\phi^{-1}$,
-
-$$
-\phi^{-1} y_t = y_{t-1} + \phi^{-1}\epsilon_t,
-$$
-
-Rewrite it as an MA process,
-
-$$
-\begin{aligned}
-y_t &= \phi^{-1} y_{t+1} - \phi^{-1}\epsilon_{t+1} \\
-&= \phi^{-1} (\phi^{-1} y_{t+2} - \phi^{-1}\epsilon_{t+2}) - \phi^{-1}\epsilon_{t+1} \\
-&\;\vdots \\
-&= \sum_{j=1}^{\infty} -\phi^{-j}\epsilon_{t+j}.
-\end{aligned}
-$$
-
-If $|\phi|>1$, then $|\phi^{-1}|<1$. So the process is stationary,
-expressed as discounted innovations in the future (despite this looks
-quite odd).
-
-The problem is given @eq-ar1, it is not enough to uniquely pin down a
-stochastic process. Both the explosive process and the stationary
-process can be a solution to @eq-ar1. But for the stationary process, we
-can find an AR(1) process with $|\tilde\phi|<1$ and a different white
-noise sequence $\{\tilde\epsilon_t\}$ that generate the same ACF.
-:::
 
 ## Lag Operator
 

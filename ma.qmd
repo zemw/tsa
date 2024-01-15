@@ -1,4 +1,4 @@
-# MA Models
+# MA Models {#sec-ma-models}
 
 ## MA(1) Process
 
