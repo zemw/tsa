@@ -20,6 +20,9 @@ book:
         - ma.qmd
         - arma.qmd
         - wold.qmd
+    - part: "Time Series Regression"
+      chapters: 
+        - ols.qmd
     - summary.qmd
     - references.qmd
 

@@ -1,0 +1,114 @@
+# Preliminaries
+
+## Chapter Overview
+
+This chapter serves two purposes. One is to introduce the techniques for estimating time series models. The other is to explain the concept of dynamic causal effect. We join the two topics in one chapter because both of them can be done via a regression framework. Maximum likelihood estimation plays a pivotal role in estimating time series models. Nonetheless, starting with OLS always make things easier. We start with a quick review of the basic OLS concepts that are familiar to any students in econometrics, that is the regressions applied to cross-sectional $iid$ observations. We then extend it to time series data. We will see it is not as straightforward as one might expect, as intertemporal dependencies between observation need additional treatment. In the second half of the chapter, we will explain the concept of dynamic causal effect, that is the causal effect of an intervention on outcome variables. Similar to cross-sectional studies, we need to define the causal effect relative to counterfactuals. With time series data, the counterfactuals have to be defined across time rather across individuals.
+
+## Limiting Theory for i.i.d Random Variables
+
+::: {#thm-lln}
+## Law of Large Numbers
+
+Let $\{x_i\}$ be $iid$ random variables with $\mathbb{E}(x_i)=\mu$ and $\text{Var}(x_i)=\sigma^2<\infty$. Define $\bar{x}_n = \frac{1}{n}\sum_{i=1}^n x_i$. Then $\bar{x}_n \overset{p}{\to} \mu$ as $n \to \infty$.
+:::
+
+::: proof
+We will give an non-rigorous proof, but nonetheless shows the tenets. It is easy to see $\mathbb{E}(\bar{x}_n) = \mu$. Consider the variance,
+
+$$
+\text{Var}(\bar x_n) = \text{Var}\left(\frac{1}{n}\sum_{i=1}^n x_i\right) \overset{iid}= \frac{1}{n^2}\sum_{i=1}^n\text{Var}(x_i) = \frac{\sigma^2}{n}\to 0.
+$$
+
+That is $\bar x_n$ converges to $\mu$ with probability 1 as $n\to\infty$. Note that we can move the variance inside the summation operator because $x_i$ are $iid$, in which all the covariance terms are 0.
+:::
+
+::: {#thm-clt}
+## Central Limit Theorem
+
+Let $\{x_i\}$ be $iid$ random variables with $\mathbb{E}(x_i)=\mu$ and $\text{Var}(x_i)=\sigma^2<\infty$. Define $\bar{x}_n = \frac{1}{n}\sum_{i=1}^n x_i$. Then
+
+$$
+\frac{\bar x_n - \mu}{\sigma/\sqrt{n}} \overset{d}\to N(0,1).
+$$
+:::
+
+::: proof
+Without loss of generality, assume $x_i$ is demeaned and standardized to have standard deviation 1. It remains to show $\sqrt{n} \bar x_n \to N(0,1)$. Define the moment generating function (MGF) for $\sqrt{n}\bar x_n$:
+
+$$M_{\sqrt{n}\bar x_n}(t) =\mathbb{E}[e^{(\sqrt{n}^{-1}\sum_{i=1}^n x_i)t}] \overset{iid}= \{\mathbb{E}[e^{(n^{-1/2}x_i)t}]\}^n.$$
+
+Evaluate the MGF for each $x_i$:
+
+$$
+\mathbb{E}[e^{(n^{-1/2}x_i)t}] = 1 + \mathbb{E}(n^{-1/2}x_i)t + \mathbb{E}(n^{-1}x_i^2)t^2 + \cdots =1 + \frac{t^2}{2n} + o(n^{-1}).
+$$
+
+Substituting back,
+
+$$
+M_{\sqrt{n}\bar x_n}(t) = \left[1 + \frac{t^2}{2n} + o(n^{-1})\right]^n = \left[\left(1 + \frac{t^2}{2n} \right)^{\frac{2n}{t^2}}\right]^{\frac{t^2}{2}}\to e^{\frac{t^2}{2}}.
+$$
+
+Note that we drop the $o(n^{-1})$ because it converges faster than $\frac{1}{n}$. $e^{\frac{t^2}{2}}$ is the MGF for standard normal distribution. Hence, the theorem is proved.
+:::
+
+## OLS for i.i.d Random Variables
+
+We now give a very quick review of OLS with $iid$ random variables. These materials are assumed familiar to the readers. We do not intend to introduce them in any detail. This section is a quick snapshot of some key concepts, so that we could contrast them with the time series regression introduced in the next section.
+
+A linear regression model postulates the joint distribution of $(y_i, \mathbf{x_i})$ follows a linear relationship,
+
+$$
+y_i = \mathbf{x_i}'\mathbf{\beta} + \epsilon_i.
+$$
+
+Expressed in terms of data matrix,
+
+$$
+\begin{bmatrix}
+y_1\\y_2\\\vdots\\y_n
+\end{bmatrix} = 
+\begin{bmatrix}
+x_{11}, x_{12}, \dots, x_{1p}\\
+x_{21}, x_{22}, \dots, x_{2p}\\
+\ddots \\
+x_{n1}, x_{n2}, \dots, x_{np}\\
+\end{bmatrix}'
+\begin{bmatrix}
+\beta_1\\\beta_2\\\vdots\\\beta_p
+\end{bmatrix} +
+\begin{bmatrix}
+\epsilon_1\\\epsilon_2\\\vdots\\\epsilon_n
+\end{bmatrix}.
+$$
+
+To estimate the parameter $\mathbf{\beta}$ from sample data, OLS seeks to minimize the squared residuals
+
+$$
+\min_{\beta} \sum_{i=1}^{n}(y_i - \mathbf{x_i'\beta})^2.
+$$
+
+The first-order condition implies,
+
+$$
+\begin{aligned}
+&\sum_i \mathbf{x_i}(y_i - \mathbf{x_i'\beta}) =0, \\
+&\sum_i \mathbf{x_i}y_i - \sum_i \mathbf{x_i x_i'\beta}=0, \\
+&\mathbf{\hat\beta}= \left(\sum_i\mathbf{x_i x_i'}\right)^{-1} \left(\sum_i\mathbf{x_i}y_i\right) \\
+&= \beta + \left(\sum_i\mathbf{x_i x_i'}\right)^{-1} \left(\sum_i\mathbf{x_i}\epsilon_i\right).
+\end{aligned}
+$$
+
+Under the Gauss-Markov assumptions, particularly $\mathbb{E}(\epsilon_i|\mathbf{x_j})=0$ and $\text{var}(\mathbf{\epsilon}|\mathbf{X})=\sigma^2\mathbf{I}$ (homoskedasticity and nonautocorrelation), the OLS estimator is **BLUE** (Best Linear Unbiased Estimator).
+
+Under the assumption of $iid$ random variables and homoskedasticity, we invoke the LLN and CLT to derive the asymptotic distribution for the OLS estimator,
+
+$$
+\begin{aligned}
+\sqrt{n}(\mathbf{\hat\beta}-\mathbf{\beta}) &= \left(\frac{1}{n}\sum_i\mathbf{x_i x_i'}\right)^{-1} \left(\sqrt{n}\frac{1}{n}\sum_i\mathbf{x_i}\epsilon_i\right) \\[1em]
+&\to [\mathbb{E}(\mathbf{x_i x_i'})]^{-1} \text{N}(0, \mathbb{E}(\mathbf{x_i}\epsilon_i\epsilon_i'\mathbf{x_i}')) \\[1em]
+&\to \text{N}(0, \sigma^2[\mathbb{E}(\mathbf{x_i x_i'})]^{-1}).
+\end{aligned}
+$$
+
+Note how the $iid$ assumption is required throughout the process. The following section will show how to extend the OLS to non-$iid$ random variables and how it leads to modification of the results.
