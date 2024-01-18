@@ -1,0 +1,87 @@
+# OLS for Time Series
+
+The limiting theories and regression theories that work for $iid$ random
+variable do not immediately apply to time series. Consider the proof for
+@thm-lln, without the $iid$ assumption we have
+
+$$
+\begin{aligned}
+\text{var}\left(\frac{1}{n}\sum_{i=1}^{n}x_i\right) 
+&= \frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^n \text{cov}(x_i, x_j) \\
+&= \frac{1}{n^2}[\text{cov}(x_1, x_1) + \text{cov}(x_1, x_2) + \cdots + \text{cov}(x_1, x_n)+ \\
+&\hspace{3em} \text{cov}(x_2, x_1) + \text{cov}(x_2, x_2) + \cdots + \text{cov}(x_2, x_n)+ \\
+&\hspace{3em}\vdots\\
+&\hspace{3em} \text{cov}(x_n, x_1) + \text{cov}(x_n, x_2) + \cdots + \text{cov}(x_n, x_n)] \\
+&= \frac{1}{n^2} [n\gamma_0 + 2(n-1)\gamma_1 + 2(n-2)\gamma_1 + 2(n-2)\gamma_2 + \dots] \\
+&= \frac{1}{n} \left[2\sum_{k=1}^n \gamma_k\left(1-\frac{k}{n}\right) + \gamma_0 \right].
+\end{aligned}
+$$
+
+The argument for the $iid$ does not work with the presence of serial
+correlations. If we assume absolute summability,
+$\sum_{j=-\infty}^{\infty} |\gamma_j| <\infty$, then
+
+$$
+\lim_{n\to\infty} \frac{1}{n} \left[2\sum_{k=1}^n \gamma_k\left(1-\frac{k}{n}\right) + \gamma_0 \right] =0.
+$$
+
+In this case, we still have the LLN holds. Otherwise, as the variance
+may not converge. Remember @thm-ergodic, absolute summability implies
+the series is ergodic.
+
+::: {#prp-lln2}
+If $x_t$ is a covariance stationary time series with absolutely summable
+auto-covariances, then a Law of Large Numbers holds.
+:::
+
+From the new proof of LLN one can guess that the variance in a Central
+Limit Theorem should also change. The serially correlated $x_t$, the
+liming variance is given by
+
+$$
+\begin{aligned}
+\text{var}\left(\frac{1}{\sqrt n}\sum_{i=1}^{n}x_i\right) 
+&= 2\sum_{k=1}^n \gamma_k\left(1-\frac{k}{n}\right) + \gamma_0 \\
+&\to 2\sum_{k=1}^{\infty} \gamma_k + \gamma_0 = \sum_{k=-\infty}^{\infty}\gamma_k = S.
+\end{aligned}
+$$
+
+We call $S$ the *long-run variance*. There are many CLTs for serially
+correlated observations. We give the two mostly commonly cited versions:
+one applies to MA($\infty$) processes, the other one is more general.
+
+::: {#thm-clt2}
+Let $y_t$ be an MA process:
+$y_t = \mu + \sum_{j=0}^\infty c_j\epsilon_{t-j}$ where $\epsilon_t$ is
+independent white noise and $\sum_{j=0}^{\infty} |c_j|<\infty$ (this
+implies ergodic), then
+
+$$
+\sqrt{T} \bar y_t \overset{d}\to N(0, S),
+$$
+
+where $S = \sum_{k=-\infty}^{\infty}\gamma_k$ is the long-run variance.
+:::
+
+::: {#thm-clt3}
+## Gordin's CLT
+
+Assume we have a strictly stationary and ergodic series $\{y_t\}$ with
+$\mathbb{E}(y_t^2) <\infty$ satisfying:
+$\sum_j\{\mathbb{E}[\mathbb{E}[y_t|I_{t-j}]-\mathbb{E}[y_t|I_{t-j-1}]]^2\}^{1/2} <\infty$
+and $\mathbb{E}[y_t|I_{t-j}]\to 0$ as $j\to\infty$, then
+
+$$
+\sqrt{T} \bar y_t \overset{d}\to N(0, S),
+$$
+
+where $S = \sum_{k=-\infty}^{\infty}\gamma_k$ is the long-run variance.
+:::
+
+The Gordin's conditions are intended to make the dependence between
+distant observations to decrease to 0. ARMA process is a special case of
+Gordin series. The essence of these theorems is that we need some
+restrictions on dependencies for LLN and CLT to hold. We allow serial
+correlations as long as they are not too strong. If the observations
+become almost independent as they are far away in time, the can still
+apply the asymptotic theorems.

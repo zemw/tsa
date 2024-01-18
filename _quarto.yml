@@ -23,6 +23,7 @@ book:
     - part: "Time Series Regression"
       chapters: 
         - ols.qmd
+        - ols2.qmd
     - summary.qmd
     - references.qmd
 
