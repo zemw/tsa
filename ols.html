@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time Series Analysis for Economists - 5&nbsp; Model vs Spec</title>
+<title>Time Series Analysis for Economists - 10&nbsp; Preliminaries</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./ar.html" rel="next">
-<link href="./stationary.html" rel="prev">
+<link href="./ols2.html" rel="next">
+<link href="./wold.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model vs Spec</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Preliminaries</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -139,7 +139,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./models.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model vs Spec</span></a>
+  <a href="./models.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model vs Spec</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -174,7 +174,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ols.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Preliminaries</span></a>
+  <a href="./ols.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Preliminaries</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -203,8 +203,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#classification" id="toc-classification" class="nav-link active" data-scroll-target="#classification"><span class="toc-section-number">5.1</span>  Classification</a></li>
-  <li><a href="#model-vs-spec" id="toc-model-vs-spec" class="nav-link" data-scroll-target="#model-vs-spec"><span class="toc-section-number">5.2</span>  Model vs Spec</a></li>
+  <li><a href="#chapter-overview" id="toc-chapter-overview" class="nav-link active" data-scroll-target="#chapter-overview"><span class="toc-section-number">10.1</span>  Chapter Overview</a></li>
+  <li><a href="#asymptotic-theorems-for-i.i.d-random-variables" id="toc-asymptotic-theorems-for-i.i.d-random-variables" class="nav-link" data-scroll-target="#asymptotic-theorems-for-i.i.d-random-variables"><span class="toc-section-number">10.2</span>  Asymptotic Theorems for i.i.d Random Variables</a></li>
+  <li><a href="#ols-for-i.i.d-random-variables" id="toc-ols-for-i.i.d-random-variables" class="nav-link" data-scroll-target="#ols-for-i.i.d-random-variables"><span class="toc-section-number">10.3</span>  OLS for i.i.d Random Variables</a></li>
   </ul>
 </nav>
     </div>
@@ -213,7 +214,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model vs Spec</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Preliminaries</span></h1>
 </div>
 
 
@@ -228,50 +229,91 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="classification" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="classification"><span class="header-section-number">5.1</span> Classification</h2>
-<p>Time series models can be broadly sorted into four categories based on whether we are dealing with stationary or non-stationary time series, or whether the model involves only one variable or multiple variables.</p>
-<table class="table">
-<caption>Time series model classification</caption>
-<thead>
-<tr class="header">
-<th></th>
-<th>Stationary</th>
-<th>Nonstationary</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Univariate</strong></td>
-<td>ARMA</td>
-<td>Unit root</td>
-</tr>
-<tr class="even">
-<td><strong>Multivariate</strong></td>
-<td>VAR</td>
-<td>Cointegration</td>
-</tr>
-</tbody>
-</table>
+<section id="chapter-overview" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="chapter-overview"><span class="header-section-number">10.1</span> Chapter Overview</h2>
+<p>This chapter serves two purposes. One is to introduce the techniques for estimating time series models. The other is to explain the concept of dynamic causal effect. We join the two topics in one chapter because both of them can be done via a regression framework. Maximum likelihood estimation plays a pivotal role in estimating time series models. Nonetheless, starting with OLS always make things easier. We start with a quick review of the basic OLS concepts that are familiar to any students in econometrics, that is the regressions applied to cross-sectional <span class="math inline">\(iid\)</span> observations. We then extend it to time series data. We will see it is not as straightforward as one might expect, as intertemporal dependencies between observation need additional treatment. In the second half of the chapter, we will explain the concept of dynamic causal effect, that is the causal effect of an intervention on outcome variables. Similar to cross-sectional studies, we need to define the causal effect relative to counterfactuals. With time series data, the counterfactuals have to be defined across time rather across individuals.</p>
 </section>
-<section id="model-vs-spec" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="model-vs-spec"><span class="header-section-number">5.2</span> Model vs Spec</h2>
-<p>We use the word “model” rather loosely in economics and econometrics. Anything that deals with the quantified relationships between variables can be called a model. A general equilibrium model is a model. A regression is also a model.</p>
-<p>To make things less confusing, we would use the word “model” more restrictively in this chapter. We reserve the word <strong>model</strong> to those representing the <strong>data generating processes</strong> (DGPs). That is, when we write down a model in an equation, we literally mean it. If we say <span class="math inline">\(y_t\)</span> follows an AR(1) model:</p>
+<section id="asymptotic-theorems-for-i.i.d-random-variables" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="asymptotic-theorems-for-i.i.d-random-variables"><span class="header-section-number">10.2</span> Asymptotic Theorems for i.i.d Random Variables</h2>
+<div id="thm-lln" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 10.1 (Law of Large Numbers) </strong></span>Let <span class="math inline">\(\{x_i\}\)</span> be <span class="math inline">\(iid\)</span> random variables with <span class="math inline">\(\mathbb{E}(x_i)=\mu\)</span> and <span class="math inline">\(\text{Var}(x_i)=\sigma^2&lt;\infty\)</span>. Define <span class="math inline">\(\bar{x}_n = \frac{1}{n}\sum_{i=1}^n x_i\)</span>. Then <span class="math inline">\(\bar{x}_n \overset{p}{\to} \mu\)</span> as <span class="math inline">\(n \to \infty\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em>. </span>We will give an non-rigorous proof, but nonetheless shows the tenets. It is easy to see <span class="math inline">\(\mathbb{E}(\bar{x}_n) = \mu\)</span>. Consider the variance,</p>
+<p><span class="math display">\[
+\text{Var}(\bar x_n) = \text{Var}\left(\frac{1}{n}\sum_{i=1}^n x_i\right) \overset{iid}= \frac{1}{n^2}\sum_{i=1}^n\text{Var}(x_i) = \frac{\sigma^2}{n}\to 0.
+\]</span></p>
+<p>That is <span class="math inline">\(\bar x_n\)</span> converges to <span class="math inline">\(\mu\)</span> with probability 1 as <span class="math inline">\(n\to\infty\)</span>. Note that we can move the variance inside the summation operator because <span class="math inline">\(x_i\)</span> are <span class="math inline">\(iid\)</span>, in which all the covariance terms are 0.</p>
+</div>
+<div id="thm-clt" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 10.2 (Central Limit Theorem) </strong></span>Let <span class="math inline">\(\{x_i\}\)</span> be <span class="math inline">\(iid\)</span> random variables with <span class="math inline">\(\mathbb{E}(x_i)=\mu\)</span> and <span class="math inline">\(\text{Var}(x_i)=\sigma^2&lt;\infty\)</span>. Define <span class="math inline">\(\bar{x}_n = \frac{1}{n}\sum_{i=1}^n x_i\)</span>. Then</p>
+<p><span class="math display">\[
+\frac{\bar x_n - \mu}{\sigma/\sqrt{n}} \overset{d}\to N(0,1).
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em>. </span>Without loss of generality, assume <span class="math inline">\(x_i\)</span> is demeaned and standardized to have standard deviation 1. It remains to show <span class="math inline">\(\sqrt{n} \bar x_n \to N(0,1)\)</span>. Define the moment generating function (MGF) for <span class="math inline">\(\sqrt{n}\bar x_n\)</span>:</p>
+<p><span class="math display">\[M_{\sqrt{n}\bar x_n}(t) =\mathbb{E}[e^{(\sqrt{n}^{-1}\sum_{i=1}^n x_i)t}] \overset{iid}= \{\mathbb{E}[e^{(n^{-1/2}x_i)t}]\}^n.\]</span></p>
+<p>Evaluate the MGF for each <span class="math inline">\(x_i\)</span>:</p>
+<p><span class="math display">\[
+\mathbb{E}[e^{(n^{-1/2}x_i)t}] = 1 + \mathbb{E}(n^{-1/2}x_i)t + \mathbb{E}(n^{-1}x_i^2)t^2 + \cdots =1 + \frac{t^2}{2n} + o(n^{-1}).
+\]</span></p>
+<p>Substituting back,</p>
+<p><span class="math display">\[
+M_{\sqrt{n}\bar x_n}(t) = \left[1 + \frac{t^2}{2n} + o(n^{-1})\right]^n = \left[\left(1 + \frac{t^2}{2n} \right)^{\frac{2n}{t^2}}\right]^{\frac{t^2}{2}}\to e^{\frac{t^2}{2}}.
+\]</span></p>
+<p>Note that we drop the <span class="math inline">\(o(n^{-1})\)</span> because it converges faster than <span class="math inline">\(\frac{1}{n}\)</span>. <span class="math inline">\(e^{\frac{t^2}{2}}\)</span> is the MGF for standard normal distribution. Hence, the theorem is proved.</p>
+</div>
+</section>
+<section id="ols-for-i.i.d-random-variables" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="ols-for-i.i.d-random-variables"><span class="header-section-number">10.3</span> OLS for i.i.d Random Variables</h2>
+<p>We now give a very quick review of OLS with <span class="math inline">\(iid\)</span> random variables. These materials are assumed familiar to the readers. We do not intend to introduce them in any detail. This section is a quick snapshot of some key concepts, so that we could contrast them with the time series regression introduced in the next section.</p>
+<p>A linear regression model postulates the joint distribution of <span class="math inline">\((y_i, \mathbf{x_i})\)</span> follows a linear relationship,</p>
+<p><span class="math display">\[
+y_i = \mathbf{x_i}'\mathbf{\beta} + \epsilon_i.
+\]</span></p>
+<p>Expressed in terms of data matrix,</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+y_1\\y_2\\\vdots\\y_n
+\end{bmatrix} =
+\begin{bmatrix}
+x_{11}, x_{12}, \dots, x_{1p}\\
+x_{21}, x_{22}, \dots, x_{2p}\\
+\ddots \\
+x_{n1}, x_{n2}, \dots, x_{np}\\
+\end{bmatrix}'
+\begin{bmatrix}
+\beta_1\\\beta_2\\\vdots\\\beta_p
+\end{bmatrix} +
+\begin{bmatrix}
+\epsilon_1\\\epsilon_2\\\vdots\\\epsilon_n
+\end{bmatrix}.
+\]</span></p>
+<p>From the perspective of dataset, the matrix matrix is fixed in the sense that they are just numbers in the dataset. But for statistical analysis, we view each entry in the matrix as random, that is as a realization of a random process.</p>
+<p>To estimate the parameter <span class="math inline">\(\mathbf{\beta}\)</span> from sample data, OLS seeks to minimize the squared residuals</p>
+<p><span class="math display">\[
+\min_{\beta} \sum_{i=1}^{n}(y_i - \mathbf{x_i'\beta})^2.
+\]</span></p>
+<p>The first-order condition implies,</p>
 <p><span class="math display">\[
 \begin{aligned}
-y_t &amp;= \phi y_{t-1} + \epsilon_t,\\
-\epsilon_t &amp;\sim N(0,\sigma^2).
+&amp;\sum_i \mathbf{x_i}(y_i - \mathbf{x_i'\beta}) =0, \\
+&amp;\sum_i \mathbf{x_i}y_i - \sum_i \mathbf{x_i x_i'\beta}=0, \\
+&amp;\mathbf{\hat\beta}= \left(\sum_i\mathbf{x_i x_i'}\right)^{-1} \left(\sum_i\mathbf{x_i}y_i\right) \\
+&amp;= \beta + \left(\sum_i\mathbf{x_i x_i'}\right)^{-1} \left(\sum_i\mathbf{x_i}\epsilon_i\right).
 \end{aligned}
 \]</span></p>
-<p>We literally mean <span class="math inline">\(y_t\)</span> is determined by its previous value and an contemporary innovation drawn from a Gaussian distribution.</p>
-<p>A model is distinguished from a <strong>specification</strong>. Suppose <span class="math inline">\(\{y_t\}\)</span> represent the GDP series, we can estimate a regression:</p>
+<p>Under the Gauss-Markov assumptions, particularly <span class="math inline">\(\mathbb{E}(\epsilon_i|\mathbf{x_j})=0\)</span> and <span class="math inline">\(\text{var}(\mathbf{\epsilon}|\mathbf{X})=\sigma^2\mathbf{I}\)</span> (homoskedasticity and nonautocorrelation), the OLS estimator is <strong>BLUE</strong> (Best Linear Unbiased Estimator).</p>
+<p>Under the assumption of <span class="math inline">\(iid\)</span> random variables and homoskedasticity, we invoke the LLN and CLT to derive the asymptotic distribution for the OLS estimator,</p>
 <p><span class="math display">\[
-y_t = \phi y_{t-1} + e_t
+\begin{aligned}
+\sqrt{n}(\mathbf{\hat\beta}-\mathbf{\beta}) &amp;= \left(\frac{1}{n}\sum_i\mathbf{x_i x_i'}\right)^{-1} \left(\sqrt{n}\frac{1}{n}\sum_i\mathbf{x_i}\epsilon_i\right) \\[1em]
+&amp;\to [\mathbb{E}(\mathbf{x_i x_i'})]^{-1} \text{N}(0, \mathbb{E}(\mathbf{x_i}\epsilon_i\epsilon_i'\mathbf{x_i}')) \\[1em]
+&amp;\to \text{N}(0, \sigma^2[\mathbb{E}(\mathbf{x_i x_i'})]^{-1}).
+\end{aligned}
 \]</span></p>
-<p>This is a specification not a model. Because the DGP of GDP data is unknown, definitely not an AR(1). We can nontheless fit this spec with the data and get an estimated <span class="math inline">\(\hat\phi\)</span>. If <span class="math inline">\(e_t\)</span> satisfies some nice properties, for example, uncorrelated with the regressor, then we know this <span class="math inline">\(\hat\phi\)</span> is consistent.</p>
-<p>When we run regressions with real-life data, we are actually working with specifications. They are not the DGPs of the random variables. But they allow us to recover some useful information from the data when certain assumptions are met. Mostly we are interested in the relationships between variables. A specification describes this relationship, even though it does not describe the full DGP.</p>
-<p>This chapter deals with models in the abstract sense. The next chapter will discuss how to fit a model or a spec with real data.</p>
+<p>Note how the <span class="math inline">\(iid\)</span> assumption is required throughout the process. The following section will show how to extend the OLS to non-<span class="math inline">\(iid\)</span> random variables and how it leads to modification of the results.</p>
 
 
 </section>
@@ -412,13 +454,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./stationary.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stationarity</span></span>
+      <a href="./wold.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Wold Theorem</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./ar.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">AR Models</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./ols2.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time Series Analysis for Economists - 2&nbsp; Decomposition</title>
+<title>Time Series Analysis for Economists - 11&nbsp; OLS for Time Series</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -93,8 +93,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./autocov.html" rel="next">
-<link href="./basics.html" rel="prev">
+<link href="./summary.html" rel="next">
+<link href="./ols.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -134,7 +134,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decomposition</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -177,7 +177,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./decomp.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decomposition</span></a>
+  <a href="./decomp.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decomposition</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -242,7 +242,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ols2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></a>
+  <a href="./ols2.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></a>
   </div>
 </li>
       </ul>
@@ -266,10 +266,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#time-series-components" id="toc-time-series-components" class="nav-link active" data-scroll-target="#time-series-components"><span class="toc-section-number">2.1</span>  Time Series Components</a></li>
-  <li><a href="#moving-averages" id="toc-moving-averages" class="nav-link" data-scroll-target="#moving-averages"><span class="toc-section-number">2.2</span>  Moving Averages</a></li>
-  <li><a href="#classical-decomposition" id="toc-classical-decomposition" class="nav-link" data-scroll-target="#classical-decomposition"><span class="toc-section-number">2.3</span>  Classical Decomposition</a></li>
-  <li><a href="#seasonal-adjustment" id="toc-seasonal-adjustment" class="nav-link" data-scroll-target="#seasonal-adjustment"><span class="toc-section-number">2.4</span>  Seasonal Adjustment</a></li>
+  <li><a href="#asymptotic-theorems-for-dependent-random-variables" id="toc-asymptotic-theorems-for-dependent-random-variables" class="nav-link active" data-scroll-target="#asymptotic-theorems-for-dependent-random-variables"><span class="toc-section-number">11.1</span>  Asymptotic Theorems for Dependent Random Variables</a></li>
+  <li><a href="#ols-for-time-series" id="toc-ols-for-time-series" class="nav-link" data-scroll-target="#ols-for-time-series"><span class="toc-section-number">11.2</span>  OLS for Time Series</a></li>
+  <li><a href="#hac-standard-errors" id="toc-hac-standard-errors" class="nav-link" data-scroll-target="#hac-standard-errors"><span class="toc-section-number">11.3</span>  HAC Standard Errors</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"><span class="toc-section-number">11.4</span>  Example</a></li>
   </ul>
 </nav>
     </div>
@@ -278,7 +278,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decomposition</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></h1>
 </div>
 
 
@@ -293,95 +293,119 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="time-series-components" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="time-series-components"><span class="header-section-number">2.1</span> Time Series Components</h2>
-<p>It is helpful to think about a time series as composed of different components: a trend component, a seasonal component, and a remainder.</p>
-<p><span class="math display">\[x_t = T_t + S_t + R_t.\]</span></p>
-<p>The formula assumes the “additive” composition. This assumption is appropriate if the magnitude of the fluctuations does not vary with the absolute levels of the time series. If the magnitude of fluctuations is proportional to the absolute levels, a “multiplicative” decomposition is more appropriate:</p>
-<p><span class="math display">\[
-x_t = T_t \times S_t \times R_t.
-\]</span></p>
-<p>Note that a multiplicative decomposition of a time series is equivalent to an additive decomposition on its log levels:</p>
-<p><span class="math display">\[
-\ln x_t = \ln T_t + \ln S_t + \ln R_t.
-\]</span></p>
-<p>Decomposing a time series allows us to extract information that is not obvious from the original time series. It also allows us to manipulate the time series. For example, if the seasonal component can be estimated, we can remove it to obtain seasonally-adjusted series, <span class="math inline">\(x_t^{SA} = x_t - S_t\)</span>, or <span class="math inline">\(x_t^{SA} = x_t/S_t\)</span>. The question is how to estimate the components given a time series.</p>
-</section>
-<section id="moving-averages" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="moving-averages"><span class="header-section-number">2.2</span> Moving Averages</h2>
-<p>Moving averages turn out to be handy in estiming trend-cycles by averaging out noisy fluctuations. A moving average of order <span class="math inline">\(m\)</span> (assuming <span class="math inline">\(m\)</span> is an odd number) is defined as</p>
-<p><span class="math display">\[
-\text{MA}(x_t,m) = \frac{1}{m}\sum_{j=-k}^{k} x_{t+j},
-\]</span></p>
-<p>where <span class="math inline">\(m=2k + 1\)</span>. For example, a moving average of order <span class="math inline">\(3\)</span> is</p>
-<p><span class="math display">\[
-\text{MA}(x_t, 3) = \frac{1}{3}(x_{t-1} + x_t + x_{t+1}).
-\]</span></p>
-<p>Note that <span class="math inline">\(x_t\)</span> is centered right in the middle and the average is symmetric. This also means, if we apply this formula to real data, the first and last observation will have to be discarded. If the order <span class="math inline">\(m\)</span> is an even number, the formula will no longer be symmetric. To overcome this, we can estimate a moving average over another moving average. For example, we can estimate a moving average of order <span class="math inline">\(4\)</span>, followed by a moving average of order <span class="math inline">\(2\)</span>. This is denoted as <span class="math inline">\(2 \times 4\)</span>-MA. Mathematically,</p>
+<section id="asymptotic-theorems-for-dependent-random-variables" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="asymptotic-theorems-for-dependent-random-variables"><span class="header-section-number">11.1</span> Asymptotic Theorems for Dependent Random Variables</h2>
+<p>The asymptotic theorems and regressions that work for <span class="math inline">\(iid\)</span> random variable do not immediately apply to time series. Consider the proof for <a href="ols.html#thm-lln">Theorem&nbsp;<span>10.1</span></a>, without the <span class="math inline">\(iid\)</span> assumption we have</p>
 <p><span class="math display">\[
 \begin{aligned}
-\text{MA}(x_t, 2 \times 4) &amp;= \frac{1}{2}[\text{MA}(x_{t-1}, 4) + \text{MA}(x_t, 4)] \\
-&amp;= \frac{1}{2}\left[\frac{1}{4}(x_{t-2} + x_{t-1} + x_t + x_{t+1}) + \frac{1}{4}(x_{t-1} + x_t + x_{t+1} + x_{t+2})\right] \\
-&amp;= \frac{1}{8}x_{t-2} + \frac{1}{4}x_{t-1} + \frac{1}{4}x_{t} + \frac{1}{4}x_{t+1} + \frac{1}{8}x_{t+2}.
+\text{var}\left(\frac{1}{n}\sum_{i=1}^{n}x_i\right)
+&amp;= \frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^n \text{cov}(x_i, x_j) \\
+&amp;= \frac{1}{n^2}[\text{cov}(x_1, x_1) + \text{cov}(x_1, x_2) + \cdots + \text{cov}(x_1, x_n)+ \\
+&amp;\hspace{3em} \text{cov}(x_2, x_1) + \text{cov}(x_2, x_2) + \cdots + \text{cov}(x_2, x_n)+ \\
+&amp;\hspace{3em}\vdots\\
+&amp;\hspace{3em} \text{cov}(x_n, x_1) + \text{cov}(x_n, x_2) + \cdots + \text{cov}(x_n, x_n)] \\
+&amp;= \frac{1}{n^2} [n\gamma_0 + 2(n-1)\gamma_1 + 2(n-2)\gamma_1 + 2(n-2)\gamma_2 + \dots] \\
+&amp;= \frac{1}{n} \left[2\sum_{k=1}^n \gamma_k\left(1-\frac{k}{n}\right) + \gamma_0 \right].
 \end{aligned}
 \]</span></p>
-<p>Note that how the <span class="math inline">\(2\times4\)</span>-MA averages out the seasonality for time series with seasonal period <span class="math inline">\(4\)</span>, e.g.&nbsp;quarterly series. The formula puts equal weight on every quarter — the first and last terms refer the same quarter and their weights combined to <span class="math inline">\(\frac{1}{4}\)</span>.</p>
-<p>In general, we can use <span class="math inline">\(m\)</span>-MA to estimate the trend if the seasonal period is an odd number, and use <span class="math inline">\(2\times m\)</span>-MA if the seasonal period is an even number.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">readRDS</span>(<span class="st">"data/gdp.Rds"</span>)  <span class="co"># a `zoo` object</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gdp2x4MA <span class="ot">=</span> <span class="fu">ma</span>(<span class="fu">ma</span>(data<span class="sc">$</span>GDP,<span class="dv">4</span>),<span class="dv">2</span>) <span class="co"># from `forecast` package</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(<span class="fu">cbind</span>(data<span class="sc">$</span>GDP, gdp2x4MA), <span class="at">col=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div id="fig-gdpma" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="decomp_files/figure-html/fig-gdpma-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.1: Quarterly GDP with 2x4-MA estimate of the trend-cycle</figcaption><p></p>
-</figure>
+<p>The argument for the <span class="math inline">\(iid\)</span> does not work with the presence of serial correlations. If we assume absolute summability, <span class="math inline">\(\sum_{j=-\infty}^{\infty} |\gamma_j| &lt;\infty\)</span>, then</p>
+<p><span class="math display">\[
+\lim_{n\to\infty} \frac{1}{n} \left[2\sum_{k=1}^n \gamma_k\left(1-\frac{k}{n}\right) + \gamma_0 \right] =0.
+\]</span></p>
+<p>In this case, we still have the LLN holds. Otherwise, as the variance may not converge. Remember <a href="stationary.html#thm-ergodic">Theorem&nbsp;<span>4.1</span></a>, absolute summability implies the series is ergodic.</p>
+<div id="prp-lln2" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 11.1 </strong></span>If <span class="math inline">\(x_t\)</span> is a covariance stationary time series with absolutely summable auto-covariances, then a Law of Large Numbers holds.</p>
 </div>
+<p>From the new proof of LLN one can guess that the variance in a Central Limit Theorem should also change. The serially correlated <span class="math inline">\(x_t\)</span>, the liming variance is given by</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{var}\left(\frac{1}{\sqrt n}\sum_{i=1}^{n}x_i\right)
+&amp;= 2\sum_{k=1}^n \gamma_k\left(1-\frac{k}{n}\right) + \gamma_0 \\
+&amp;\to 2\sum_{k=1}^{\infty} \gamma_k + \gamma_0 = \sum_{k=-\infty}^{\infty}\gamma_k = S.
+\end{aligned}
+\]</span></p>
+<p>We call <span class="math inline">\(S\)</span> the <em>long-run variance</em>. There are many CLTs for serially correlated observations. We give the two mostly commonly cited versions: one applies to MA(<span class="math inline">\(\infty\)</span>) processes, the other one is more general.</p>
+<div id="thm-clt2" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 11.1 </strong></span>Let <span class="math inline">\(y_t\)</span> be an MA process: <span class="math inline">\(y_t = \mu + \sum_{j=0}^\infty c_j\epsilon_{t-j}\)</span> where <span class="math inline">\(\epsilon_t\)</span> is independent white noise and <span class="math inline">\(\sum_{j=0}^{\infty} |c_j|&lt;\infty\)</span> (this implies ergodic), then</p>
+<p><span class="math display">\[
+\sqrt{T} \bar y_t \overset{d}\to N(0, S),
+\]</span></p>
+<p>where <span class="math inline">\(S = \sum_{k=-\infty}^{\infty}\gamma_k\)</span> is the long-run variance.</p>
 </div>
+<div id="thm-clt3" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 11.2 (Gordin’s CLT) </strong></span>Assume we have a strictly stationary and ergodic series <span class="math inline">\(\{y_t\}\)</span> with <span class="math inline">\(\mathbb{E}(y_t^2) &lt;\infty\)</span> satisfying: <span class="math inline">\(\sum_j\{\mathbb{E}[\mathbb{E}[y_t|I_{t-j}]-\mathbb{E}[y_t|I_{t-j-1}]]^2\}^{1/2} &lt;\infty\)</span> and <span class="math inline">\(\mathbb{E}[y_t|I_{t-j}]\to 0\)</span> as <span class="math inline">\(j\to\infty\)</span>, then</p>
+<p><span class="math display">\[
+\sqrt{T} \bar y_t \overset{d}\to N(0, S),
+\]</span></p>
+<p>where <span class="math inline">\(S = \sum_{k=-\infty}^{\infty}\gamma_k\)</span> is the long-run variance.</p>
 </div>
+<p>The Gordin’s conditions are intended to make the dependence between distant observations to decrease to 0. ARMA process is a special case of Gordin series. The essence of these theorems is that we need some restrictions on dependencies for LLN and CLT to hold. We allow serial correlations as long as they are not too strong. If the observations become almost independent as they are far away in time, the can still apply the asymptotic theorems.</p>
 </section>
-<section id="classical-decomposition" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="classical-decomposition"><span class="header-section-number">2.3</span> Classical Decomposition</h2>
-<p>Moving averages give us everything we need to perform classical decomposition. Classical decomposition, invented 1920s, is the simplest method decompose a time series into trend, seasonality and remainder. It is outdated nowadays and has been replaced by more advanced algorithms. Nonetheless, it serves as a good example for introductory purpose on how time series decomposition could possibly be achieved.</p>
-<p>The algorithm for additive decomposition is as follows.</p>
-<ol type="1">
-<li>Estimate the trend component <span class="math inline">\(T_t\)</span> by applying moving averages. If the seasonal period is an odd number, apply the <span class="math inline">\(m\)</span>-th order MA. If the seasonal period is even, apply the <span class="math inline">\(2\times m\)</span> MA.</li>
-<li>Calculate the detrended series <span class="math inline">\(x_t - T_t\)</span>.</li>
-<li>Calculate the seasonal component <span class="math inline">\(S_t\)</span> by averaging all the detrended values of the season. For example, for quarterly series, the value of <span class="math inline">\(S_t\)</span> for Q1 would be the average of all values in Q1. This assumes the seasonal component is constant over time. <span class="math inline">\(S_t\)</span> is then adjusted to ensure all values summed up to zero.</li>
-<li>Subtracting the seasonal component to get the remainder <span class="math inline">\(R_t = x_t-T_t-S_t\)</span>.</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(data<span class="sc">$</span>GDP) <span class="sc">|&gt;</span> <span class="fu">decompose</span>() <span class="sc">|&gt;</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div id="fig-gdpdecomp" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="decomp_files/figure-html/fig-gdpdecomp-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.2: Classical multiplicative decomposition of quarterly GDP</figcaption><p></p>
-</figure>
+<section id="ols-for-time-series" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="ols-for-time-series"><span class="header-section-number">11.2</span> OLS for Time Series</h2>
+<div id="def-exog" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 11.1 </strong></span>Given a time series regression model</p>
+<p><span class="math display">\[y_t = x_t'\beta + \epsilon_t, \]</span></p>
+<p><span class="math inline">\(x_t\)</span> is <strong>weakly exogenous</strong> if</p>
+<p><span class="math display">\[ \mathbb{E}(\epsilon_t | x_t, x_{t-1}, ...) = 0;\]</span></p>
+<p><span class="math inline">\(x_t\)</span> is <strong>strictly exogenous</strong> if</p>
+<p><span class="math display">\[ \mathbb{E}(\epsilon_t | \{x_t\}_{t=-\infty}^{\infty}) = 0. \]</span></p>
 </div>
-</div>
-</div>
-<p>The example performs additive decomposition to the logged quarterly GDP series. Note how the constant seasonal component is removed, leaving the smooth and nice-looking up-growing trend. The remainder component tells us the irregular ups and downs of the economy around the trend-cycle. Isn’t it amazing that a simple decomposition of the time series tells us a lot about the economy?</p>
+<p>Strictly exogeneity requires innovations being exogenous from all past and future regressors; while weakly exogeneity only requires being exogenous from past regressors. In practice, strict exogeneity is too strong as an assumption. The weak exogenous is more practical and it is enough to ensure the consistency of the OLS estimator.</p>
+<p>The OLS estimator is as usual:</p>
+<p><span class="math display">\[\hat\beta = \beta + \left(\frac{1}{n}\sum_t x_t x_t'\right)^{-1} \left(\frac{1}{n}\sum_t x_t\epsilon_t\right).\]</span></p>
+<p>Assuming LLN holds and <span class="math inline">\(x_t\)</span> is weakly exogenous, we have</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{1}{n}\sum_t x_t x_t' &amp;\to \mathbb{E}(x_t x_t') = Q,\\
+\frac{1}{n}\sum_t x_t\epsilon_t &amp;\to \mathbb{E}(x_t\epsilon_t) = \mathbb{E}[x_t\mathbb{E}[\epsilon_t|x_t]] = 0.
+\end{aligned}
+\]</span></p>
+<p>Therefore, <span class="math inline">\(\hat\beta \to \beta\)</span>. The OLS estimator is <em>consistent</em>.</p>
+<p>Assuming the Gordin’s conditions hold for <span class="math inline">\(z_t=x_t\epsilon_t\)</span>, the CLT gives</p>
+<p><span class="math display">\[
+\frac{1}{\sqrt n}\sum_t x_t\epsilon_t \to N(0,S),
+\]</span></p>
+<p>where <span class="math inline">\(S = \sum_{-\infty}^{\infty}\gamma_j\)</span> is the long-run variance for <span class="math inline">\(z_t\)</span>. Thus, we have the asymptotic normality for the OLS estimator</p>
+<p><span class="math display">\[
+\sqrt{T}(\hat\beta - \beta) \to N(0,Q^{-1}SQ^{-1}).
+\]</span></p>
+<p>Note how the covariance matrix <span class="math inline">\(S\)</span> is different from the one in the <span class="math inline">\(iid\)</span> case where <span class="math inline">\(S=\sigma^2\mathbb{E}(x_ix_i')\)</span>. The long-run variance <span class="math inline">\(S\)</span> takes into account the auto-dependencies between observations. The auto-dependencies usually arise from the serially correlated error terms. It may also arise from <span class="math inline">\(x_t\)</span> being autocorrelated and from conditional heteroskedasticity of the error terms. Because of the auto-covariance structure, <span class="math inline">\(S\)</span> cannot be estimated in the same way as in the <span class="math inline">\(iid\)</span> case. The estimator for <span class="math inline">\(S\)</span> is called HAC (heteroskedasticity autocorrelation consistent) standard errors.</p>
 </section>
-<section id="seasonal-adjustment" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="seasonal-adjustment"><span class="header-section-number">2.4</span> Seasonal Adjustment</h2>
-<p>By decomposing a time series into trend, seasonality and remainder, it readily gives us a method for seasonal adjustment. Simply subtracting the seasonal component from the original data, or equivalently, summing up the trend and the remainder components, would give us the seasonally-adjusted series.</p>
-<p>The following example compares the seasonally-adjusted series using the classical decomposition with the state-of-the-art <a href="https://www.census.gov/data/software/x13as.html">X-13ARIMA-SEATS</a> algorithm. Despite the former is far more rudimentary than the latter, they look quite close if we simply eye-balling the plot. By taking first-order differences, we can see the series based on classical decomposition is more volatile, suggesting the classical decomposition is less robust to unusual values.</p>
-<div class="cell" data-fig.asp="0.5">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>logdata <span class="ot">=</span> <span class="fu">log</span>(data) <span class="sc">|&gt;</span> <span class="fu">window</span>(<span class="at">start=</span><span class="dv">2000</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>seasadj <span class="ot">=</span> <span class="fu">as.ts</span>(logdata<span class="sc">$</span>GDP) <span class="sc">-</span> <span class="fu">decompose</span>(logdata<span class="sc">$</span>GDP)<span class="sc">$</span>seasonal</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">mar=</span><span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">4</span>))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(<span class="fu">cbind</span>(seasadj, logdata<span class="sc">$</span>GDPSA), <span class="at">col=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(<span class="fu">diff</span>(<span class="fu">cbind</span>(seasadj, logdata<span class="sc">$</span>GDPSA)), <span class="at">col=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="decomp_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Comparing classical decomposition and X-13</figcaption><p></p>
-</figure>
-</div>
+<section id="hac-standard-errors" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="hac-standard-errors"><span class="header-section-number">11.3</span> HAC Standard Errors</h2>
+<p><span class="math inline">\(S\)</span> can be estimated with truncated autocovariances,</p>
+<p><span class="math display">\[
+\hat S = \sum_{j=-h(T)}^{h(T)} \hat\gamma_j.
+\]</span></p>
+<p><span class="math inline">\(h(T)\)</span> is a function of <span class="math inline">\(T\)</span> and <span class="math inline">\(h(T)\to\infty\)</span> as <span class="math inline">\(T\to\infty\)</span>, but more slowly. Because we don’t want to include too many imprecisely estimated covariances. Another problem is the estimated <span class="math inline">\(\hat S\)</span> might be negative. The solution is weight the covariances in a way to ensure positiveness:</p>
+<p><span class="math display">\[
+\hat S = \sum_{j=-h(T)}^{h(T)} k_T(j) \hat\gamma_j.
+\]</span></p>
+<p><span class="math inline">\(k_T(\cdot)\)</span> is called a kernel. The weights are chosen to guarantee positive-definiteness by weighting down high lag covariances. Also we need <span class="math inline">\(k_T(\cdot)\to 1\)</span> for consistency.</p>
+<p>A popular HAC estimator is the Newey-West variance estimator, in which <span class="math inline">\(h(T) = 0.75 T^{1/3}\)</span> and <span class="math inline">\(k_T(j) = \frac{h-j}{h}\)</span>, so that</p>
+<p><span class="math display">\[
+\hat S = \sum_{j=-h}^{h} \left(\frac{h-j}{h}\right)\hat\gamma_j.
+\]</span></p>
+</section>
+<section id="example" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="example"><span class="header-section-number">11.4</span> Example</h2>
+<p>Note that all of our discussions in this chapter apply only to stationary time series. Without stationarity, even the autocovariance <span class="math inline">\(\gamma_j\)</span> might not be well-defined. In the following example, we generate artificial data from an AR(2) process, and recover the parameters by regression <span class="math inline">\(y_t\)</span> on its lags.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.3</span>)), <span class="at">n =</span> <span class="dv">1000</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> <span class="fu">cbind</span>(y, <span class="fu">lag</span>(y,<span class="sc">-</span><span class="dv">1</span>), <span class="fu">lag</span>(y,<span class="sc">-</span><span class="dv">2</span>)))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(mod, <span class="at">vcov. =</span> sandwich<span class="sc">::</span><span class="fu">NeweyWest</span>(mod))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+t test of coefficients:
+
+             Estimate Std. Error t value  Pr(&gt;|t|)    
+(Intercept)  0.038217   0.031399  1.2172    0.2238    
+`lag(y, -1)` 0.518832   0.030908 16.7866 &lt; 2.2e-16 ***
+`lag(y, -2)` 0.243377   0.030645  7.9419 5.359e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 
@@ -524,13 +548,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./basics.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></span>
+      <a href="./ols.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Preliminaries</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./autocov.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ACF and PACF</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./summary.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
