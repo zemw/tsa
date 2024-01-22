@@ -91,10 +91,10 @@ key concepts, so that we could contrast them with the time series
 regression introduced in the next section.
 
 A linear regression model postulates the joint distribution of
-$(y_i, \mathbf{x_i})$ follows a linear relationship,
+$(y_i, x_i)$ follows a linear relationship,
 
 $$
-y_i = \mathbf{x_i}'\mathbf{\beta} + \epsilon_i.
+y_i = x_i'\beta + \epsilon_i.
 $$
 
 Expressed in terms of data matrix,
@@ -122,27 +122,27 @@ that they are just numbers in the dataset. But for statistical analysis,
 we view each entry in the matrix as random, that is as a realization of
 a random process.
 
-To estimate the parameter $\mathbf{\beta}$ from sample data, OLS seeks
+To estimate the parameter $\beta$ from sample data, OLS seeks
 to minimize the squared residuals
 
 $$
-\min_{\beta} \sum_{i=1}^{n}(y_i - \mathbf{x_i'\beta})^2.
+\min_{\beta} \sum_{i=1}^{n}(y_i - x_i'\beta)^2.
 $$
 
 The first-order condition implies,
 
 $$
 \begin{aligned}
-&\sum_i \mathbf{x_i}(y_i - \mathbf{x_i'\beta}) =0, \\
-&\sum_i \mathbf{x_i}y_i - \sum_i \mathbf{x_i x_i'\beta}=0, \\
-&\mathbf{\hat\beta}= \left(\sum_i\mathbf{x_i x_i'}\right)^{-1} \left(\sum_i\mathbf{x_i}y_i\right) \\
-&= \beta + \left(\sum_i\mathbf{x_i x_i'}\right)^{-1} \left(\sum_i\mathbf{x_i}\epsilon_i\right).
+&\sum_i x_i(y_i - x_i'\beta) =0, \\
+&\sum_i x_iy_i - \sum_i x_ix_i'\beta=0, \\
+&\hat\beta = \left(\sum_i x_ix_i'\right)^{-1} \left(\sum_i x_iy_i\right) \\
+&= \beta + \left(\sum_i x_ix_i'\right)^{-1} \left(\sum_i x_i\epsilon_i\right).
 \end{aligned}
 $$
 
 Under the Gauss-Markov assumptions, particularly
-$\mathbb{E}(\epsilon_i|\mathbf{x_j})=0$ and
-$\text{var}(\mathbf{\epsilon}|\mathbf{X})=\sigma^2\mathbf{I}$
+$\mathbb{E}(\epsilon_i|x_j)=0$ and
+$\text{var}(\epsilon|X)=\sigma^2 I$
 (homoskedasticity and nonautocorrelation), the OLS estimator is **BLUE**
 (Best Linear Unbiased Estimator).
 
@@ -152,9 +152,9 @@ estimator,
 
 $$
 \begin{aligned}
-\sqrt{n}(\mathbf{\hat\beta}-\mathbf{\beta}) &= \left(\frac{1}{n}\sum_i\mathbf{x_i x_i'}\right)^{-1} \left(\sqrt{n}\frac{1}{n}\sum_i\mathbf{x_i}\epsilon_i\right) \\[1em]
-&\to [\mathbb{E}(\mathbf{x_i x_i'})]^{-1} \text{N}(0, \mathbb{E}(\mathbf{x_i}\epsilon_i\epsilon_i'\mathbf{x_i}')) \\[1em]
-&\to \text{N}(0, \sigma^2[\mathbb{E}(\mathbf{x_i x_i'})]^{-1}).
+\sqrt{n}(\hat\beta-\beta) &= \left(\frac{1}{n}\sum_i x_ix_i'\right)^{-1} \left(\sqrt{n}\frac{1}{n}\sum_i x_i\epsilon_i\right) \\[1em]
+&\to [\mathbb{E}(x_ix_i')]^{-1} \text{N}(0, \mathbb{E}(x_i\epsilon_i\epsilon_i'x_i')) \\[1em]
+&\to \text{N}(0, \sigma^2[\mathbb{E}(x_ix_i')]^{-1}).
 \end{aligned}
 $$
 
