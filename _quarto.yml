@@ -25,6 +25,7 @@ book:
         - ols.qmd
         - ols2.qmd
         - mle.qmd
+        - forecast.qmd
     - summary.qmd
     - references.qmd
 
