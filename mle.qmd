@@ -1,0 +1,77 @@
+# MLE for ARMA Models
+
+OLS can only be used to estimate AR models, but not MA models. MA models or ARMA models in general can be estimated using maximum likelihood approach. Maximum likelihood estimation (MLE) starts with an assumed distribution of the random variables. The parameters are chosen to maximize the likelihood of observing the data under the distribution.
+
+Consider an ARMA($p$, $q$) model
+
+$$
+y_t = \phi_1 y_{t-1} +\dots + \phi_p y_{t-p} + u_t + \theta_1 u_{t-1} + \dots + \theta_q u_{t-q}
+$$
+
+Write in the form of data matrix:
+
+$$
+\begin{bmatrix}
+y_1 \\ y_2 \\ y_3 \\ \vdots \\y_T
+\end{bmatrix}=
+\underbrace{
+\begin{bmatrix}
+y_0 & y_{-1} & \dots & y_{1-p} \\
+y_1 & y_{0} & \dots & y_{2-p} \\
+y_2 & y_{1} & \dots & y_{3-p} \\
+\vdots & \vdots & \ddots & \vdots \\
+y_T & y_{T-1} & \dots & y_{T-p} \\
+\end{bmatrix}
+}_{\boldsymbol X}
+\begin{bmatrix}
+\phi_1 \\ \phi_2 \\ \phi_3 \\ \vdots \\ \phi_p
+\end{bmatrix} +
+\underbrace{
+\begin{bmatrix}
+1 & 0 & 0 & \dots & 0 \\
+\theta_1 & 1 & 0 & \dots & 0 \\
+\theta_2 & \theta_1 & 1 & \dots & 0 \\
+\vdots & \vdots & & \ddots & \vdots \\
+0  & \dots & \theta_2 & \theta_1 & 1
+\end{bmatrix}
+}_{\boldsymbol\Gamma}
+\begin{bmatrix}
+u_1 \\ u_2 \\ u_3 \\ \vdots \\ u_T
+\end{bmatrix}
+$$
+
+Or compactly,
+
+$$
+\boldsymbol{y = X\phi + \Gamma u}.
+$$
+
+We assume the innovations are jointly normal $\boldsymbol u \sim N(0,\sigma^2\boldsymbol I)$. We also assume the first $p$ observations are known initial values $y_0, y_{-1},\dots,y_{1-p}$ and $u_0 = u_{-1} = \dots = u_{1-q} = 0$. Therefore, the observed data are jointly normal given the initial condition,
+
+$$
+\boldsymbol{y|y_0} \sim N(\boldsymbol{X\phi}, \sigma^2\boldsymbol{\Gamma\Gamma'}).
+$$
+
+The probability density function for multivariate normal is
+
+$$
+f(\boldsymbol{y} | \boldsymbol{y_0}, \boldsymbol{\phi}, \boldsymbol{\Gamma},\sigma^2) = (2\pi)^{-T/2}|\sigma^2\boldsymbol{\Gamma\Gamma'}|^{-1/2}\exp\left(-\frac{1}{2}(\boldsymbol{y-X\phi})' (\sigma^2\boldsymbol{\Gamma\Gamma'})^{-1} (\boldsymbol{y-X\phi}) \right)
+$$
+
+To simplify computation, take logarithm to get the log-likelihood function
+
+$$
+\ell(\boldsymbol{\phi},\boldsymbol{\Gamma},\sigma^2|\boldsymbol{y},\boldsymbol{y_0}) = -\frac{T}{2}\ln(2\pi) -\frac{1}{2}\ln|\sigma^2\boldsymbol{\Gamma\Gamma'}|-\frac{1}{2\sigma^2}(\boldsymbol{y-X\phi})' (\boldsymbol{\Gamma\Gamma'})^{-1} (\boldsymbol{y-X\phi}).
+$$
+
+The parameters are then chosen to maximize this log-likelihood function, i.e. the probability of observing the data under the assumed distribution. This can be done by conducting a grid search over the parameter space using a computer. To reduce the seach dimensions, we may concentrate the log-likelihood by computing the first-order conditions:
+
+$$
+\frac{\partial\ell}{\partial\boldsymbol\phi}=0 \implies \boldsymbol{\hat\phi} = (\boldsymbol X'(\boldsymbol{\hat\Gamma\hat\Gamma'})^{-1}\boldsymbol X)^{-1}\boldsymbol X'(\boldsymbol{\hat\Gamma\hat\Gamma'})^{-1}\boldsymbol y
+$$
+
+$$
+\frac{\partial\ell}{\partial\sigma^2}=0 \implies \hat\sigma^2 =\frac{1}{T} (\boldsymbol{y-X\hat\phi})' (\boldsymbol{\hat\Gamma\hat\Gamma'})^{-1} (\boldsymbol{y-X\hat\phi})
+$$
+
+Thia allows us to focus our search only on $\boldsymbol\phi$.

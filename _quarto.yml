@@ -24,6 +24,7 @@ book:
       chapters: 
         - ols.qmd
         - ols2.qmd
+        - mle.qmd
     - summary.qmd
     - references.qmd
 
