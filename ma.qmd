@@ -147,7 +147,7 @@ zero after $q$ lags; and (i) a PACF that is infinite in extend but tails
 of gradually.
 :::
 
-## MA(∞) Process
+## MA($\infty$) Process
 
 MA($\infty$) is a special case deserves attention. Partly because all
 ARMA processes can be reduced to MA($\infty$) processes. In addition to

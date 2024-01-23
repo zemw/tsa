@@ -36,6 +36,7 @@ format:
     theme: cosmo
   pdf:
     documentclass: scrreprt
+    pdf-engine: pdflatex
 
 
 
