@@ -2,7 +2,9 @@
 
 ## Asymptotic Theorems for Dependent Random Variables
 
-The asymptotic theorems and regressions that work for $iid$ random variable do not immediately apply to time series. Consider the proof for @thm-lln, without the $iid$ assumption we have
+The asymptotic theorems and regressions that work for $iid$ random
+variable do not immediately apply to time series. Consider the proof for
+@thm-lln, without the $iid$ assumption we have
 
 $$
 \begin{aligned}
@@ -17,19 +19,26 @@ $$
 \end{aligned}
 $$
 
-The argument for the $iid$ does not work with the presence of serial correlations. If we assume absolute summability, $\sum_{j=-\infty}^{\infty} |\gamma_j| <\infty$, then
+The argument for the $iid$ does not work with the presence of serial
+correlations. If we assume absolute summability,
+$\sum_{j=-\infty}^{\infty} |\gamma_j| <\infty$, then
 
 $$
 \lim_{n\to\infty} \frac{1}{n} \left[2\sum_{k=1}^n \gamma_k\left(1-\frac{k}{n}\right) + \gamma_0 \right] =0.
 $$
 
-In this case, we still have the LLN holds. Otherwise, as the variance may not converge. Remember @thm-ergodic, absolute summability implies the series is ergodic.
+In this case, we still have the LLN holds. Otherwise, as the variance
+may not converge. Remember @thm-ergodic, absolute summability implies
+the series is ergodic.
 
 ::: {#prp-lln2}
-If $x_t$ is a covariance stationary time series with absolutely summable auto-covariances, then a Law of Large Numbers holds.
+If $x_t$ is a covariance stationary time series with absolutely summable
+auto-covariances, then a Law of Large Numbers holds.
 :::
 
-From the new proof of LLN one can guess that the variance in a Central Limit Theorem should also change. The serially correlated $x_t$, the liming variance is given by
+From the new proof of LLN one can guess that the variance in a Central
+Limit Theorem should also change. The serially correlated $x_t$, the
+liming variance is given by
 
 $$
 \begin{aligned}
@@ -39,10 +48,15 @@ $$
 \end{aligned}
 $$
 
-We call $S$ the *long-run variance*. There are many CLTs for serially correlated observations. We give the two mostly commonly cited versions: one applies to MA($\infty$) processes, the other one is more general.
+We call $S$ the *long-run variance*. There are many CLTs for serially
+correlated observations. We give the two mostly commonly cited versions:
+one applies to MA($\infty$) processes, the other one is more general.
 
 ::: {#thm-clt2}
-Let $y_t$ be an MA process: $y_t = \mu + \sum_{j=0}^\infty c_j\epsilon_{t-j}$ where $\epsilon_t$ is independent white noise and $\sum_{j=0}^{\infty} |c_j|<\infty$ (this implies ergodic), then
+Let $y_t$ be an MA process:
+$y_t = \mu + \sum_{j=0}^\infty c_j\epsilon_{t-j}$ where $\epsilon_t$ is
+independent white noise and $\sum_{j=0}^{\infty} |c_j|<\infty$ (this
+implies ergodic), then
 
 $$
 \sqrt{T} \bar y_t \overset{d}\to N(0, S),
@@ -54,7 +68,10 @@ where $S = \sum_{k=-\infty}^{\infty}\gamma_k$ is the long-run variance.
 ::: {#thm-clt3}
 ## Gordin's CLT
 
-Assume we have a strictly stationary and ergodic series $\{y_t\}$ with $\mathbb{E}(y_t^2) <\infty$ satisfying: $\sum_j\{\mathbb{E}[\mathbb{E}[y_t|I_{t-j}]-\mathbb{E}[y_t|I_{t-j-1}]]^2\}^{1/2} <\infty$ and $\mathbb{E}[y_t|I_{t-j}]\to 0$ as $j\to\infty$, then
+Assume we have a strictly stationary and ergodic series $\{y_t\}$ with
+$\mathbb{E}(y_t^2) <\infty$ satisfying:
+$\sum_j\{\mathbb{E}[\mathbb{E}[y_t|I_{t-j}]-\mathbb{E}[y_t|I_{t-j-1}]]^2\}^{1/2} <\infty$
+and $\mathbb{E}[y_t|I_{t-j}]\to 0$ as $j\to\infty$, then
 
 $$
 \sqrt{T} \bar y_t \overset{d}\to N(0, S),
@@ -63,7 +80,13 @@ $$
 where $S = \sum_{k=-\infty}^{\infty}\gamma_k$ is the long-run variance.
 :::
 
-The Gordin's conditions are intended to make the dependence between distant observations to decrease to 0. ARMA process is a special case of Gordin series. The essence of these theorems is that we need some restrictions on dependencies for LLN and CLT to hold. We allow serial correlations as long as they are not too strong. If the observations become almost independent as they are far away in time, the can still apply the asymptotic theorems.
+The Gordin's conditions are intended to make the dependence between
+distant observations to decrease to 0. ARMA process is a special case of
+Gordin series. The essence of these theorems is that we need some
+restrictions on dependencies for LLN and CLT to hold. We allow serial
+correlations as long as they are not too strong. If the observations
+become almost independent as they are far away in time, the can still
+apply the asymptotic theorems.
 
 ## OLS for Time Series
 
@@ -81,7 +104,11 @@ $x_t$ is **strictly exogenous** if
 $$ \mathbb{E}(\epsilon_t | \{x_t\}_{t=-\infty}^{\infty}) = 0. $$
 :::
 
-Strictly exogeneity requires innovations being exogenous from all past and future regressors; while weakly exogeneity only requires being exogenous from past regressors. In practice, strict exogeneity is too strong as an assumption. The weak exogenous is more practical and it is enough to ensure the consistency of the OLS estimator.
+Strictly exogeneity requires innovations being exogenous from all past
+and future regressors; while weakly exogeneity only requires being
+exogenous from past regressors. In practice, strict exogeneity is too
+strong as an assumption. The weak exogenous is more practical and it is
+enough to ensure the consistency of the OLS estimator.
 
 The OLS estimator is as usual:
 
@@ -98,19 +125,29 @@ $$
 
 Therefore, $\hat\beta \to \beta$. The OLS estimator is *consistent*.
 
-Assuming the Gordin's conditions hold for $z_t=x_t\epsilon_t$, the CLT gives
+Assuming the Gordin's conditions hold for $z_t=x_t\epsilon_t$, the CLT
+gives
 
 $$
 \frac{1}{\sqrt n}\sum_t x_t\epsilon_t \to N(0,S),
 $$
 
-where $S = \sum_{-\infty}^{\infty}\gamma_j$ is the long-run variance for $z_t$. Thus, we have the asymptotic normality for the OLS estimator
+where $S = \sum_{-\infty}^{\infty}\gamma_j$ is the long-run variance for
+$z_t$. Thus, we have the asymptotic normality for the OLS estimator
 
 $$ 
 \sqrt{T}(\hat\beta - \beta) \to N(0,Q^{-1}SQ^{-1}).
 $$
 
-Note how the covariance matrix $S$ is different from the one in the $iid$ case where $S=\sigma^2\mathbb{E}(x_ix_i')$. The long-run variance $S$ takes into account the auto-dependencies between observations. The auto-dependencies usually arise from the serially correlated error terms. It may also arise from $x_t$ being autocorrelated and from conditional heteroskedasticity of the error terms. Because of the auto-covariance structure, $S$ cannot be estimated in the same way as in the $iid$ case. The estimator for $S$ is called HAC (heteroskedasticity autocorrelation consistent) standard errors.
+Note how the covariance matrix $S$ is different from the one in the
+$iid$ case where $S=\sigma^2\mathbb{E}(x_ix_i')$. The long-run variance
+$S$ takes into account the auto-dependencies between observations. The
+auto-dependencies usually arise from the serially correlated error
+terms. It may also arise from $x_t$ being autocorrelated and from
+conditional heteroskedasticity of the error terms. Because of the
+auto-covariance structure, $S$ cannot be estimated in the same way as in
+the $iid$ case. The estimator for $S$ is called HAC (heteroskedasticity
+autocorrelation consistent) standard errors.
 
 ## HAC Standard Errors
 
@@ -120,15 +157,22 @@ $$
 \hat S = \sum_{j=-h(T)}^{h(T)} \hat\gamma_j.
 $$
 
-$h(T)$ is a function of $T$ and $h(T)\to\infty$ as $T\to\infty$, but more slowly. Because we don't want to include too many imprecisely estimated covariances. Another problem is the estimated $\hat S$ might be negative. The solution is weight the covariances in a way to ensure positiveness:
+$h(T)$ is a function of $T$ and $h(T)\to\infty$ as $T\to\infty$, but
+more slowly. Because we don't want to include too many imprecisely
+estimated covariances. Another problem is the estimated $\hat S$ might
+be negative. The solution is weight the covariances in a way to ensure
+positiveness:
 
 $$
 \hat S = \sum_{j=-h(T)}^{h(T)} k_T(j) \hat\gamma_j.
 $$
 
-$k_T(\cdot)$ is called a kernel. The weights are chosen to guarantee positive-definiteness by weighting down high lag covariances. Also we need $k_T(\cdot)\to 1$ for consistency.
+$k_T(\cdot)$ is called a kernel. The weights are chosen to guarantee
+positive-definiteness by weighting down high lag covariances. Also we
+need $k_T(\cdot)\to 1$ for consistency.
 
-A popular HAC estimator is the Newey-West variance estimator, in which $h(T) = 0.75 T^{1/3}$ and $k_T(j) = \frac{h-j}{h}$, so that
+A popular HAC estimator is the Newey-West variance estimator, in which
+$h(T) = 0.75 T^{1/3}$ and $k_T(j) = \frac{h-j}{h}$, so that
 
 $$
 \hat S = \sum_{j=-h}^{h} \left(\frac{h-j}{h}\right)\hat\gamma_j.
@@ -136,7 +180,11 @@ $$
 
 ## Example
 
-Note that all of our discussions in this chapter apply only to stationary time series. Without stationarity, even the autocovariance $\gamma_j$ might not be well-defined. In the following example, we generate artificial data from an AR(2) process, and recover the parameters by regression $y_t$ on its lags.
+Note that all of our discussions in this chapter apply only to
+stationary time series. Without stationarity, even the autocovariance
+$\gamma_j$ might not be well-defined. In the following example, we
+generate artificial data from an AR(2) process, and recover the
+parameters by regression $y_t$ on its lags.
 
 ```{r}
 #| echo: true

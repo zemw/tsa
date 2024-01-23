@@ -1,12 +1,12 @@
 # Forecasting
 
-So far we have introduced basic univariate time series models and their estimation. 
-One common application of univariate time series analysis is forecasting. 
-Forecasting is a rather complex topic, with a wide range of techniques from 
-basic ARMA models to machine learning. This book is not specialized in 
-forecasting. We only devote this section to briefly cover forecasting based on 
-ARMA models. We will start with some intuition. Then justify the intuition 
-with a bit of formal theory. 
+So far we have introduced basic univariate time series models and their
+estimation. One common application of univariate time series analysis is
+forecasting. Forecasting is a rather complex topic, with a wide range of
+techniques from basic ARMA models to machine learning. This book is not
+specialized in forecasting. We only devote this section to briefly cover
+forecasting based on ARMA models. We will start with some intuition.
+Then justify the intuition with a bit of formal theory.
 
 ## Intuition
 
@@ -16,16 +16,16 @@ $$
 y_t = \phi y_{t-1} + \epsilon_t, \quad\epsilon_t\sim\text{WN}(0,\sigma^2).
 $$
 
-What would be the reasonable forecast for $y_{T+1}$ given $y_1,...,y_T$? 
-It seems sensible to simply drop the white noise, as it is something completely
-unpredictable and it has mean zero. Thus,
+What would be the reasonable forecast for $y_{T+1}$ given $y_1,...,y_T$?
+It seems sensible to simply drop the white noise, as it is something
+completely unpredictable and it has mean zero. Thus,
 
 $$
 \hat y_{T+1|T} = \phi y_t.
 $$
 
-This is 1-period ahead forecast. But how do we forecast $k$-period ahead?
-Heuristically, we can simply iterate over to the future:
+This is 1-period ahead forecast. But how do we forecast $k$-period
+ahead? Heuristically, we can simply iterate over to the future:
 
 $$
 \begin{aligned}
@@ -34,8 +34,9 @@ $$
 \end{aligned}
 $$
 
-We will leave the heuristic solutions here and justify them later. If we accept
-this heuristic approach, we can easily generalize it to AR($p$) processes:
+We will leave the heuristic solutions here and justify them later. If we
+accept this heuristic approach, we can easily generalize it to AR($p$)
+processes:
 
 $$
 \begin{aligned}
@@ -51,11 +52,11 @@ For MA($q$) processes
 
 $$
 y_t = \epsilon_t + \theta_1\epsilon_{t-1} + \theta_2\epsilon_{t-2} + \cdots + \theta_q\epsilon_{t-q}  
-$$
-Suppose we know the past innovations until $T$: $\epsilon_{T}, \epsilon_{T-1}, ...$
-The best way to forecast $\hat y_{T+h|T}$ looks to simply discard 
-$\epsilon_{T+1},...,\epsilon_{T+h}$. Since we have no knowledge about future 
-innovations given the information at time $T$. Therefore,
+$$ Suppose we know the past innovations until $T$:
+$\epsilon_{T}, \epsilon_{T-1}, ...$ The best way to forecast
+$\hat y_{T+h|T}$ looks to simply discard
+$\epsilon_{T+1},...,\epsilon_{T+h}$. Since we have no knowledge about
+future innovations given the information at time $T$. Therefore,
 
 $$
 \begin{array}{l}
@@ -68,16 +69,15 @@ $$
 
 ## Best Linear Predictor
 
-We now justify our heuristic solutions by the theory of best linear predictor.
-Suppose we want to forecast $y$ give the information set $X$. 
+We now justify our heuristic solutions by the theory of best linear
+predictor. Suppose we want to forecast $y$ give the information set $X$.
 
 ::: {#def-blp}
 The best linear predictor (BLP) is defined as
 
 $$
 \mathcal{F}(y|X)=x'\beta^* 
-$$
-which is a linear function of $X=(x_1,x_2,...,x_p)$ such that 
+$$ which is a linear function of $X=(x_1,x_2,...,x_p)$ such that
 
 $$
 \beta^* =\text{argmin}\ \mathbb{E}(y-x'\beta)^2.
@@ -90,7 +90,7 @@ $$
 \beta^* = [\mathbb{E}(xx')]^{-1} \mathbb{E}(xy).
 $$
 
-Therefore, the BLP is given by 
+Therefore, the BLP is given by
 
 $$
 \hat y = \mathcal{F}(y|X)=x'\beta^* = x'[\mathbb{E}(xx')]^{-1} \mathbb{E}(xy).
@@ -102,24 +102,26 @@ $$
 r_{y|X} = y - \hat y = y - x'[\mathbb{E}(xx')]^{-1} \mathbb{E}(xy).
 $$
 
-The BLP is the linear projection of $y$ onto $X$. Because $\mathbb{E}[x(y-x'\beta)]=0$.
-The forecast error is orthogonal to $X$.
+The BLP is the linear projection of $y$ onto $X$. Because
+$\mathbb{E}[x(y-x'\beta)]=0$. The forecast error is orthogonal to $X$.
 
 ::: {#prp-blp}
 BLP has the following properties:
 
-1. $\mathcal{F}[ax + by| z_1...z_k] = a\mathcal{F}[x|z_1...z_k] + b\mathcal{F}[y|z_1...z_k]$;
-2. If $x = a_1z_1 + \cdots + a_kz_k$ is already a linear combination of $z_1...z_k$, then $\mathcal{F}[x|z_1...z_k]=x$;
-3. If for all $1\leq j\leq k$, $\text{cov}(x,z_j)=\mathbb{E}(xz_j)=0$, then $\mathcal{F}[x|z_1...z_k]=0$.
+1.  $\mathcal{F}[ax + by| z_1...z_k] = a\mathcal{F}[x|z_1...z_k] + b\mathcal{F}[y|z_1...z_k]$;
+2.  If $x = a_1z_1 + \cdots + a_kz_k$ is already a linear combination of
+    $z_1...z_k$, then $\mathcal{F}[x|z_1...z_k]=x$;
+3.  If for all $1\leq j\leq k$, $\text{cov}(x,z_j)=\mathbb{E}(xz_j)=0$,
+    then $\mathcal{F}[x|z_1...z_k]=0$.
 :::
 
 ## Forecasting with ARMA Models
 
-ARMA model is a basic yet powerful tool for forecasting. Given all stationary
-time series can be approximated by ARMA processes, it makes sense to model a 
-stationary time series with ARMA, and then make forecast based on that model. 
-We will see our heuristic solutions in the first part can be easily justified 
-with the theory of BLP. 
+ARMA model is a basic yet powerful tool for forecasting. Given all
+stationary time series can be approximated by ARMA processes, it makes
+sense to model a stationary time series with ARMA, and then make
+forecast based on that model. We will see our heuristic solutions in the
+first part can be easily justified with the theory of BLP.
 
 We have said that, for an AR($p$) process
 
@@ -163,18 +165,15 @@ $$
 \end{aligned}
 $$
 
-Note that we make use of the 3rd property of @prp-blp with the knowledge that 
-$\text{cov}(\epsilon_i,\epsilon_j)=0$ for $i \neq j$. 
-This result is also consistent with our intuition. If $h>q$, then all 
-$\mathcal{F}(\epsilon_{T+h-q}|\epsilon_T,\epsilon_{T-1}...)$ are zero, which
-yields $\hat y_{T+h|T} = 0$.
+Note that we make use of the 3rd property of @prp-blp with the knowledge
+that $\text{cov}(\epsilon_i,\epsilon_j)=0$ for $i \neq j$. This result
+is also consistent with our intuition. If $h>q$, then all
+$\mathcal{F}(\epsilon_{T+h-q}|\epsilon_T,\epsilon_{T-1}...)$ are zero,
+which yields $\hat y_{T+h|T} = 0$.
 
-With the MA specification, we can easily compute the mean squared forecast error (MSFE) as follows
+With the MA specification, we can easily compute the mean squared
+forecast error (MSFE) as follows
 
 $$
 Q_{T+h} = \mathbb{E}(y_{T+h} - \hat y_{T+h})^2 = \mathbb{E}\left(\sum_{j=0}^{h-1}\theta_j\epsilon_{T+h-j}\right)^2 = \sigma^2\sum_{j=0}^{h-1}\theta_j^2.
 $$
-
-
-
-

@@ -122,8 +122,8 @@ that they are just numbers in the dataset. But for statistical analysis,
 we view each entry in the matrix as random, that is as a realization of
 a random process.
 
-To estimate the parameter $\beta$ from sample data, OLS seeks
-to minimize the squared residuals
+To estimate the parameter $\beta$ from sample data, OLS seeks to
+minimize the squared residuals
 
 $$
 \min_{\beta} \sum_{i=1}^{n}(y_i - x_i'\beta)^2.
@@ -141,8 +141,7 @@ $$
 $$
 
 Under the Gauss-Markov assumptions, particularly
-$\mathbb{E}(\epsilon_i|x_j)=0$ and
-$\text{var}(\epsilon|X)=\sigma^2 I$
+$\mathbb{E}(\epsilon_i|x_j)=0$ and $\text{var}(\epsilon|X)=\sigma^2 I$
 (homoskedasticity and nonautocorrelation), the OLS estimator is **BLUE**
 (Best Linear Unbiased Estimator).
 
