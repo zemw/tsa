@@ -1,0 +1,67 @@
+# Dynamic Causal Effect
+
+As in all fields of science, we are perpetually interested in
+understanding the causal effect of one thing on another. In economics,
+we want to understand how monetary policy affects output and inflation,
+how exchange rate affects import and export, and so on. However,
+causality is something much easier said than done. In reality, there are
+multiple forces at work simultaneously that leads to the consequences we
+observed. It is challenging both conceptually and statistically to
+isolate the causality of a variable of particular interest.
+
+In cross-sectional analysis, causality is defined counter-factually.
+That is, a causal effect of a treatment is defined as the difference
+between the treated outcome and the untreated outcome assuming that they
+would be otherwise the same without the treatment. In practice, that
+involves working with a large number of $iid$ observations that are
+similar on average only differentiated by the status of the treatment.
+This approach, however, does not work well with many macroeconomic
+studies. For example, suppose we want to figure out the causal effect of
+monetary policy on inflation rate. The cross-sectional approach would
+entail finding a large number of almost identical countries, each with
+independent monetary policy. And a random subset of them tighten their
+monetary policies while others do not. Then we work out the different
+economic outcomes between these two groups. This is clearly infeasible.
+The question we posed concerns only one country with inflation and
+interest rates observed through time. We would need a definition of
+causal effect that encompasses observations over time not across
+individuals.
+
+Suppose $\epsilon_t$ denote a random treatment at time $t$. Then the
+causal effect on an outcome variable $y_{t+h}$, $h$ periods ahead, of a
+unit shock in $\epsilon$ is defined as
+
+$$
+\mathbb{E}[y_{t+h}|\epsilon_t=1]-\mathbb{E}[y_{t+h}|\epsilon_t=0].
+$$ {#eq-cediff}
+
+We require the randomness of the treatment $\epsilon_t$ in a sense that
+it is uncorrelated with any other variables that could possible have an
+impact on the outcome. Therefore, $\epsilon_t$ happens out does not
+affect other forces that shape the outcome. The difference in the
+outcomes is solely attributable to $\epsilon_t$. It is this randomness
+that guarantees a causal interpretation.
+
+Our example of monetary policy above clearly does not meet this
+requirement. The monetary authority does not set the interest rate
+randomly, but based on the economic conditions of the time, which makes
+it correlated with other economic variables that could also have an
+impact on inflation. A qualified random shock may be a change in weather
+conditions. Weather has huge impact on agricultural production, but it
+is determined independent of any human activity. If $\epsilon_t$ denotes
+a rainy day at time $t$, and $y_{t+h}$ be the agricultural production,
+@eq-cediff could be a plausible causal effect. However, most variables
+of interest in economics are endogenously determined. How to estimate
+the causal effect in such cases is an art in itself. We will come back
+to this point later.
+
+The conceptual definition of @eq-cediff can not be computed directly as
+the counterfactual is not observed. What we have is a sample of
+experiments over time, in which the treatment happens randomly at a
+particular time point,
+$\{\epsilon_1=0, \epsilon_2=1, \epsilon_3=0,\dots\}$. We could envision
+that if we have long enough observations, by comparing the outcomes when
+the shock happens and when it does not, it gives us an reasonable
+estimation of the causal effect because all other factors that
+contributing to the outcome, despite they are changing over time, would
+be averaged out provided the randomness of the treatment.
