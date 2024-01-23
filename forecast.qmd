@@ -8,7 +8,7 @@ specialized in forecasting. We only devote this section to briefly cover
 forecasting based on ARMA models. We will start with some intuition.
 Then justify the intuition with a bit of formal theory.
 
-## Intuition
+## Intuitive Approach
 
 Suppose we have an AR(1) process,
 
@@ -123,6 +123,8 @@ sense to model a stationary time series with ARMA, and then make
 forecast based on that model. We will see our heuristic solutions in the
 first part can be easily justified with the theory of BLP.
 
+### Forecasting with AR(p)
+
 We have said that, for an AR($p$) process
 
 $$
@@ -135,21 +137,26 @@ $$
 \hat y_{T+1|T} = \phi_1 y_{T} + \phi_2 y_{T-1} + \dots + \phi_p y_{T-p+1}.
 $$
 
-This is the BLP by the 2nd property of @prp-blp.
-
-We also mentioned, the $h$-step-ahead forecast is (assuming $h>p$)
-
-$$
-\hat y_{T+h|T} = \phi_1\hat y_{T+h-1|T} + \phi_2\hat y_{T+h-2|T} + \dots + \phi_p\hat y_{T+h-p|T}
-$$
-
-This iterated forecast is also the BLP by Property 1 and 2:
+This is the BLP immediately from Property 2 of @prp-blp. We can also
+justify the iterated $h$-step-ahead forecast by Property 1 (assuming
+$h<p$):
 
 $$
-\hat y_{T+h|T} = \sum_{j=1}^{p} \phi_j\hat y_{T+h-j|T} = \sum_{j=1}^{p} \phi_j\mathcal{F}[y_{T+h-j}|y_T, y_{T-1},...] = \mathcal{F}[y_{T+h}|y_T,y_{T-1},...] 
+\begin{aligned}
+\hat y_{T+h|T} &= \phi_1\hat y_{T+h-1|T} + \phi_2\hat y_{T+h-2|T} + \cdots + \phi_h y_{T} + \dots + \phi_p y_{T+h-p} \\
+&= \phi_1\mathcal{F}[y_{T+h-1}|y_T, y_{T-1}...] + \cdots + \phi_p\mathcal{F}[y_{T+h-p}|y_T, y_{T-1}...] \\
+&= \mathcal{F}[\phi_1 y_{T+h-1} + \cdots + \phi_p y_{T+h-p} | y_T,y_{T-1},...] \\
+&= \mathcal{F}[y_{T+h}|y_T,y_{T-1},...]
+\end{aligned}
 $$
 
-For MA(q) process
+This is assuming all the forecast before $h$ are BLPs, which can be
+justified recursively. Also note that for the values readily observed:
+$y_T, y_{T-1},...$ , the BLP is the value itself.
+
+### Forecasting with MA(q)
+
+For the MA($q$) process
 
 $$
 y_t = \epsilon_t + \theta_1\epsilon_{t-1} + \theta_2\epsilon_{t-2} + \cdots + \theta_q\epsilon_{t-q}  
@@ -165,15 +172,118 @@ $$
 \end{aligned}
 $$
 
-Note that we make use of the 3rd property of @prp-blp with the knowledge
-that $\text{cov}(\epsilon_i,\epsilon_j)=0$ for $i \neq j$. This result
-is also consistent with our intuition. If $h>q$, then all
+We make use of Property 3 of @prp-blp with the knowledge that
+$\text{cov}(\epsilon_i,\epsilon_j)=0$ for $i \neq j$. This result is
+also consistent with our intuition, because we have no knowledge of
+future innovations, the best thing we can do is assuming they are zeros.
+If $h>q$, then all
 $\mathcal{F}(\epsilon_{T+h-q}|\epsilon_T,\epsilon_{T-1}...)$ are zero,
 which yields $\hat y_{T+h|T} = 0$.
 
-With the MA specification, we can easily compute the mean squared
-forecast error (MSFE) as follows
+In practice, we do not observe $\{\epsilon_{t}\}$. If we have an
+estimated MA model and we want to make forecast based on the model, we
+need to back out $\{\epsilon_{t}\}$ from $\{y_t\}$ by inverting the MA
+process: $\epsilon_t = \theta^{-1}(L)y_t$.
+
+With the MA specification, we can easily compute the **Mean Squared
+Forecast Error (MSFE)** as follows
 
 $$
-Q_{T+h} = \mathbb{E}(y_{T+h} - \hat y_{T+h})^2 = \mathbb{E}\left(\sum_{j=0}^{h-1}\theta_j\epsilon_{T+h-j}\right)^2 = \sigma^2\sum_{j=0}^{h-1}\theta_j^2.
+Q_{T+h|T} = \mathbb{E}(y_{T+h} - \hat y_{T+h|T})^2 = \mathbb{E}\left(\sum_{j=0}^{h-1}\theta_j\epsilon_{T+h-j}\right)^2 = \sigma^2\sum_{j=0}^{h-1}\theta_j^2.
 $$
+
+### Forecasting with ARMA(p,q)
+
+Consider the ARMA($p$, $q$) process
+
+$$
+(1-\phi_1L-\cdots-\phi_pL^p)y_t = (1+\theta_1L+\cdots+\theta_qL^q)\epsilon_t
+$$
+
+We assume the process is causal and invertible. We can transform it to
+an AR($\infty$) process or MA($\infty$) process.
+
+Causal form:
+
+$$
+y_t = \phi^{-1}(L)\theta(L)\epsilon_t = \sum_{j=0}^{\infty} \psi_j\epsilon_{t-j}
+$$
+
+Invertible form:
+
+$$
+\epsilon_t = \theta^{-1}(L)\phi(L)y_t = \sum_{j=0}^{\infty} \pi_j y_{t-j}
+$$
+
+or
+
+$$
+y_t = -\sum_{j=1}^{\infty} \pi_j y_{t-j} + \epsilon_t
+$$
+
+As we have seen so far, it is relatively easier to compute the mean
+forecast with AR models, and the MSFE with MA models. So we make
+forecast with the AR representation:
+
+$$
+\hat y_{T+h|T} = -\sum_{j=1}^{h-1}\pi_j\hat y_{T+h-j} - \sum_{j=h}^{\infty}\pi_jy_{T+h-j}
+$$
+
+However, we do not observe infinite past values in real world. We can
+only use the truncated values, discarding past values that we do not
+observe $y_0,y_{-1}, y_{-1},...$
+
+$$
+\hat y_{T+h|T} = -\sum_{j=1}^{h-1}\pi_j\hat y_{T+h-j} - \sum_{j=h}^{T+h-1}\pi_jy_{T+h-j}
+$$
+
+We compute the MSFE with the MA representation:
+
+$$
+Q_{T+h|T} = \mathbb{E}(y_{T+h} - \hat y_{T+h})^2 =  \sigma^2\sum_{j=0}^{h-1}\psi_j^2
+$$
+
+If we can compute the prediction interval if we assume some probability
+distributions for the innovations. If we assume
+$\epsilon_t\overset{iid}\sim N(0, \sigma^2)$, then $(y_1,...,y_{T+h})'$
+is jointly normal. Therefore,
+
+$$
+y_{T+h} - \hat y_{T+h|T} \sim N(0, Q_{T+h|T})
+$$
+
+The prediction interval is thus given by
+$\hat y_{T+h|T} \pm z_{\alpha/2}\sqrt{Q_{T+h|T}}$.
+
+## Applications
+
+The following examples use ARMA models to forecast inflation rate and
+stock market index. The parameters of the ARMA models are chosen
+automatically. We can see for the inflation rate, the model produces
+some patterns in the forecast. But for the stock market index, the
+forecast is an uninformative flat line, indicating there is no useful
+patterns in the past data can be extrapolated by the ARMA model.
+
+```{r}
+#| echo: true
+#| warning: false
+#| fig-cap: "ARMA forecast for monthly inflation"
+#| label: fig-fccpi
+library(forecast)
+data = readRDS("data/md.Rds")
+data$CPI |>
+  auto.arima() |> 
+  forecast(h=20) |>
+  autoplot()
+```
+
+```{r}
+#| echo: true
+#| warning: false
+#| fig-cap: "ARMA forecast for stock market index"
+#| label: fig-fcshse
+data$SHSE |>
+  auto.arima() |> 
+  forecast(h=20) |>
+  autoplot()
+```
