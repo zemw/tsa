@@ -27,6 +27,7 @@ book:
         - mle.qmd
         - forecast.qmd
         - dce.qmd
+        - ssf.qmd
     - summary.qmd
     - references.qmd
 

@@ -1,0 +1,98 @@
+# The Structural Shock Framework
+
+The counterfactual framework introduced in the last section defines the
+dynamic causal effect of any variable on another. As economists, we are
+more interested in understanding the causal relationships between
+important forces that drive the economy. We now introduce the
+**structural shock framework**, or the **Slutzky-Frisch paradigm**. This
+paradigm is explicitly or implicitly embedded in virtually every
+mainstream macroeconomic models or econometric models. It is not an
+essential component of time series analysis. But, as we would like to
+approach the topic from an economist's perspective, it is good to have
+this framework in mind for many of our applications.
+
+The structural shock framework envisions our economy as a complex system
+driven by a set of fundamental structural forces and coordinated by
+numerous price signals that automatically balance the demand and supply
+of all goods and services. The structural forces could be technology
+progress, climate change, policy changes and so on. These structural
+shocks are the primitive forces underlying our economy. When a
+structural shock happens, it triggers a reallocation of economic
+resources guided by market forces. In theoretical works, we are
+interested in modelling the system as a whole, particularly how
+resources are allocated optimally by market forces. In empirical works,
+we are interested how to recover the underlying structural shocks and
+estimate their causal effect on other economic variables.
+
+In the language of time series analysis, we can envision our economy as
+an MA process, in which the observable variables (output, employment,
+inflation, etc) are the outcomes of accumulated past and current
+structural shocks:
+
+$$
+\boldsymbol y_t = \boldsymbol\Theta(L) \boldsymbol\epsilon_t,
+$$
+
+or
+
+$$
+\begin{bmatrix}
+y_{1t}\\ y_{2t}\\ \vdots\\ y_{nt}
+\end{bmatrix} = 
+\sum_{j=0}^{\infty}
+\begin{bmatrix}
+\theta_{j,11} & \theta_{j,12} & \cdots & \theta_{j,1m}\\
+\theta_{j,21} & \theta_{j,22} & \cdots & \theta_{j,2m}\\
+\vdots & \vdots & \ddots & \vdots \\
+\theta_{j,n1} & \theta_{j,n2} & \cdots & \theta_{j,nm}
+\end{bmatrix}
+\begin{bmatrix}
+\epsilon_{1,t-j}\\ \epsilon_{2,t-j}\\ \vdots\\ \epsilon_{m,t-j}
+\end{bmatrix}.
+$$
+
+$\boldsymbol y_t$ represents the vector of economic variables of
+concern. The space of $\boldsymbol y_t$ are spanned by $m$ structural
+shocks (current and past):
+$\{\boldsymbol \epsilon_{t-j}\}_{j=0}^{\infty}$.
+
+**Structural shocks** are conceptual constructions that are primitive,
+unforeseeable, and uncorrelated underlying forces. Whether structural
+shocks do exist or not is an open question. But they are useful
+constructions that enable econometricians to disentangle different
+driving forces of the outcome variable.
+
+In reality, almost every economic variable is endogenous. For example,
+monetary policy (interest rate) is set by the monetary authority based
+on their assessment of the economic conditions. But we can also imagine,
+there is a "genuine" component of the monetary policy, which may come
+from the personality of the policymaker and his mental conditions when
+he make the decision, that is not predictable from other variables. This
+genuine component is what we deem as the "monetary policy shock". It is
+a shock in a sense that it is not predictable. It speaks for its own
+sake and contribute to the economic outcomes independently.
+
+We do not observe the structural shocks directly. The observable
+variables are linear combinations of the structural shocks. For example,
+we may think of the observed interest rate as a linear combination of
+the monetary policy shock together with supply-side shocks and others.
+
+$$
+i_t = \sum_{j=0}^{\infty}
+\begin{bmatrix}
+\theta_{j,1} & \theta_{j,2} & \cdots & \theta_{j,m}
+\end{bmatrix}
+\begin{bmatrix}
+\epsilon_{t-j}^{\text{MP}}\\ \epsilon_{t-j}^{\text{SS}}\\ \vdots
+\end{bmatrix}
+$$
+
+Therefore, regressing inflation or output on interest rate will not give
+the causal effect of the monetary policy. Because interest rate does not
+represent the "genuine" monetary policy shock. It is determined by other
+economic variables and there are multiple structural forces at work.
+There are numerous literature that works on methods to isolate the
+"monetary policy shock" from the observed interest rates. Such way of
+constructing the structural shocks is not only a conceptual idea, but
+also a prerequisite for meaningful interpretation of the coefficients of
+econometric models.
