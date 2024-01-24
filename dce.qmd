@@ -1,5 +1,7 @@
 # Dynamic Causal Effect
 
+## Causal Effect over Time
+
 As in all fields of science, we are perpetually interested in
 understanding the causal effect of one thing on another. In economics,
 we want to understand how monetary policy affects output and inflation,
@@ -9,8 +11,8 @@ multiple forces at work simultaneously that leads to the consequences we
 observed. It is challenging both conceptually and statistically to
 isolate the causality of a variable of particular interest.
 
-In cross-sectional analysis, causality is defined counter-factually.
-That is, a causal effect of a treatment is defined as the difference
+In cross-sectional analysis, causality is defined counterfactually. That
+is, the causal effect of a treatment is defined as the difference
 between the treated outcome and the untreated outcome assuming that they
 would be otherwise the same without the treatment. In practice, that
 involves working with a large number of $iid$ observations that are
@@ -27,9 +29,9 @@ interest rates observed through time. We would need a definition of
 causal effect that encompasses observations over time not across
 individuals.
 
-Suppose $\epsilon_t$ denote a random treatment at time $t$. Then the
-causal effect on an outcome variable $y_{t+h}$, $h$ periods ahead, of a
-unit shock in $\epsilon$ is defined as
+Suppose $\epsilon_t$ denote a random treatment happened at time $t$.
+Then the causal effect on an outcome variable $y_{t+h}$, $h$ periods
+ahead, of a unit shock in $\epsilon$ is defined as
 
 $$
 \mathbb{E}[y_{t+h}|\epsilon_t=1]-\mathbb{E}[y_{t+h}|\epsilon_t=0].
@@ -37,7 +39,7 @@ $$ {#eq-cediff}
 
 We require the randomness of the treatment $\epsilon_t$ in a sense that
 it is uncorrelated with any other variables that could possible have an
-impact on the outcome. Therefore, $\epsilon_t$ happens out does not
+impact on the outcome. Therefore, $\epsilon_t$ happens or not does not
 affect other forces that shape the outcome. The difference in the
 outcomes is solely attributable to $\epsilon_t$. It is this randomness
 that guarantees a causal interpretation.
@@ -57,11 +59,31 @@ to this point later.
 
 The conceptual definition of @eq-cediff can not be computed directly as
 the counterfactual is not observed. What we have is a sample of
-experiments over time, in which the treatment happens randomly at a
-particular time point,
+experiments over time, in which the treatment happens randomly at some
+points but not others,
 $\{\epsilon_1=0, \epsilon_2=1, \epsilon_3=0,\dots\}$. We could envision
 that if we have long enough observations, by comparing the outcomes when
 the shock happens and when it does not, it gives us an reasonable
 estimation of the causal effect because all other factors that
 contributing to the outcome, despite they are changing over time, would
 be averaged out provided the randomness of the treatment.
+
+Assuming linearity and stationarity, the causal effect of @eq-cediff can
+be effectively captured by a regression framework,
+
+$$
+y_{t+h} = \theta_h\epsilon_t + u_{t+h},
+$$
+
+where $u_{t+h}$ represents all other factors contributing to the outcome
+variable. Since $\epsilon_t$ is random, it holds that
+$\mathbb{E}(u_{t+h}|\epsilon_t) = 0$. Therefore,
+
+$$
+\theta_h = \mathbb{E}(y_{t+h}|\epsilon_t=1)-\mathbb{E}(y_{t+h}|\epsilon_t=0).
+$$
+
+Thus, $\theta_h$ captures the causal effect of one unit shock of
+$\epsilon_t$ on $y_{t+h}$. The path of the causal effects mapped out by
+$\{\theta_0, \theta_1, \theta_2, \dots\}$ is called the **dynamic causal
+effect**, in a sense that it is the causal effects through time.
