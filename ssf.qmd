@@ -78,13 +78,7 @@ we may think of the observed interest rate as a linear combination of
 the monetary policy shock together with supply-side shocks and others.
 
 $$
-i_t = \sum_{j=0}^{\infty}
-\begin{bmatrix}
-\theta_{j,1} & \theta_{j,2} & \cdots & \theta_{j,m}
-\end{bmatrix}
-\begin{bmatrix}
-\epsilon_{t-j}^{\text{MP}}\\ \epsilon_{t-j}^{\text{SS}}\\ \vdots
-\end{bmatrix}
+i_t = \theta_{1}(L)\epsilon_{t}^{\text{MP}} + \theta_{2}(L)\epsilon_{t}^{\text{SS}} + \cdots
 $$
 
 Therefore, regressing inflation or output on interest rate will not give
