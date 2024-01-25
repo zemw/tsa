@@ -59,10 +59,10 @@ $\epsilon_{T+1},...,\epsilon_{T+h}$. Since we have no knowledge about
 future innovations given the information at time $T$. Therefore,
 
 $$
-\begin{array}{l}
+\begin{array}{llll}
 \hat y_{T+1|T} &= \theta_1\epsilon_T + &\theta_2\epsilon_{T-1} + &\theta_3\epsilon_{T-2} + \cdots \\
 \hat y_{T+2|T} &=  &\theta_2\epsilon_T + &\theta_3\epsilon_{T-1} + \cdots \\
-&\vdots \\
+&\vdots & & \\
 \hat y_{T+h|T} &=  & & \theta_h\epsilon_T + \theta_{h+1}\epsilon_{T-1} + \cdots
 \end{array}
 $$
