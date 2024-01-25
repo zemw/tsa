@@ -29,6 +29,7 @@ book:
         - dce.qmd
         - ssf.qmd
         - adl.qmd
+        - lpiv.qmd
     - summary.qmd
     - references.qmd
 
