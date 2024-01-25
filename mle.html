@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time Series Analysis for Economists - 1&nbsp; Time Series Data</title>
+<title>Time Series Analysis for Economists - 12&nbsp; MLE for ARMA Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./decomp.html" rel="next">
-<link href="./index.html" rel="prev">
+<link href="./forecast.html" rel="next">
+<link href="./ols2.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MLE for ARMA Models</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -109,7 +109,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./basics.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></a>
+  <a href="./basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -184,7 +184,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./mle.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MLE for ARMA Models</span></a>
+  <a href="./mle.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MLE for ARMA Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -236,7 +236,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MLE for ARMA Models</span></h1>
 </div>
 
 
@@ -251,48 +251,65 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p><strong>Raw data</strong>: The raw values without any transformation. We are not so interested in the raw data, as it is hard to read information from it. Take the GDP plot as an example (<a href="#fig-gdpts">Figure&nbsp;<span>1.1</span></a>, upper-left subplot). There is an overall upward trend. But we are more interested in: how much does the economy grow this year? Is it better or worse than last year? The answers are not obvious from the raw data. Besides, there are obvious seasonal fluctuations. Usually the first quarter has the lowest value in a whole year, due to the Spring Festival, which significantly reduces the working days in the first quarter. The seasonal fluctuations prohibit us from sensibly comparing two consecutive values.</p>
-<p><strong>Growth rate</strong>: The headline GDP growth is usually derived by comparing the current quarter with the same quarter from last year. <span class="math inline">\(g=\frac{x_t - x_{t-4}}{x_{t-4}}\times 100.\)</span> This makes sense. As mentioned above, due to seasonal patterns, comparing two consecutive quarters directly does not make sense. The year-on-year growth rate directly tells us how fast the economy grows. However, by dividing the past values, it loses the absolute level information. For instance, it is hard to tell after the pandemic, whether or not the economy recovers from its pre-pandemic output level. Besides, it is sensitive to the values of last year. For example, due to the pandemic, the GDP for 2020 is exceptionally low, which makes growth rate for 2021 exceptionally high. This is undesirable, because it does not mean the economy in 2021 is actually good. We would like a growth rate that shirks off past burdens.</p>
-<p>That’s why we sometimes prefer (annualized) quarterly growth rate. <span class="math inline">\(g=\frac{x_t-x_{t-1}}{x_{t-1}}\times 400.\)</span> Due to seasonally patterns, two consecutive quarters are not comparable directly. A first quarter value is usually much lower than the fourth quarter of last year due to holidays, which does not necessarily mean the economy condition is getting worse. Since this pattern is the same every year, it is possible to remove the seasonal fluctuations. This is called <em>seasonally adjustment</em>. We won’t cover seasonally adjustment in detail, but the next section will give some intuitions on how this can possibly be done. After seasonally adjusting the time series, we can calculate the growth rate based on two consecutive values (annualized by multiplying <span class="math inline">\(4\)</span>). The bottom-right panel of <a href="#fig-gdpts">Figure&nbsp;<span>1.1</span></a> is the seasonally-adjusted quarterly growth. Note that it is no longer biased upward in 2021 as the YoY growth.</p>
-<p><strong>Seasonally-adjusted series</strong>: This is usually the data format we prefer in time series analysis. FRED reports both seasonally-adjusted and non-seasonally-adjusted series. Seasonal adjustment algorithm is a science in itself. Popular algorithms include X-13-ARIMA developed by the United States Census Bureau, TRAMO/SEATS developed by the Bank of Spain, and so on.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-gdpts" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="basics_files/figure-html/fig-gdpts-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;1.1: Quarterly GDP Time Series (Unit: RMB Billion or %)</figcaption><p></p>
-</figure>
-</div>
-</div>
-</div>
-<p><strong>Log levels and log growth rates</strong>: We like to work with log levels. A lot of economic time series exhibit exponential growth, such as GDP. Taking logs convert them to linear. Another amazing thing about logs is the difference of two log values can be interpreted as percentage growth. We know from Taylor expansion that for small values of <span class="math inline">\(\Delta x\)</span> : <span class="math inline">\(\ln(\Delta x +1) \approx \Delta x\)</span>. Therefore,</p>
+<p>OLS can only be used to estimate AR models, but not MA models. MA models or ARMA models in general can be estimated using maximum likelihood approach. Maximum likelihood estimation (MLE) starts with an assumed distribution of the random variables. The parameters are chosen to maximize the likelihood of observing the data under the distribution.</p>
+<p>Consider an ARMA(<span class="math inline">\(p\)</span>, <span class="math inline">\(q\)</span>) model</p>
 <p><span class="math display">\[
-\ln x_t - \ln x_{t-1} = \ln\left(\frac{x_t}{x_{t-1}}\right) = \ln\left(\frac{x_t-x_{t-1}}{x_{t-1}}+1\right) \approx \frac{x_t-x_{t-1}}{x_{t-1}}.
+y_t = \phi_1 y_{t-1} +\dots + \phi_p y_{t-p} + u_t + \theta_1 u_{t-1} + \dots + \theta_q u_{t-q}
 \]</span></p>
-<p>So it is very handy to just difference the log levels to get the growth rates. Log difference can also be interpreted as the continuously compounded rate of change, if assuming</p>
+<p>Write in the form of data matrix:</p>
 <p><span class="math display">\[
-\frac{x_t}{x_{t-1}}=e^g \implies g = \ln x_t - \ln x_{t-1}.
+\begin{bmatrix}
+y_1 \\ y_2 \\ y_3 \\ \vdots \\y_T
+\end{bmatrix}=
+\underbrace{
+\begin{bmatrix}
+y_0 &amp; y_{-1} &amp; \dots &amp; y_{1-p} \\
+y_1 &amp; y_{0} &amp; \dots &amp; y_{2-p} \\
+y_2 &amp; y_{1} &amp; \dots &amp; y_{3-p} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+y_T &amp; y_{T-1} &amp; \dots &amp; y_{T-p} \\
+\end{bmatrix}
+}_{\boldsymbol X}
+\begin{bmatrix}
+\phi_1 \\ \phi_2 \\ \phi_3 \\ \vdots \\ \phi_p
+\end{bmatrix} +
+\underbrace{
+\begin{bmatrix}
+1 &amp; 0 &amp; 0 &amp; \dots &amp; 0 \\
+\theta_1 &amp; 1 &amp; 0 &amp; \dots &amp; 0 \\
+\theta_2 &amp; \theta_1 &amp; 1 &amp; \dots &amp; 0 \\
+\vdots &amp; \vdots &amp; &amp; \ddots &amp; \vdots \\
+0  &amp; \dots &amp; \theta_2 &amp; \theta_1 &amp; 1
+\end{bmatrix}
+}_{\boldsymbol\Gamma}
+\begin{bmatrix}
+u_1 \\ u_2 \\ u_3 \\ \vdots \\ u_T
+\end{bmatrix}
 \]</span></p>
-<p>Log difference also has the property of summability: summing up a series of log differences gives the log level provided the initial level. It is not as handy if you want to recover the level values from a series of percentage growth.</p>
+<p>Or compactly,</p>
 <p><span class="math display">\[
-\ln x_t = x_0 + \sum_{j=1}^{t} (\ln x_j - \ln x_{j-1}).
+\boldsymbol{y = X\phi + \Gamma u}.
 \]</span></p>
-<div class="callout-tip callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Buying vs.&nbsp;renting a home, which is better? Compute the NPV:</p>
+<p>We assume the innovations are jointly normal <span class="math inline">\(\boldsymbol u \sim N(0,\sigma^2\boldsymbol I)\)</span>. We also assume the first <span class="math inline">\(p\)</span> observations are known initial values <span class="math inline">\(y_0, y_{-1},\dots,y_{1-p}\)</span> and <span class="math inline">\(u_0 = u_{-1} = \dots = u_{1-q} = 0\)</span>. Therefore, the observed data are jointly normal given the initial condition,</p>
 <p><span class="math display">\[
-\text{NPV}=\sum_{t=0}^T \frac{C_t}{(1+r)^t}=\int_0^T C(t) e^{-rt} dt.
+\boldsymbol{y|y_0} \sim N(\boldsymbol{X\phi}, \sigma^2\boldsymbol{\Gamma\Gamma'}).
 \]</span></p>
-</div>
-</div>
+<p>The probability density function for multivariate normal is</p>
+<p><span class="math display">\[
+f(\boldsymbol{y} | \boldsymbol{y_0}, \boldsymbol{\phi}, \boldsymbol{\Gamma},\sigma^2) = (2\pi)^{-T/2}|\sigma^2\boldsymbol{\Gamma\Gamma'}|^{-1/2}\exp\left(-\frac{1}{2}(\boldsymbol{y-X\phi})' (\sigma^2\boldsymbol{\Gamma\Gamma'})^{-1} (\boldsymbol{y-X\phi}) \right)
+\]</span></p>
+<p>To simplify computation, take logarithm to get the log-likelihood function</p>
+<p><span class="math display">\[
+\ell(\boldsymbol{\phi},\boldsymbol{\Gamma},\sigma^2|\boldsymbol{y},\boldsymbol{y_0}) = -\frac{T}{2}\ln(2\pi) -\frac{1}{2}\ln|\sigma^2\boldsymbol{\Gamma\Gamma'}|-\frac{1}{2\sigma^2}(\boldsymbol{y-X\phi})' (\boldsymbol{\Gamma\Gamma'})^{-1} (\boldsymbol{y-X\phi}).
+\]</span></p>
+<p>The parameters are then chosen to maximize this log-likelihood function, i.e.&nbsp;the probability of observing the data under the assumed distribution. This can be done by conducting a grid search over the parameter space using a computer. To reduce the seach dimensions, we may concentrate the log-likelihood by computing the first-order conditions:</p>
+<p><span class="math display">\[
+\frac{\partial\ell}{\partial\boldsymbol\phi}=0 \implies \boldsymbol{\hat\phi} = (\boldsymbol X'(\boldsymbol{\hat\Gamma\hat\Gamma'})^{-1}\boldsymbol X)^{-1}\boldsymbol X'(\boldsymbol{\hat\Gamma\hat\Gamma'})^{-1}\boldsymbol y
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial\ell}{\partial\sigma^2}=0 \implies \hat\sigma^2 =\frac{1}{T} (\boldsymbol{y-X\hat\phi})' (\boldsymbol{\hat\Gamma\hat\Gamma'})^{-1} (\boldsymbol{y-X\hat\phi})
+\]</span></p>
+<p>Thia allows us to focus our search only on <span class="math inline">\(\boldsymbol\phi\)</span>.</p>
 
 
 
@@ -432,13 +449,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      <a href="./ols2.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./decomp.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decomposition</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./forecast.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Forecasting</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

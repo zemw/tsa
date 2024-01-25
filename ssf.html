@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time Series Analysis for Economists - 1&nbsp; Time Series Data</title>
+<title>Time Series Analysis for Economists - 15&nbsp; The Structural Shock Framework</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./decomp.html" rel="next">
-<link href="./index.html" rel="prev">
+<link href="./adl.html" rel="next">
+<link href="./dce.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -71,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The Structural Shock Framework</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -109,7 +109,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./basics.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></a>
+  <a href="./basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -199,7 +199,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ssf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The Structural Shock Framework</span></a>
+  <a href="./ssf.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The Structural Shock Framework</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -236,7 +236,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The Structural Shock Framework</span></h1>
 </div>
 
 
@@ -251,48 +251,36 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p><strong>Raw data</strong>: The raw values without any transformation. We are not so interested in the raw data, as it is hard to read information from it. Take the GDP plot as an example (<a href="#fig-gdpts">Figure&nbsp;<span>1.1</span></a>, upper-left subplot). There is an overall upward trend. But we are more interested in: how much does the economy grow this year? Is it better or worse than last year? The answers are not obvious from the raw data. Besides, there are obvious seasonal fluctuations. Usually the first quarter has the lowest value in a whole year, due to the Spring Festival, which significantly reduces the working days in the first quarter. The seasonal fluctuations prohibit us from sensibly comparing two consecutive values.</p>
-<p><strong>Growth rate</strong>: The headline GDP growth is usually derived by comparing the current quarter with the same quarter from last year. <span class="math inline">\(g=\frac{x_t - x_{t-4}}{x_{t-4}}\times 100.\)</span> This makes sense. As mentioned above, due to seasonal patterns, comparing two consecutive quarters directly does not make sense. The year-on-year growth rate directly tells us how fast the economy grows. However, by dividing the past values, it loses the absolute level information. For instance, it is hard to tell after the pandemic, whether or not the economy recovers from its pre-pandemic output level. Besides, it is sensitive to the values of last year. For example, due to the pandemic, the GDP for 2020 is exceptionally low, which makes growth rate for 2021 exceptionally high. This is undesirable, because it does not mean the economy in 2021 is actually good. We would like a growth rate that shirks off past burdens.</p>
-<p>That’s why we sometimes prefer (annualized) quarterly growth rate. <span class="math inline">\(g=\frac{x_t-x_{t-1}}{x_{t-1}}\times 400.\)</span> Due to seasonally patterns, two consecutive quarters are not comparable directly. A first quarter value is usually much lower than the fourth quarter of last year due to holidays, which does not necessarily mean the economy condition is getting worse. Since this pattern is the same every year, it is possible to remove the seasonal fluctuations. This is called <em>seasonally adjustment</em>. We won’t cover seasonally adjustment in detail, but the next section will give some intuitions on how this can possibly be done. After seasonally adjusting the time series, we can calculate the growth rate based on two consecutive values (annualized by multiplying <span class="math inline">\(4\)</span>). The bottom-right panel of <a href="#fig-gdpts">Figure&nbsp;<span>1.1</span></a> is the seasonally-adjusted quarterly growth. Note that it is no longer biased upward in 2021 as the YoY growth.</p>
-<p><strong>Seasonally-adjusted series</strong>: This is usually the data format we prefer in time series analysis. FRED reports both seasonally-adjusted and non-seasonally-adjusted series. Seasonal adjustment algorithm is a science in itself. Popular algorithms include X-13-ARIMA developed by the United States Census Bureau, TRAMO/SEATS developed by the Bank of Spain, and so on.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-gdpts" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="basics_files/figure-html/fig-gdpts-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;1.1: Quarterly GDP Time Series (Unit: RMB Billion or %)</figcaption><p></p>
-</figure>
-</div>
-</div>
-</div>
-<p><strong>Log levels and log growth rates</strong>: We like to work with log levels. A lot of economic time series exhibit exponential growth, such as GDP. Taking logs convert them to linear. Another amazing thing about logs is the difference of two log values can be interpreted as percentage growth. We know from Taylor expansion that for small values of <span class="math inline">\(\Delta x\)</span> : <span class="math inline">\(\ln(\Delta x +1) \approx \Delta x\)</span>. Therefore,</p>
+<p>The counterfactual framework introduced in the last section defines the dynamic causal effect of any variable on another. As economists, we are more interested in understanding the causal relationships between important forces that drive the economy. We now introduce the <strong>structural shock framework</strong>, or the <strong>Slutzky-Frisch paradigm</strong>. This paradigm is explicitly or implicitly embedded in virtually every mainstream macroeconomic models or econometric models. It is not an essential component of time series analysis. But, as we would like to approach the topic from an economist’s perspective, it is good to have this framework in mind for many of our applications.</p>
+<p>The structural shock framework envisions our economy as a complex system driven by a set of fundamental structural forces and coordinated by numerous price signals that automatically balance the demand and supply of all goods and services. The structural forces could be technology progress, climate change, policy changes and so on. These structural shocks are the primitive forces underlying our economy. When a structural shock happens, it triggers a reallocation of economic resources guided by market forces. In theoretical works, we are interested in modelling the system as a whole, particularly how resources are allocated optimally by market forces. In empirical works, we are interested how to recover the underlying structural shocks and estimate their causal effect on other economic variables.</p>
+<p>In the language of time series analysis, we can envision our economy as an MA process, in which the observable variables (output, employment, inflation, etc) are the outcomes of accumulated past and current structural shocks:</p>
 <p><span class="math display">\[
-\ln x_t - \ln x_{t-1} = \ln\left(\frac{x_t}{x_{t-1}}\right) = \ln\left(\frac{x_t-x_{t-1}}{x_{t-1}}+1\right) \approx \frac{x_t-x_{t-1}}{x_{t-1}}.
+\boldsymbol y_t = \boldsymbol\Theta(L) \boldsymbol\epsilon_t,
 \]</span></p>
-<p>So it is very handy to just difference the log levels to get the growth rates. Log difference can also be interpreted as the continuously compounded rate of change, if assuming</p>
+<p>or</p>
 <p><span class="math display">\[
-\frac{x_t}{x_{t-1}}=e^g \implies g = \ln x_t - \ln x_{t-1}.
+\begin{bmatrix}
+y_{1t}\\ y_{2t}\\ \vdots\\ y_{nt}
+\end{bmatrix} =
+\sum_{j=0}^{\infty}
+\begin{bmatrix}
+\theta_{j,11} &amp; \theta_{j,12} &amp; \cdots &amp; \theta_{j,1m}\\
+\theta_{j,21} &amp; \theta_{j,22} &amp; \cdots &amp; \theta_{j,2m}\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\theta_{j,n1} &amp; \theta_{j,n2} &amp; \cdots &amp; \theta_{j,nm}
+\end{bmatrix}
+\begin{bmatrix}
+\epsilon_{1,t-j}\\ \epsilon_{2,t-j}\\ \vdots\\ \epsilon_{m,t-j}
+\end{bmatrix}.
 \]</span></p>
-<p>Log difference also has the property of summability: summing up a series of log differences gives the log level provided the initial level. It is not as handy if you want to recover the level values from a series of percentage growth.</p>
+<p><span class="math inline">\(\boldsymbol y_t\)</span> represents the vector of economic variables of concern. The space of <span class="math inline">\(\boldsymbol y_t\)</span> are spanned by <span class="math inline">\(m\)</span> structural shocks (current and past): <span class="math inline">\(\{\boldsymbol \epsilon_{t-j}\}_{j=0}^{\infty}\)</span>.</p>
+<p><strong>Structural shocks</strong> are conceptual constructions that are primitive, unforeseeable, and uncorrelated underlying forces. Whether structural shocks do exist or not is an open question. But they are useful constructions that enable econometricians to disentangle different driving forces of the outcome variable.</p>
+<p>In reality, almost every economic variable is endogenous. For example, monetary policy (interest rate) is set by the monetary authority based on their assessment of the economic conditions. But we can also imagine, there is a “genuine” component of the monetary policy, which may come from the personality of the policymaker and his mental conditions when he make the decision, that is not predictable from other variables. This genuine component is what we deem as the “monetary policy shock”. It is a shock in a sense that it is not predictable. It speaks for its own sake and contribute to the economic outcomes independently.</p>
+<p>We do not observe the structural shocks directly. The observable variables are linear combinations of the structural shocks. For example, we may think of the observed interest rate as a linear combination of the monetary policy shock together with supply-side shocks and others.</p>
 <p><span class="math display">\[
-\ln x_t = x_0 + \sum_{j=1}^{t} (\ln x_j - \ln x_{j-1}).
+i_t = \theta_{1}(L)\epsilon_{t}^{\text{MP}} + \theta_{2}(L)\epsilon_{t}^{\text{SS}} + \cdots
 \]</span></p>
-<div class="callout-tip callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Buying vs.&nbsp;renting a home, which is better? Compute the NPV:</p>
-<p><span class="math display">\[
-\text{NPV}=\sum_{t=0}^T \frac{C_t}{(1+r)^t}=\int_0^T C(t) e^{-rt} dt.
-\]</span></p>
-</div>
-</div>
+<p>Therefore, regressing inflation or output on interest rate will not give the causal effect of the monetary policy. Because interest rate does not represent the “genuine” monetary policy shock. It is determined by other economic variables and there are multiple structural forces at work. There are numerous literature that works on methods to isolate the “monetary policy shock” from the observed interest rates. Such way of constructing the structural shocks is not only a conceptual idea, but also a prerequisite for meaningful interpretation of the coefficients of econometric models.</p>
 
 
 
@@ -432,13 +420,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      <a href="./dce.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Dynamic Causal Effect</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./decomp.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decomposition</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./adl.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimating Dynamic Multipliers</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

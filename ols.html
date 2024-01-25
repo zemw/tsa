@@ -182,11 +182,41 @@ ul.task-list li input[type="checkbox"] {
   <a href="./ols2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mle.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MLE for ARMA Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./forecast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Forecasting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Dynamic Causal Effect</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ssf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The Structural Shock Framework</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./adl.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimating Dynamic Multipliers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lpiv.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Instrument Variables</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">Epilogue</a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -268,9 +298,9 @@ M_{\sqrt{n}\bar x_n}(t) = \left[1 + \frac{t^2}{2n} + o(n^{-1})\right]^n = \left[
 <section id="ols-for-i.i.d-random-variables" class="level2" data-number="10.3">
 <h2 data-number="10.3" class="anchored" data-anchor-id="ols-for-i.i.d-random-variables"><span class="header-section-number">10.3</span> OLS for i.i.d Random Variables</h2>
 <p>We now give a very quick review of OLS with <span class="math inline">\(iid\)</span> random variables. These materials are assumed familiar to the readers. We do not intend to introduce them in any detail. This section is a quick snapshot of some key concepts, so that we could contrast them with the time series regression introduced in the next section.</p>
-<p>A linear regression model postulates the joint distribution of <span class="math inline">\((y_i, \mathbf{x_i})\)</span> follows a linear relationship,</p>
+<p>A linear regression model postulates the joint distribution of <span class="math inline">\((y_i, x_i)\)</span> follows a linear relationship,</p>
 <p><span class="math display">\[
-y_i = \mathbf{x_i}'\mathbf{\beta} + \epsilon_i.
+y_i = x_i'\beta + \epsilon_i.
 \]</span></p>
 <p>Expressed in terms of data matrix,</p>
 <p><span class="math display">\[
@@ -291,26 +321,26 @@ x_{n1}, x_{n2}, \dots, x_{np}\\
 \end{bmatrix}.
 \]</span></p>
 <p>From the perspective of dataset, the matrix matrix is fixed in the sense that they are just numbers in the dataset. But for statistical analysis, we view each entry in the matrix as random, that is as a realization of a random process.</p>
-<p>To estimate the parameter <span class="math inline">\(\mathbf{\beta}\)</span> from sample data, OLS seeks to minimize the squared residuals</p>
+<p>To estimate the parameter <span class="math inline">\(\beta\)</span> from sample data, OLS seeks to minimize the squared residuals</p>
 <p><span class="math display">\[
-\min_{\beta} \sum_{i=1}^{n}(y_i - \mathbf{x_i'\beta})^2.
+\min_{\beta} \sum_{i=1}^{n}(y_i - x_i'\beta)^2.
 \]</span></p>
 <p>The first-order condition implies,</p>
 <p><span class="math display">\[
 \begin{aligned}
-&amp;\sum_i \mathbf{x_i}(y_i - \mathbf{x_i'\beta}) =0, \\
-&amp;\sum_i \mathbf{x_i}y_i - \sum_i \mathbf{x_i x_i'\beta}=0, \\
-&amp;\mathbf{\hat\beta}= \left(\sum_i\mathbf{x_i x_i'}\right)^{-1} \left(\sum_i\mathbf{x_i}y_i\right) \\
-&amp;= \beta + \left(\sum_i\mathbf{x_i x_i'}\right)^{-1} \left(\sum_i\mathbf{x_i}\epsilon_i\right).
+&amp;\sum_i x_i(y_i - x_i'\beta) =0, \\
+&amp;\sum_i x_iy_i - \sum_i x_ix_i'\beta=0, \\
+&amp;\hat\beta = \left(\sum_i x_ix_i'\right)^{-1} \left(\sum_i x_iy_i\right) \\
+&amp;= \beta + \left(\sum_i x_ix_i'\right)^{-1} \left(\sum_i x_i\epsilon_i\right).
 \end{aligned}
 \]</span></p>
-<p>Under the Gauss-Markov assumptions, particularly <span class="math inline">\(\mathbb{E}(\epsilon_i|\mathbf{x_j})=0\)</span> and <span class="math inline">\(\text{var}(\mathbf{\epsilon}|\mathbf{X})=\sigma^2\mathbf{I}\)</span> (homoskedasticity and nonautocorrelation), the OLS estimator is <strong>BLUE</strong> (Best Linear Unbiased Estimator).</p>
+<p>Under the Gauss-Markov assumptions, particularly <span class="math inline">\(\mathbb{E}(\epsilon_i|x_j)=0\)</span> and <span class="math inline">\(\text{var}(\epsilon|X)=\sigma^2 I\)</span> (homoskedasticity and nonautocorrelation), the OLS estimator is <strong>BLUE</strong> (Best Linear Unbiased Estimator).</p>
 <p>Under the assumption of <span class="math inline">\(iid\)</span> random variables and homoskedasticity, we invoke the LLN and CLT to derive the asymptotic distribution for the OLS estimator,</p>
 <p><span class="math display">\[
 \begin{aligned}
-\sqrt{n}(\mathbf{\hat\beta}-\mathbf{\beta}) &amp;= \left(\frac{1}{n}\sum_i\mathbf{x_i x_i'}\right)^{-1} \left(\sqrt{n}\frac{1}{n}\sum_i\mathbf{x_i}\epsilon_i\right) \\[1em]
-&amp;\to [\mathbb{E}(\mathbf{x_i x_i'})]^{-1} \text{N}(0, \mathbb{E}(\mathbf{x_i}\epsilon_i\epsilon_i'\mathbf{x_i}')) \\[1em]
-&amp;\to \text{N}(0, \sigma^2[\mathbb{E}(\mathbf{x_i x_i'})]^{-1}).
+\sqrt{n}(\hat\beta-\beta) &amp;= \left(\frac{1}{n}\sum_i x_ix_i'\right)^{-1} \left(\sqrt{n}\frac{1}{n}\sum_i x_i\epsilon_i\right) \\[1em]
+&amp;\to [\mathbb{E}(x_ix_i')]^{-1} \text{N}(0, \mathbb{E}(x_i\epsilon_i\epsilon_i'x_i')) \\[1em]
+&amp;\to \text{N}(0, \sigma^2[\mathbb{E}(x_ix_i')]^{-1}).
 \end{aligned}
 \]</span></p>
 <p>Note how the <span class="math inline">\(iid\)</span> assumption is required throughout the process. The following section will show how to extend the OLS to non-<span class="math inline">\(iid\)</span> random variables and how it leads to modification of the results.</p>

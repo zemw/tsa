@@ -245,11 +245,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <a href="./ols2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mle.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MLE for ARMA Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./forecast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Forecasting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Dynamic Causal Effect</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ssf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The Structural Shock Framework</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./adl.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimating Dynamic Multipliers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lpiv.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Instrument Variables</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary</span></a>
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">Epilogue</a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -268,7 +298,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul>
   <li><a href="#ma1-process" id="toc-ma1-process" class="nav-link active" data-scroll-target="#ma1-process"><span class="toc-section-number">7.1</span>  MA(1) Process</a></li>
   <li><a href="#maq-process" id="toc-maq-process" class="nav-link" data-scroll-target="#maq-process"><span class="toc-section-number">7.2</span>  MA(q) Process</a></li>
-  <li><a href="#ma-process" id="toc-ma-process" class="nav-link" data-scroll-target="#ma-process"><span class="toc-section-number">7.3</span>  MA(∞) Process</a></li>
+  <li><a href="#mainfty-process" id="toc-mainfty-process" class="nav-link" data-scroll-target="#mainfty-process"><span class="toc-section-number">7.3</span>  MA(<span class="math inline">\(\infty\)</span>) Process</a></li>
   </ul>
 </nav>
     </div>
@@ -394,8 +424,8 @@ y_t = \mu + \epsilon_t + \theta_1\epsilon_{t-1} + \dots + \theta_q\epsilon_{t-q}
 <p><span class="theorem-title"><strong>Proposition 7.3 </strong></span>An MA(<span class="math inline">\(q\)</span>) process is characterized by (i) an ACF that is (close to) zero after <span class="math inline">\(q\)</span> lags; and (i) a PACF that is infinite in extend but tails of gradually.</p>
 </div>
 </section>
-<section id="ma-process" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="ma-process"><span class="header-section-number">7.3</span> MA(∞) Process</h2>
+<section id="mainfty-process" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="mainfty-process"><span class="header-section-number">7.3</span> MA(<span class="math inline">\(\infty\)</span>) Process</h2>
 <p>MA(<span class="math inline">\(\infty\)</span>) is a special case deserves attention. Partly because all ARMA processes can be reduced to MA(<span class="math inline">\(\infty\)</span>) processes. In addition to MA(<span class="math inline">\(q\)</span>) processes, we need more conditions for MA(<span class="math inline">\(\infty\)</span>) to be stationary. Consider the variance of</p>
 <p><span class="math display">\[
 y_t = \sum_{j=0}^{\infty}\theta_j\epsilon_{t-j},

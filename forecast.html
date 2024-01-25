@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time Series Analysis for Economists - 11&nbsp; OLS for Time Series</title>
+<title>Time Series Analysis for Economists - 13&nbsp; Forecasting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -93,8 +93,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./mle.html" rel="next">
-<link href="./ols.html" rel="prev">
+<link href="./dce.html" rel="next">
+<link href="./mle.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -134,7 +134,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Forecasting</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -242,7 +242,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ols2.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></a>
+  <a href="./ols2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -252,7 +252,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./forecast.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Forecasting</span></a>
+  <a href="./forecast.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Forecasting</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -296,10 +296,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#asymptotic-theorems-for-dependent-random-variables" id="toc-asymptotic-theorems-for-dependent-random-variables" class="nav-link active" data-scroll-target="#asymptotic-theorems-for-dependent-random-variables"><span class="toc-section-number">11.1</span>  Asymptotic Theorems for Dependent Random Variables</a></li>
-  <li><a href="#ols-for-time-series" id="toc-ols-for-time-series" class="nav-link" data-scroll-target="#ols-for-time-series"><span class="toc-section-number">11.2</span>  OLS for Time Series</a></li>
-  <li><a href="#hac-standard-errors" id="toc-hac-standard-errors" class="nav-link" data-scroll-target="#hac-standard-errors"><span class="toc-section-number">11.3</span>  HAC Standard Errors</a></li>
-  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"><span class="toc-section-number">11.4</span>  Example</a></li>
+  <li><a href="#intuitive-approach" id="toc-intuitive-approach" class="nav-link active" data-scroll-target="#intuitive-approach"><span class="toc-section-number">13.1</span>  Intuitive Approach</a></li>
+  <li><a href="#best-linear-predictor" id="toc-best-linear-predictor" class="nav-link" data-scroll-target="#best-linear-predictor"><span class="toc-section-number">13.2</span>  Best Linear Predictor</a></li>
+  <li><a href="#forecasting-with-arma-models" id="toc-forecasting-with-arma-models" class="nav-link" data-scroll-target="#forecasting-with-arma-models"><span class="toc-section-number">13.3</span>  Forecasting with ARMA Models</a>
+  <ul class="collapse">
+  <li><a href="#forecasting-with-arp" id="toc-forecasting-with-arp" class="nav-link" data-scroll-target="#forecasting-with-arp"><span class="toc-section-number">13.3.1</span>  Forecasting with AR(p)</a></li>
+  <li><a href="#forecasting-with-maq" id="toc-forecasting-with-maq" class="nav-link" data-scroll-target="#forecasting-with-maq"><span class="toc-section-number">13.3.2</span>  Forecasting with MA(q)</a></li>
+  <li><a href="#forecasting-with-armapq" id="toc-forecasting-with-armapq" class="nav-link" data-scroll-target="#forecasting-with-armapq"><span class="toc-section-number">13.3.3</span>  Forecasting with ARMA(p,q)</a></li>
+  </ul></li>
+  <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications"><span class="toc-section-number">13.4</span>  Applications</a></li>
   </ul>
 </nav>
     </div>
@@ -308,7 +313,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Forecasting</span></h1>
 </div>
 
 
@@ -323,119 +328,195 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="asymptotic-theorems-for-dependent-random-variables" class="level2" data-number="11.1">
-<h2 data-number="11.1" class="anchored" data-anchor-id="asymptotic-theorems-for-dependent-random-variables"><span class="header-section-number">11.1</span> Asymptotic Theorems for Dependent Random Variables</h2>
-<p>The asymptotic theorems and regressions that work for <span class="math inline">\(iid\)</span> random variable do not immediately apply to time series. Consider the proof for <a href="ols.html#thm-lln">Theorem&nbsp;<span>10.1</span></a>, without the <span class="math inline">\(iid\)</span> assumption we have</p>
+<p>So far we have introduced basic univariate time series models and their estimation. One common application of univariate time series analysis is forecasting. Forecasting is a rather complex topic, with a wide range of techniques from basic ARMA models to machine learning. This book is not specialized in forecasting. We only devote this section to briefly cover forecasting based on ARMA models. We will start with some intuition. Then justify the intuition with a bit of formal theory.</p>
+<section id="intuitive-approach" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="intuitive-approach"><span class="header-section-number">13.1</span> Intuitive Approach</h2>
+<p>Suppose we have an AR(1) process,</p>
+<p><span class="math display">\[
+y_t = \phi y_{t-1} + \epsilon_t, \quad\epsilon_t\sim\text{WN}(0,\sigma^2).
+\]</span></p>
+<p>What would be the reasonable forecast for <span class="math inline">\(y_{T+1}\)</span> given <span class="math inline">\(y_1,...,y_T\)</span>? It seems sensible to simply drop the white noise, as it is something completely unpredictable and it has mean zero. Thus,</p>
+<p><span class="math display">\[
+\hat y_{T+1|T} = \phi y_t.
+\]</span></p>
+<p>This is 1-period ahead forecast. But how do we forecast <span class="math inline">\(k\)</span>-period ahead? Heuristically, we can simply iterate over to the future:</p>
 <p><span class="math display">\[
 \begin{aligned}
-\text{var}\left(\frac{1}{n}\sum_{i=1}^{n}x_i\right)
-&amp;= \frac{1}{n^2}\sum_{i=1}^n\sum_{j=1}^n \text{cov}(x_i, x_j) \\
-&amp;= \frac{1}{n^2}[\text{cov}(x_1, x_1) + \text{cov}(x_1, x_2) + \cdots + \text{cov}(x_1, x_n)+ \\
-&amp;\hspace{3em} \text{cov}(x_2, x_1) + \text{cov}(x_2, x_2) + \cdots + \text{cov}(x_2, x_n)+ \\
-&amp;\hspace{3em}\vdots\\
-&amp;\hspace{3em} \text{cov}(x_n, x_1) + \text{cov}(x_n, x_2) + \cdots + \text{cov}(x_n, x_n)] \\
-&amp;= \frac{1}{n^2} [n\gamma_0 + 2(n-1)\gamma_1 + 2(n-2)\gamma_1 + 2(n-2)\gamma_2 + \dots] \\
-&amp;= \frac{1}{n} \left[2\sum_{k=1}^n \gamma_k\left(1-\frac{k}{n}\right) + \gamma_0 \right].
+\hat y_{T+2|T} &amp;= \phi\hat y_{T+1|T} = \phi^2 y_T, \\
+\hat y_{T+h|T} &amp;= \phi\hat y_{T+h-1} = \cdots = \phi^h y_T.
 \end{aligned}
 \]</span></p>
-<p>The argument for the <span class="math inline">\(iid\)</span> does not work with the presence of serial correlations. If we assume absolute summability, <span class="math inline">\(\sum_{j=-\infty}^{\infty} |\gamma_j| &lt;\infty\)</span>, then</p>
-<p><span class="math display">\[
-\lim_{n\to\infty} \frac{1}{n} \left[2\sum_{k=1}^n \gamma_k\left(1-\frac{k}{n}\right) + \gamma_0 \right] =0.
-\]</span></p>
-<p>In this case, we still have the LLN holds. Otherwise, as the variance may not converge. Remember <a href="stationary.html#thm-ergodic">Theorem&nbsp;<span>4.1</span></a>, absolute summability implies the series is ergodic.</p>
-<div id="prp-lln2" class="theorem proposition">
-<p><span class="theorem-title"><strong>Proposition 11.1 </strong></span>If <span class="math inline">\(x_t\)</span> is a covariance stationary time series with absolutely summable auto-covariances, then a Law of Large Numbers holds.</p>
-</div>
-<p>From the new proof of LLN one can guess that the variance in a Central Limit Theorem should also change. The serially correlated <span class="math inline">\(x_t\)</span>, the liming variance is given by</p>
+<p>We will leave the heuristic solutions here and justify them later. If we accept this heuristic approach, we can easily generalize it to AR(<span class="math inline">\(p\)</span>) processes:</p>
 <p><span class="math display">\[
 \begin{aligned}
-\text{var}\left(\frac{1}{\sqrt n}\sum_{i=1}^{n}x_i\right)
-&amp;= 2\sum_{k=1}^n \gamma_k\left(1-\frac{k}{n}\right) + \gamma_0 \\
-&amp;\to 2\sum_{k=1}^{\infty} \gamma_k + \gamma_0 = \sum_{k=-\infty}^{\infty}\gamma_k = S.
+y_t &amp;= \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} + \epsilon_t. \\
+\hat y_{T+1|T} &amp;= \phi_1 y_{T} + \phi_2 y_{T-1} + \dots + \phi_p y_{T-p+1}, \\
+\hat y_{T+2|T} &amp;= \phi_1\hat y_{T+1|T} + \phi_2 y_{T} + \dots + \phi_p y_{T-p+2}, \\
+&amp;\vdots \\
+\hat y_{T+h|T} &amp;= \phi_1\hat y_{T+h-1|T} + \phi_2\hat y_{T+h-2|T} + \dots + \phi_p y_{T-p+h}. \\
 \end{aligned}
 \]</span></p>
-<p>We call <span class="math inline">\(S\)</span> the <em>long-run variance</em>. There are many CLTs for serially correlated observations. We give the two mostly commonly cited versions: one applies to MA(<span class="math inline">\(\infty\)</span>) processes, the other one is more general.</p>
-<div id="thm-clt2" class="theorem">
-<p><span class="theorem-title"><strong>Theorem 11.1 </strong></span>Let <span class="math inline">\(y_t\)</span> be an MA process: <span class="math inline">\(y_t = \mu + \sum_{j=0}^\infty c_j\epsilon_{t-j}\)</span> where <span class="math inline">\(\epsilon_t\)</span> is independent white noise and <span class="math inline">\(\sum_{j=0}^{\infty} |c_j|&lt;\infty\)</span> (this implies ergodic), then</p>
+<p>For MA(<span class="math inline">\(q\)</span>) processes</p>
 <p><span class="math display">\[
-\sqrt{T} \bar y_t \overset{d}\to N(0, S),
-\]</span></p>
-<p>where <span class="math inline">\(S = \sum_{k=-\infty}^{\infty}\gamma_k\)</span> is the long-run variance.</p>
-</div>
-<div id="thm-clt3" class="theorem">
-<p><span class="theorem-title"><strong>Theorem 11.2 (Gordin’s CLT) </strong></span>Assume we have a strictly stationary and ergodic series <span class="math inline">\(\{y_t\}\)</span> with <span class="math inline">\(\mathbb{E}(y_t^2) &lt;\infty\)</span> satisfying: <span class="math inline">\(\sum_j\{\mathbb{E}[\mathbb{E}[y_t|I_{t-j}]-\mathbb{E}[y_t|I_{t-j-1}]]^2\}^{1/2} &lt;\infty\)</span> and <span class="math inline">\(\mathbb{E}[y_t|I_{t-j}]\to 0\)</span> as <span class="math inline">\(j\to\infty\)</span>, then</p>
+y_t = \epsilon_t + \theta_1\epsilon_{t-1} + \theta_2\epsilon_{t-2} + \cdots + \theta_q\epsilon_{t-q}  
+\]</span> Suppose we know the past innovations until <span class="math inline">\(T\)</span>: <span class="math inline">\(\epsilon_{T}, \epsilon_{T-1}, ...\)</span> The best way to forecast <span class="math inline">\(\hat y_{T+h|T}\)</span> looks to simply discard <span class="math inline">\(\epsilon_{T+1},...,\epsilon_{T+h}\)</span>. Since we have no knowledge about future innovations given the information at time <span class="math inline">\(T\)</span>. Therefore,</p>
 <p><span class="math display">\[
-\sqrt{T} \bar y_t \overset{d}\to N(0, S),
+\begin{array}{llll}
+\hat y_{T+1|T} &amp;= \theta_1\epsilon_T + &amp;\theta_2\epsilon_{T-1} + &amp;\theta_3\epsilon_{T-2} + \cdots \\
+\hat y_{T+2|T} &amp;=  &amp;\theta_2\epsilon_T + &amp;\theta_3\epsilon_{T-1} + \cdots \\
+&amp;\vdots &amp; &amp; \\
+\hat y_{T+h|T} &amp;=  &amp; &amp; \theta_h\epsilon_T + \theta_{h+1}\epsilon_{T-1} + \cdots
+\end{array}
 \]</span></p>
-<p>where <span class="math inline">\(S = \sum_{k=-\infty}^{\infty}\gamma_k\)</span> is the long-run variance.</p>
-</div>
-<p>The Gordin’s conditions are intended to make the dependence between distant observations to decrease to 0. ARMA process is a special case of Gordin series. The essence of these theorems is that we need some restrictions on dependencies for LLN and CLT to hold. We allow serial correlations as long as they are not too strong. If the observations become almost independent as they are far away in time, the can still apply the asymptotic theorems.</p>
 </section>
-<section id="ols-for-time-series" class="level2" data-number="11.2">
-<h2 data-number="11.2" class="anchored" data-anchor-id="ols-for-time-series"><span class="header-section-number">11.2</span> OLS for Time Series</h2>
-<div id="def-exog" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 11.1 </strong></span>Given a time series regression model</p>
-<p><span class="math display">\[y_t = x_t'\beta + \epsilon_t, \]</span></p>
-<p><span class="math inline">\(x_t\)</span> is <strong>weakly exogenous</strong> if</p>
-<p><span class="math display">\[ \mathbb{E}(\epsilon_t | x_t, x_{t-1}, ...) = 0;\]</span></p>
-<p><span class="math inline">\(x_t\)</span> is <strong>strictly exogenous</strong> if</p>
-<p><span class="math display">\[ \mathbb{E}(\epsilon_t | \{x_t\}_{t=-\infty}^{\infty}) = 0. \]</span></p>
+<section id="best-linear-predictor" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="best-linear-predictor"><span class="header-section-number">13.2</span> Best Linear Predictor</h2>
+<p>We now justify our heuristic solutions by the theory of best linear predictor. Suppose we want to forecast <span class="math inline">\(y\)</span> give the information set <span class="math inline">\(X\)</span>.</p>
+<div id="def-blp" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 13.1 </strong></span>The best linear predictor (BLP) is defined as</p>
+<p><span class="math display">\[
+\mathcal{F}(y|X)=x'\beta^*
+\]</span> which is a linear function of <span class="math inline">\(X=(x_1,x_2,...,x_p)\)</span> such that</p>
+<p><span class="math display">\[
+\beta^* =\text{argmin}\ \mathbb{E}(y-x'\beta)^2.
+\]</span></p>
 </div>
-<p>Strictly exogeneity requires innovations being exogenous from all past and future regressors; while weakly exogeneity only requires being exogenous from past regressors. In practice, strict exogeneity is too strong as an assumption. The weak exogenous is more practical and it is enough to ensure the consistency of the OLS estimator.</p>
-<p>The OLS estimator is as usual:</p>
-<p><span class="math display">\[\hat\beta = \beta + \left(\frac{1}{n}\sum_t x_t x_t'\right)^{-1} \left(\frac{1}{n}\sum_t x_t\epsilon_t\right).\]</span></p>
-<p>Assuming LLN holds and <span class="math inline">\(x_t\)</span> is weakly exogenous, we have</p>
+<p>Taking first-order condition with respect to <span class="math inline">\(\beta\)</span> gives</p>
+<p><span class="math display">\[
+\beta^* = [\mathbb{E}(xx')]^{-1} \mathbb{E}(xy).
+\]</span></p>
+<p>Therefore, the BLP is given by</p>
+<p><span class="math display">\[
+\hat y = \mathcal{F}(y|X)=x'\beta^* = x'[\mathbb{E}(xx')]^{-1} \mathbb{E}(xy).
+\]</span></p>
+<p>The prediction error is</p>
+<p><span class="math display">\[
+r_{y|X} = y - \hat y = y - x'[\mathbb{E}(xx')]^{-1} \mathbb{E}(xy).
+\]</span></p>
+<p>The BLP is the linear projection of <span class="math inline">\(y\)</span> onto <span class="math inline">\(X\)</span>. Because <span class="math inline">\(\mathbb{E}[x(y-x'\beta)]=0\)</span>. The forecast error is orthogonal to <span class="math inline">\(X\)</span>.</p>
+<div id="prp-blp" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 13.1 </strong></span>BLP has the following properties:</p>
+<ol type="1">
+<li><span class="math inline">\(\mathcal{F}[ax + by| z_1...z_k] = a\mathcal{F}[x|z_1...z_k] + b\mathcal{F}[y|z_1...z_k]\)</span>;</li>
+<li>If <span class="math inline">\(x = a_1z_1 + \cdots + a_kz_k\)</span> is already a linear combination of <span class="math inline">\(z_1...z_k\)</span>, then <span class="math inline">\(\mathcal{F}[x|z_1...z_k]=x\)</span>;</li>
+<li>If for all <span class="math inline">\(1\leq j\leq k\)</span>, <span class="math inline">\(\text{cov}(x,z_j)=\mathbb{E}(xz_j)=0\)</span>, then <span class="math inline">\(\mathcal{F}[x|z_1...z_k]=0\)</span>.</li>
+</ol>
+</div>
+</section>
+<section id="forecasting-with-arma-models" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="forecasting-with-arma-models"><span class="header-section-number">13.3</span> Forecasting with ARMA Models</h2>
+<p>ARMA model is a basic yet powerful tool for forecasting. Given all stationary time series can be approximated by ARMA processes, it makes sense to model a stationary time series with ARMA, and then make forecast based on that model. We will see our heuristic solutions in the first part can be easily justified with the theory of BLP.</p>
+<section id="forecasting-with-arp" class="level3" data-number="13.3.1">
+<h3 data-number="13.3.1" class="anchored" data-anchor-id="forecasting-with-arp"><span class="header-section-number">13.3.1</span> Forecasting with AR(p)</h3>
+<p>We have said that, for an AR(<span class="math inline">\(p\)</span>) process</p>
+<p><span class="math display">\[
+y_t = \phi_1 y_{t-1} + \phi_2 y_{t-2} + \dots + \phi_p y_{t-p} + \epsilon_t,
+\]</span></p>
+<p>The one-step-ahead forecast is simply</p>
+<p><span class="math display">\[
+\hat y_{T+1|T} = \phi_1 y_{T} + \phi_2 y_{T-1} + \dots + \phi_p y_{T-p+1}.
+\]</span></p>
+<p>This is the BLP immediately from Property 2 of <a href="#prp-blp">Proposition&nbsp;<span>13.1</span></a>. We can also justify the iterated <span class="math inline">\(h\)</span>-step-ahead forecast by Property 1 (assuming <span class="math inline">\(h&lt;p\)</span>):</p>
 <p><span class="math display">\[
 \begin{aligned}
-\frac{1}{n}\sum_t x_t x_t' &amp;\to \mathbb{E}(x_t x_t') = Q,\\
-\frac{1}{n}\sum_t x_t\epsilon_t &amp;\to \mathbb{E}(x_t\epsilon_t) = \mathbb{E}[x_t\mathbb{E}[\epsilon_t|x_t]] = 0.
+\hat y_{T+h|T} &amp;= \phi_1\hat y_{T+h-1|T} + \phi_2\hat y_{T+h-2|T} + \cdots + \phi_h y_{T} + \dots + \phi_p y_{T+h-p} \\
+&amp;= \phi_1\mathcal{F}[y_{T+h-1}|y_T, y_{T-1}...] + \cdots + \phi_p\mathcal{F}[y_{T+h-p}|y_T, y_{T-1}...] \\
+&amp;= \mathcal{F}[\phi_1 y_{T+h-1} + \cdots + \phi_p y_{T+h-p} | y_T,y_{T-1},...] \\
+&amp;= \mathcal{F}[y_{T+h}|y_T,y_{T-1},...]
 \end{aligned}
 \]</span></p>
-<p>Therefore, <span class="math inline">\(\hat\beta \to \beta\)</span>. The OLS estimator is <em>consistent</em>.</p>
-<p>Assuming the Gordin’s conditions hold for <span class="math inline">\(z_t=x_t\epsilon_t\)</span>, the CLT gives</p>
-<p><span class="math display">\[
-\frac{1}{\sqrt n}\sum_t x_t\epsilon_t \to N(0,S),
-\]</span></p>
-<p>where <span class="math inline">\(S = \sum_{-\infty}^{\infty}\gamma_j\)</span> is the long-run variance for <span class="math inline">\(z_t\)</span>. Thus, we have the asymptotic normality for the OLS estimator</p>
-<p><span class="math display">\[
-\sqrt{T}(\hat\beta - \beta) \to N(0,Q^{-1}SQ^{-1}).
-\]</span></p>
-<p>Note how the covariance matrix <span class="math inline">\(S\)</span> is different from the one in the <span class="math inline">\(iid\)</span> case where <span class="math inline">\(S=\sigma^2\mathbb{E}(x_ix_i')\)</span>. The long-run variance <span class="math inline">\(S\)</span> takes into account the auto-dependencies between observations. The auto-dependencies usually arise from the serially correlated error terms. It may also arise from <span class="math inline">\(x_t\)</span> being autocorrelated and from conditional heteroskedasticity of the error terms. Because of the auto-covariance structure, <span class="math inline">\(S\)</span> cannot be estimated in the same way as in the <span class="math inline">\(iid\)</span> case. The estimator for <span class="math inline">\(S\)</span> is called HAC (heteroskedasticity autocorrelation consistent) standard errors.</p>
+<p>This is assuming all the forecast before <span class="math inline">\(h\)</span> are BLPs, which can be justified recursively. Also note that for the values readily observed: <span class="math inline">\(y_T, y_{T-1},...\)</span> , the BLP is the value itself.</p>
 </section>
-<section id="hac-standard-errors" class="level2" data-number="11.3">
-<h2 data-number="11.3" class="anchored" data-anchor-id="hac-standard-errors"><span class="header-section-number">11.3</span> HAC Standard Errors</h2>
-<p><span class="math inline">\(S\)</span> can be estimated with truncated autocovariances,</p>
+<section id="forecasting-with-maq" class="level3" data-number="13.3.2">
+<h3 data-number="13.3.2" class="anchored" data-anchor-id="forecasting-with-maq"><span class="header-section-number">13.3.2</span> Forecasting with MA(q)</h3>
+<p>For the MA(<span class="math inline">\(q\)</span>) process</p>
 <p><span class="math display">\[
-\hat S = \sum_{j=-h(T)}^{h(T)} \hat\gamma_j.
+y_t = \epsilon_t + \theta_1\epsilon_{t-1} + \theta_2\epsilon_{t-2} + \cdots + \theta_q\epsilon_{t-q}  
 \]</span></p>
-<p><span class="math inline">\(h(T)\)</span> is a function of <span class="math inline">\(T\)</span> and <span class="math inline">\(h(T)\to\infty\)</span> as <span class="math inline">\(T\to\infty\)</span>, but more slowly. Because we don’t want to include too many imprecisely estimated covariances. Another problem is the estimated <span class="math inline">\(\hat S\)</span> might be negative. The solution is weight the covariances in a way to ensure positiveness:</p>
+<p>The BLP for <span class="math inline">\(h\)</span>-step-ahead forecast is (assuming <span class="math inline">\(h&lt;q\)</span>)</p>
 <p><span class="math display">\[
-\hat S = \sum_{j=-h(T)}^{h(T)} k_T(j) \hat\gamma_j.
+\begin{aligned}
+\hat y_{T+h|T} &amp;= \mathcal{F}(y_{T+h}|\epsilon_T,\epsilon_{T-1}...) \\
+&amp;= \mathcal{F}(\epsilon_{T+h}|\epsilon_T,\epsilon_{T-1}...) + \theta_1\mathcal{F}(\epsilon_{T+h-1}|\epsilon_T,\epsilon_{T-1}...) + \cdots + \theta_q\mathcal{F}(\epsilon_{T+h-q}|\epsilon_T,\epsilon_{T-1}...) \\
+&amp;= 0 + \cdots + 0 + \theta_h\epsilon_T + \cdots + \theta_q\epsilon_{T+h-q}
+\end{aligned}
 \]</span></p>
-<p><span class="math inline">\(k_T(\cdot)\)</span> is called a kernel. The weights are chosen to guarantee positive-definiteness by weighting down high lag covariances. Also we need <span class="math inline">\(k_T(\cdot)\to 1\)</span> for consistency.</p>
-<p>A popular HAC estimator is the Newey-West variance estimator, in which <span class="math inline">\(h(T) = 0.75 T^{1/3}\)</span> and <span class="math inline">\(k_T(j) = \frac{h-j}{h}\)</span>, so that</p>
+<p>We make use of Property 3 of <a href="#prp-blp">Proposition&nbsp;<span>13.1</span></a> with the knowledge that <span class="math inline">\(\text{cov}(\epsilon_i,\epsilon_j)=0\)</span> for <span class="math inline">\(i \neq j\)</span>. This result is also consistent with our intuition, because we have no knowledge of future innovations, the best thing we can do is assuming they are zeros. If <span class="math inline">\(h&gt;q\)</span>, then all <span class="math inline">\(\mathcal{F}(\epsilon_{T+h-q}|\epsilon_T,\epsilon_{T-1}...)\)</span> are zero, which yields <span class="math inline">\(\hat y_{T+h|T} = 0\)</span>.</p>
+<p>In practice, we do not observe <span class="math inline">\(\{\epsilon_{t}\}\)</span>. If we have an estimated MA model and we want to make forecast based on the model, we need to back out <span class="math inline">\(\{\epsilon_{t}\}\)</span> from <span class="math inline">\(\{y_t\}\)</span> by inverting the MA process: <span class="math inline">\(\epsilon_t = \theta^{-1}(L)y_t\)</span>.</p>
+<p>With the MA specification, we can easily compute the <strong>Mean Squared Forecast Error (MSFE)</strong> as follows</p>
 <p><span class="math display">\[
-\hat S = \sum_{j=-h}^{h} \left(\frac{h-j}{h}\right)\hat\gamma_j.
+Q_{T+h|T} = \mathbb{E}(y_{T+h} - \hat y_{T+h|T})^2 = \mathbb{E}\left(\sum_{j=0}^{h-1}\theta_j\epsilon_{T+h-j}\right)^2 = \sigma^2\sum_{j=0}^{h-1}\theta_j^2.
 \]</span></p>
 </section>
-<section id="example" class="level2" data-number="11.4">
-<h2 data-number="11.4" class="anchored" data-anchor-id="example"><span class="header-section-number">11.4</span> Example</h2>
-<p>Note that all of our discussions in this chapter apply only to stationary time series. Without stationarity, even the autocovariance <span class="math inline">\(\gamma_j\)</span> might not be well-defined. In the following example, we generate artificial data from an AR(2) process, and recover the parameters by regression <span class="math inline">\(y_t\)</span> on its lags.</p>
+<section id="forecasting-with-armapq" class="level3" data-number="13.3.3">
+<h3 data-number="13.3.3" class="anchored" data-anchor-id="forecasting-with-armapq"><span class="header-section-number">13.3.3</span> Forecasting with ARMA(p,q)</h3>
+<p>Consider the ARMA(<span class="math inline">\(p\)</span>, <span class="math inline">\(q\)</span>) process</p>
+<p><span class="math display">\[
+(1-\phi_1L-\cdots-\phi_pL^p)y_t = (1+\theta_1L+\cdots+\theta_qL^q)\epsilon_t
+\]</span></p>
+<p>We assume the process is causal and invertible. We can transform it to an AR(<span class="math inline">\(\infty\)</span>) process or MA(<span class="math inline">\(\infty\)</span>) process.</p>
+<p>Causal form:</p>
+<p><span class="math display">\[
+y_t = \phi^{-1}(L)\theta(L)\epsilon_t = \sum_{j=0}^{\infty} \psi_j\epsilon_{t-j}
+\]</span></p>
+<p>Invertible form:</p>
+<p><span class="math display">\[
+\epsilon_t = \theta^{-1}(L)\phi(L)y_t = \sum_{j=0}^{\infty} \pi_j y_{t-j}
+\]</span></p>
+<p>or</p>
+<p><span class="math display">\[
+y_t = -\sum_{j=1}^{\infty} \pi_j y_{t-j} + \epsilon_t
+\]</span></p>
+<p>As we have seen so far, it is relatively easier to compute the mean forecast with AR models, and the MSFE with MA models. So we make forecast with the AR representation:</p>
+<p><span class="math display">\[
+\hat y_{T+h|T} = -\sum_{j=1}^{h-1}\pi_j\hat y_{T+h-j} - \sum_{j=h}^{\infty}\pi_jy_{T+h-j}
+\]</span></p>
+<p>However, we do not observe infinite past values in real world. We can only use the truncated values, discarding past values that we do not observe <span class="math inline">\(y_0,y_{-1}, y_{-1},...\)</span></p>
+<p><span class="math display">\[
+\hat y_{T+h|T} = -\sum_{j=1}^{h-1}\pi_j\hat y_{T+h-j} - \sum_{j=h}^{T+h-1}\pi_jy_{T+h-j}
+\]</span></p>
+<p>We compute the MSFE with the MA representation:</p>
+<p><span class="math display">\[
+Q_{T+h|T} = \mathbb{E}(y_{T+h} - \hat y_{T+h})^2 =  \sigma^2\sum_{j=0}^{h-1}\psi_j^2
+\]</span></p>
+<p>If we can compute the prediction interval if we assume some probability distributions for the innovations. If we assume <span class="math inline">\(\epsilon_t\overset{iid}\sim N(0, \sigma^2)\)</span>, then <span class="math inline">\((y_1,...,y_{T+h})'\)</span> is jointly normal. Therefore,</p>
+<p><span class="math display">\[
+y_{T+h} - \hat y_{T+h|T} \sim N(0, Q_{T+h|T})
+\]</span></p>
+<p>The prediction interval is thus given by <span class="math inline">\(\hat y_{T+h|T} \pm z_{\alpha/2}\sqrt{Q_{T+h|T}}\)</span>.</p>
+</section>
+</section>
+<section id="applications" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="applications"><span class="header-section-number">13.4</span> Applications</h2>
+<p>The following examples use ARMA models to forecast inflation rate and stock market index. The parameters of the ARMA models are chosen automatically. We can see for the inflation rate, the model produces some patterns in the forecast. But for the stock market index, the forecast is an uninformative flat line, indicating there is no useful patterns in the past data can be extrapolated by the ARMA model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ar =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.3</span>)), <span class="at">n =</span> <span class="dv">1000</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> <span class="fu">cbind</span>(y, <span class="fu">lag</span>(y,<span class="sc">-</span><span class="dv">1</span>), <span class="fu">lag</span>(y,<span class="sc">-</span><span class="dv">2</span>)))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(mod, <span class="at">vcov. =</span> sandwich<span class="sc">::</span><span class="fu">NeweyWest</span>(mod))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-t test of coefficients:
-
-              Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  -0.025182   0.031793 -0.7921   0.4285    
-`lag(y, -1)`  0.536739   0.030622 17.5281   &lt;2e-16 ***
-`lag(y, -2)`  0.265160   0.031017  8.5489   &lt;2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">readRDS</span>(<span class="st">"data/md.Rds"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>CPI <span class="sc">|&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">auto.arima</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">forecast</span>(<span class="at">h=</span><span class="dv">20</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-fccpi" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="forecast_files/figure-html/fig-fccpi-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;13.1: ARMA forecast for monthly inflation</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>SHSE <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">auto.arima</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">forecast</span>(<span class="at">h=</span><span class="dv">20</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-fcshse" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="forecast_files/figure-html/fig-fcshse-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;13.2: ARMA forecast for stock market index</figcaption><p></p>
+</figure>
+</div>
 </div>
 </div>
 
@@ -578,13 +659,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./ols.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Preliminaries</span></span>
+      <a href="./mle.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MLE for ARMA Models</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./mle.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MLE for ARMA Models</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./dce.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Dynamic Causal Effect</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
