@@ -28,6 +28,7 @@ book:
         - forecast.qmd
         - dce.qmd
         - ssf.qmd
+        - adl.qmd
     - summary.qmd
     - references.qmd
 
