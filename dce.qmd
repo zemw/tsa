@@ -1,7 +1,5 @@
 # Dynamic Causal Effect
 
-## Causal Effect over Time
-
 As in all fields of science, we are perpetually interested in
 understanding the causal effect of one thing on another. In economics,
 we want to understand how monetary policy affects output and inflation,
