@@ -30,6 +30,9 @@ book:
         - ssf.qmd
         - adl.qmd
         - lpiv.qmd
+    - part: "Unit Root Process"
+      chapters: 
+        - ito.qmd
     - summary.qmd
     - references.qmd
 

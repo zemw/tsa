@@ -1,0 +1,33 @@
+# A Crash Course on Itô Calculus
+
+## Brownian Motion
+
++---------------------+----------------------+----------------------+
+|                     | Random Walk          | Brownian Motion      |
++=====================+======================+======================+
+| Innovation          | $\epsilon_           | ![](fig/epsilon.png) |
+|                     | i\sim\text{WN}(0,1)$ |                      |
++---------------------+----------------------+----------------------+
+| Stochastic process  | $y_t = \epsil        | $X(r) = \li          |
+|                     | on_1 + \epsilon_2 +  | m_{n\to\infty}\sum_{ |
+|                     | \cdots + \epsilon_t$ | i=1}^{nr}\epsilon_i$ |
+|                     |                      | where $r \in [0,1]$  |
++---------------------+----------------------+----------------------+
+| Expectation         | $\mathbb E[y_t]=0$   | $                    |
+|                     |                      | \mathbb E[X(r)] = 0$ |
++---------------------+----------------------+----------------------+
+| Variance            | $\t                  | $\tex                |
+|                     | ext{Var}[y_t]=t\text | t{Var}[X(r)]=nr\text |
+|                     | {Var}[\epsilon_i]=t$ | {Var}[\epsilon_i]=r$ |
++---------------------+----------------------+----------------------+
+| Quadratic variation | $$                   | $$                   |
+|                     | \mathbb E\sum_{i=1}^ | \mathbb              |
+|                     | {t}(y_i-y_{i-1})^2=t | E\int_{0}^{t} (dX)=t |
+|                     | $$                   | $$                   |
++---------------------+----------------------+----------------------+
+
+: Random Walk and Brownian Motion
+
+```{r}
+plot(0:10)
+```
