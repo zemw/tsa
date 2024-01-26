@@ -2,24 +2,80 @@
 
 ## Brownian Motion
 
-Brownian motion is the continuous-time limit of a discrete-time random walk.
+Brownian motion is the continuous-time limit of a discrete-time random
+walk. To define the continuous version of a random walk, we cannot
+simply sum up infinite number of white noises, which will certainly
+explode. Instead, we chop up a finite interval into infinitely many
+small intervals, each one of which corresponds to a tiny small white
+noise. The following table shows how the discrete random walk extends to
+a continuous function.
 
-+---------------------+---------------------------------------------+------------------------------------------------------------------------------------+
-|                     | Random Walk                                 | Brownian Motion                                                                    |
-+=====================+=============================================+====================================================================================+
-| Innovation          | $\epsilon_i\sim\text{WN}(0,1)$              | ![](fig/epsilon.png){width=200px}                                                  |
-+---------------------+---------------------------------------------+------------------------------------------------------------------------------------+
-| Stochastic process  | $y_t = \epsilon_1 + \cdots + \epsilon_t$    | $X(r)_{r\in[0,1]} = \lim_{n\to\infty}\sum_{i=1}^{nr}\epsilon_i$                    |
-+---------------------+---------------------------------------------+------------------------------------------------------------------------------------+
-| Expectation         | $\mathbb E[y_t]=0$                          | $\mathbb E[X(r)] = 0$                                                              |
-+---------------------+---------------------------------------------+------------------------------------------------------------------------------------+
-| Variance            | $\text{Var}[y_t]=t\text{Var}[\epsilon_i]=t$ | $\text{Var}[X(r)]=nr\text{Var}[\epsilon_i]=r$                                      |
-+---------------------+---------------------------------------------+------------------------------------------------------------------------------------+
-| Quadratic variation | $\mathbb E\sum_{i=1}^{t}(y_i-y_{i-1})^2$    | $\mathbb E\int_{0}^{t} [\underbrace{X(r+dr)-X(r)}_{N(0,dr)}]^2 = \int_{0}^{t}dr=t$ |
-|                     | $=\sum_{i=1}^{t}\mathbb{E}(\epsilon_i^2)=t$ |                                                                                    |
-+---------------------+---------------------------------------------+------------------------------------------------------------------------------------+
+<!-- WARNING: switch to visual model breaks the table -->
+
+|                     | Random Walk                                 | Brownian Motion                                                 |
+|---------------------|---------------------------------------------|-----------------------------------------------------------------|
+| Innovation          | $\epsilon_i\sim\text{WN}(0,1)$              | ![](fig/epsilon.png){width="200px"}                             |
+| Stochastic process  | $y_t = \epsilon_1 + \cdots + \epsilon_t$    | $W(t)_{t\in[0,1]} = \lim_{n\to\infty}\sum_{i=1}^{nt}\epsilon_i$ |
+| Expectation         | $\mathbb E[y_t]=0$                          | $\mathbb E[W(t)] = 0$                                           |
+| Variance            | $\text{Var}[y_t]=t\text{Var}[\epsilon_i]=t$ | $\text{Var}[W(t)]=nt\text{Var}[\epsilon_i]=t$                   |
+| Quadratic variation | $\mathbb E\sum_{i=1}^{t}(y_i-y_{i-1})^2=t$  | $\int_0^t(dW)^2 = t$                                            |
 
 : Random Walk and Brownian Motion
+
+Brownian motion $W(t)$ is a stochastic function. Its realized path is
+different each time we take a draw from it. But every piece of it
+follows a tiny Gaussian process. The function is continuous, but nowhere
+differentiable. It is hard to imagine such a function at first thought.
+But as we proceed, we will appreciate how amazing it is. Despite its
+path is random, the area under the curve (integration) follows a
+distribution. The squared changes even sum up to a deterministic number
+(quadratic variation).
+
+```{r}
+#| echo: false
+#| fig-cap: "Simulation of Brownian Motion"
+#| label: fig-simbm
+brownian = function(r, n=1000) {
+  cumsum(rnorm(n*r,0,1/n))
+}
+plot(brownian(1), type="l")
+```
+
+The quadratic variation is one the most important properties of Brownian
+motion. Intuitively, it says the squared tiny changes sum up to a
+constant with probability 1 no matter which realized path it takes.
+Smooth functions will not have this property, because $(dX)^2$
+diminishes much faster than $dX$, surely we get $\int_0^t(dX)^2 =0$.
+Because Brownian motion fluctuations so much, the squared changes do not
+diminish away. To see this, imagine summing up the squares of infinitely
+many small increments up to $t$:
+
+$$
+\lim_{n\to\infty}\sum_{i=1}^{nt}\left[X\left(\frac{i}{n}\right)-X\left(\frac{i-1}{n}\right)\right]^2 = \lim_{n\to\infty}\sum_{i=1}^{nt}\epsilon_i^2,
+$$
+
+with $\epsilon_i\sim N\left(0,\frac{1}{n}\right)$. Therefore,
+$\mathbb E(\epsilon_i^2)=\frac{1}{n}$. Let $z_i = \epsilon_i^2$. The sum
+above can be rewritten as
+
+$$
+\sum_{i=1}^{nt} z_i = nt\left(\frac{1}{nt}\sum_{i=1}^{nt} z_i\right) \overset{\text{LLN}}\to nt\mathbb{E}(z_i)=t.
+$$
+
+The integral version is the quadratic variation
+
+$$
+\int_0^t(dW)^2 = t,
+$$ {#eq-quad2}
+
+or written in differential form
+
+$$
+(dW)^2 = dt.
+$$ {#eq-quad}
+
+The quadratic variation is a very important property of Brownian motion.
+It says
 
 Note that by Central Limit Theorem,
 
@@ -27,33 +83,32 @@ $$
 \frac{1}{\sqrt{nr}} X(r) = \sqrt{nr}\frac{1}{nr}\sum_{i=1}^{nr}\epsilon_i\to N\left(0,\frac{1}{n}\right)
 $$
 
-Therefore, 
+Therefore,
 
 $$
 X(r) \sim \sqrt{nr} N\left(0,\frac{1}{n}\right) \sim N(0,r)
-$$
+$$ {#eq-brnorm}
 
-It follows that, for any $r<s$, 
+It follows that, for any $r<s$,
 
 $$
 X(s) - X(r) \sim N(0, s-r)
-$$
+$$ {#eq-brdiff}
 
 If $s$ and $r$ become arbitrarily close,
 
 $$
 dX \sim N(0, dr)
+$$ {#eq-brdr}
+
+$X(r)$ is called **Brownian motion** or **Wiener Process**.
+
+::: {#thm-ito}
+## Itô's Lemma
+
+Let $F(W)$ be a "smooth" function of a Brownian motion $W(t)$. Then
+
 $$
-
-$X(r)$ is called **Brownian motion** or **Wiener Process**. 
-
-
-
-
-
-
-
-
-
-
-
+dF = F'dW + \frac{1}{2}F''dt.
+$$
+:::
