@@ -1,0 +1,101 @@
+# Nonstationary Process
+
+It is said, all stationary series are alike, but each non-stationary
+series is non-stationary in its own way (remember Leo Tolstoy's famous
+quote: *all happy families are alike; each unhappy family is unhappy in
+its own way.*)
+
+In all previous chapters, we have been working on stationary processes.
+We have shown that similar regression techniques and asymptotic results
+hold for stationary processes as for $iid$ observations, albeit not
+exactly the same. If a time series is not stationary, we transform it to
+stationary by taking differences.
+
+This chapter is devoted to study non-stationary time series. Special
+attention is given to unit root processes. We will see the theories
+involving non-stationary processes are entirely different from those
+applied to stationary processes. This makes unit root analysis an rather
+independent topic. The obsession with unit root in academia have faded
+away in recent decades (I do not know if this assessment is accurate).
+Despite the topic posses immense theoretical interest, it does not seem
+to provide proportionate value for applied studies. Nonertheless, the
+topic is indispensable for a comprehensive understanding of time series
+analysis.
+
+We will focus on two types of non-stationary processes: trend-stationary
+processes and unit root processes, which are the most common types of
+non-stationary series we would encounter in economic and finance.
+Non-stationary series with exponential growth can be transformed into
+linear trend, hence is not of particular interest. We will start with
+the relatively easy tread-stationary processes, and spend most of the
+paragraphs on unit root processes.
+
+We start by pointing out that, it is very dangerous to blindly include
+non-stationary variables in a regression. To illustrate this, we
+simulate two random walks (with drifts):
+
+$$
+\begin{aligned}
+x_{t} &= \mu_X + x_{t-1} + \epsilon_{t},\quad\epsilon_{t}\overset{iid}\sim N(0,\sigma_X^2)\\
+y_{t} &= \mu_Y + y_{t-1} + \eta_{t},\quad\eta_{t}\overset{iid}\sim N(0,\sigma_Y^2)
+\end{aligned}
+$$
+
+$\epsilon_t$ and $\eta_t$ are independent to each other.
+
+```{r}
+#| include: false
+library(lmtest)
+```
+
+```{r}
+x = cumsum(.1 + rnorm(200))
+y = cumsum(.1 + rnorm(200))
+ts.plot(cbind(x,y), col=1:2)
+```
+
+We would expect the two series completely uncorrelated, as they are two
+irrelevant random processes. However, if we regress $y_t$ on $x_t$, we
+would likely find a very strong correlation. This is called a **spurious
+regression**.
+
+$$
+y_t = \alpha + \beta x_t + u_t
+$$
+
+```{r}
+coeftest(lm(y ~ x))
+```
+
+Note that if we difference the two series to stationary, the spurious
+correlation disappears.
+
+```{r}
+coeftest(lm(diff(y) ~ diff(x)))
+```
+
+What's even worse, if we run a Monte Carlo simulation to approximate the
+distribution of $\hat\beta$, we would find the distribution is not
+Gaussian at all. It is not centered around 0 and left-skewed. This
+means, all the conventional asymptotic theories, the $t$-statistics or
+$F$-statistics, do not make sense any more.
+
+```{r}
+# Monte Carlo simulation
+beta = sapply(1:1000, function(i) {
+  x = cumsum(.1 + rnorm(200))
+  y = cumsum(.1 + rnorm(200))
+  coef(lm (y ~ x))[2]
+})
+# plot the density with Gaussian curve
+{
+  hist(beta, prob = TRUE)
+  range = seq(-3, 3, by = .1)
+  lines(range, dnorm(range), col = 2)
+}
+```
+
+Therefore, the normal OLS against non-stationary series is totally
+misleading. The rest of the chapter will demystify the nature of
+spurious regression and present how we can properly deal with
+non-stationary time series.

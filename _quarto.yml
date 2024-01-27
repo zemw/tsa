@@ -32,6 +32,7 @@ book:
         - lpiv.qmd
     - part: "Unit Root Process"
       chapters: 
+        - nonstat.qmd
         - ito.qmd
     - summary.qmd
     - references.qmd
