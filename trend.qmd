@@ -1,0 +1,198 @@
+# Trend Stationary
+
+Trend-stationary process is a stationary process round a deterministic
+trend:
+
+$$
+y_t = \alpha + \delta t + \psi(L)\epsilon_t,
+$$
+
+where $\delta t$ is a deterministic linear time trend,
+$\psi(L)\epsilon_t$ is a stationary process. After de-trending
+$-(\alpha+\delta t)$ , the result is a stationary process.
+
+::: callout-caution
+## Trend stationary vs stochastic trend
+
+Trend-stationary processes must be distinguished from *stochastic trend
+process* (unit root with a drift):
+
+$$
+y_t = \delta + y_{t-1} +\epsilon_t = y_0+\delta t+\sum_{j=1}^{t}\epsilon_j.
+$$
+
+Both of them have a time trend component. But in the latter model, the
+stochastic component is not stationary. In other words, a innovation in
+a trend-stationary model does not have long-lasting effect, whereas the
+effect is persistent in a stochastic trend model.
+
+The difference becomes clearer by comparing the variances. The variance
+of the trend-stationary process
+
+$$
+\text{var}(y_t) = \psi^2(L)\sigma^2
+$$
+
+is constant which does not depend on time. However, the variance of the
+stochastic trend process
+
+$$
+\text{var}(y_t) = \text{var}(\sum_{j=1}^{t} \epsilon_j) = \sigma^2 t
+$$
+
+is increasing over time. Therefore, stochastic trend process fluctuates
+more widely as time goes by.
+:::
+
+Unlike unit root processes, trend-stationary processes can be safely
+estimated by OLS. The usual $t$ and $F$ statistics have the same
+asymptotic distribution as they are for stationary processes. But they
+converge at a different speed, due to the presence of the trend. To see
+this, rewrite the regression in vector form
+
+$$
+\begin{aligned}
+y_t = \alpha + \delta t + \epsilon_t 
+= \begin{bmatrix}1 & t\end{bmatrix}\begin{bmatrix}\alpha\\\delta\end{bmatrix} + \epsilon_t = \boldsymbol{x_t'\beta} + \epsilon_t;
+\end{aligned}
+$$
+
+For simplicity, assume $\epsilon_t \sim IID(0,\sigma^2)$ for the
+following computation. The result can be generalized to $\epsilon_t$
+being stationary. The OLS estimator is given by
+
+$$
+\begin{aligned}
+\hat\beta = \begin{bmatrix}\hat\alpha\\ \hat\delta\end{bmatrix} &= \left(\sum_t x_tx_t'\right)^{-1} \left(\sum_t x_ty_t\right), \\
+\sqrt{T}(\hat\beta-\beta) &= \left(\frac{1}{T}\sum_t x_tx_t'\right)^{-1} \left(\frac{1}{\sqrt T}\sum_t x_t\epsilon_t\right).
+\end{aligned}
+$$
+
+The usual asymptotic results are
+
+$$
+\begin{aligned}
+\frac{1}{T}\sum_t x_t x_t' &\to Q \\
+\frac{1}{\sqrt T}\sum_t x_t \epsilon_t &\to N(0,\sigma^2 Q) \\
+\sqrt{T}(\hat\beta -\beta) &\to N(0, \sigma^2 Q^{-1})
+\end{aligned}
+$$
+
+But this is not the case with deterministic trend if we do the
+computation:
+
+$$
+\frac{1}{T}\sum_t x_t x_t' = 
+\begin{bmatrix}
+1 & \frac{1}{T}\sum t \\
+\frac{1}{T}\sum t & \frac{1}{T}\sum t^2
+\end{bmatrix}
+$$
+
+does not converge. Because $\sum_{t=1}^{T} t = \frac{T(T+1)}{2}$, and
+$\sum_{t=1}^{T} t^2 = \frac{T(T+1)(2T+1)}{6}$. It requires stronger
+divider to make them converge, $T^{-2}\sum_{t=1}^{T}t\to\frac{1}{2}$,
+$T^{-3}\sum_{t=1}^{T}t^2\to\frac{1}{3}$. In general,
+
+$$
+\frac{1}{T^{v+1}} \sum_{t=1}^{T} t^v \to \frac{1}{v+1}.
+$$
+
+Dividing by $T^3$ will make the convergence
+
+$$
+\frac{1}{T^3}\sum_t x_t x_t' \to \begin{bmatrix}0 & 0\\0 & \frac{1}{3}\end{bmatrix}
+$$
+
+However, this matrix is not invertible. We need different rates of
+convergence for $\hat\alpha$ and $\hat\delta$.
+
+Define
+
+$$
+\boldsymbol\gamma_T = \begin{bmatrix}\sqrt{T} & 0 \\ 0 & T^{3/2}\end{bmatrix}
+$$
+
+Multiple this matrix with the coefficient vector would apply different
+convergence speed to different coefficients:
+
+$$
+\begin{aligned}
+\begin{bmatrix}\sqrt{T}(\hat\alpha-\alpha) \\ T^{3/2}(\hat\delta - \delta)\end{bmatrix}
+&= \gamma_T\left(\sum_t x_tx_t'\right)^{-1} \left(\sum_t x_t\epsilon_t\right) \\
+&= \left[\gamma_T^{-1}\left(\sum_t x_tx_t'\right)\gamma_T^{-1}\right]^{-1} \left[\gamma_T^{-1}\left(\sum_t x_t\epsilon_t\right)\right]
+\end{aligned}
+$$
+
+in which
+
+$$
+\begin{aligned}
+\gamma_T^{-1}\left(\sum_t x_tx_t'\right)\gamma_T^{-1} &=
+\begin{bmatrix}T^{-1/2} & \\ & T^{-3/2}\end{bmatrix}
+\begin{bmatrix}\sum 1 & \sum t \\ \sum t & \sum t^2 \end{bmatrix}
+\begin{bmatrix}T^{-1/2} & \\ & T^{-3/2}\end{bmatrix} \\ &=
+\begin{bmatrix}T^{-1}\sum 1 & T^{-2}\sum t \\ T^{-2}\sum t & T^{-3}\sum t^2 \end{bmatrix} \to 
+\begin{bmatrix}1 & \frac{1}{2}\\ \frac{1}{2} & \frac{1}{3}\end{bmatrix}=Q.
+\end{aligned}
+$$
+
+Turning to the second term:
+
+$$
+\gamma_T^{-1}\left(\sum_t x_t\epsilon_t\right) =
+\begin{bmatrix}T^{-1/2} & \\ & T^{-3/2}\end{bmatrix}
+\begin{bmatrix}\sum\epsilon_t \\ \sum t\epsilon_t\end{bmatrix} = 
+\begin{bmatrix}T^{-1/2}\sum\epsilon_t \\ T^{-1/2}\sum\frac{t}{T}\epsilon_t\end{bmatrix}
+$$
+
+$T^{-1/2}\sum\epsilon_t\to N(0,\sigma^2)$ by standard CLT. Observe that
+$\zeta_t = \frac{t}{T}\epsilon_t$ is not serially correlated,
+
+$$
+\mathbb E(\zeta_t\zeta_{t-j})=\frac{t(t-j)}{T^2}\mathbb{E}(\epsilon_t\epsilon_{t-j})=0
+$$
+
+with stabilized variance
+
+$$
+\text{var}(T^{-1/2}\sum\zeta_t)=\frac{1}{T}\sum\text{var}\left(\frac{t}{T}\epsilon_t\right) = \frac{\sigma^2}{T^3}\sum t^2 \to \frac{\sigma^2}{3}
+$$
+
+Therefore,
+$T^{-1/2}\sum\frac{t}{T}\epsilon_t\to N(0,\frac{\sigma^2}{3})$. We also
+need to consider the covariance,
+
+$$
+\text{cov}(T^{-1/2}\sum\epsilon_t, T^{-1/2}\sum \frac{t}{T}\epsilon_t) = 
+\frac{1}{T}\mathbb{E}\left(\sum\epsilon_t\sum\frac{t}{T}\epsilon_t\right) = \frac{\sigma^2}{T^2}\sum t \to \frac{\sigma^2}{2}
+$$
+
+Therefore, we have
+
+$$
+\begin{bmatrix}T^{-1/2}\sum\epsilon_t \\ T^{-1/2}\sum\frac{t}{T}\epsilon_t\end{bmatrix} \to
+\begin{bmatrix}
+\sigma^2 & \frac{\sigma^2}{2} \\ 
+\frac{\sigma^2}{2} & \frac{\sigma^2}{3}
+\end{bmatrix} = \sigma^2 Q
+$$
+
+Finally, putting everything together,
+
+$$
+\gamma_T(\hat\beta-\beta)\to N(0, \sigma^2 Q^{-1}).
+$$
+
+This means the usual OLS $t$-test and $F$-test are asymptotically valid,
+despite at different convergence rates. After all, trend-stationary
+process is stationary after de-trending. But unit root process is a
+totally different species.
+
+::: callout-important
+## Key Point Summary
+
+1.  Trend-stationary process vs stochastic-trend process;
+2.  Applying different convergence rates to OLS estimator;
+3.  Usual $t$-test and $F$-test are still valid.
+:::

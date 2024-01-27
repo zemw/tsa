@@ -33,6 +33,7 @@ book:
     - part: "Unit Root Process"
       chapters: 
         - nonstat.qmd
+        - trend.qmd
         - ito.qmd
     - summary.qmd
     - references.qmd
