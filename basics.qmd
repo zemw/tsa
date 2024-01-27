@@ -95,6 +95,8 @@ $$
 $$
 
 ::: callout-tip
+## Exercise
+
 Buying vs. renting a home, which is better? Compute the NPV:
 
 $$
