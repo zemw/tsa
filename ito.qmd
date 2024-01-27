@@ -13,7 +13,7 @@ extends to a continuous function.
 <!-- WARNING: switch to visual model breaks the table -->
 
 |                     | Random Walk                                 | Brownian Motion                                                 |
-|---------------------|---------------------------------------------|-----------------------------------------------------------------|
+|----------------|-----------------------|---------------------------------|
 | Innovation          | $\epsilon_i\sim\text{WN}(0,1)$              | ![](fig/epsilon.png){width="200px"}                             |
 | Stochastic process  | $y_t = \epsilon_1 + \cdots + \epsilon_t$    | $W(t)_{t\in[0,1]} = \lim_{n\to\infty}\sum_{i=1}^{nt}\epsilon_i$ |
 | Expectation         | $\mathbb E[y_t]=0$                          | $\mathbb E[W(t)] = 0$                                           |
@@ -33,12 +33,17 @@ variation) even sum up to a deterministic constant.
 
 ```{r}
 #| echo: false
-#| fig-cap: "Simulation of Brownian Motion"
+#| fig-cap: "Multiple Realizations of Brownian Motion"
 #| label: fig-simbm
 brownian = function(r, n=1000) {
   cumsum(rnorm(n*r,0,1/n))
 }
-plot(brownian(1), type="l")
+# plot multiple realizations of Brownian motion
+{
+  plot(brownian(1), type = "l", ylim = c(-.1,.1))
+  for(i in 1:20) 
+    lines(brownian(1), col = rgb(0,0,0,runif(1,0,.3)))
+}
 ```
 
 ## Basic Properties
@@ -76,8 +81,14 @@ $$
 (dW)^2 = dt.
 $$ {#eq-quad}
 
-Now we drive some basic properties of Brownian motions. Note that by
-Central Limit Theorem,
+It should be stressed, $W$ is not differentiable. We use the notation
+$dW$, but it is not the same as conventional differentials. The calculus
+for Brownian motions, the Itô calculus, which is introduced below, is a
+different class of calculus specifically designed for stochastic
+functions. Before we get to that, let's first have a look at some
+additional properties of Brownian motions.
+
+By Central Limit Theorem, it holds that
 
 $$
 \frac{1}{\sqrt{nt}} W(t) = \sqrt{nt}\frac{1}{nt}\sum_{i=1}^{nt}\epsilon_i\to N\left(0,\frac{1}{n}\right)
@@ -112,7 +123,7 @@ $$
 :::
 
 ::: proof
-It immediately follows from the Taylor expansion
+For an informal proof, it immediately follows from the Taylor expansion
 
 $$
 F(W_{t+h})-F(W_t)=F'(W_{t+h}-W_t)+\frac{1}{2}F''(W_{t+h}-W_t)^2+\cdots
@@ -257,3 +268,123 @@ $$
 Thus, the integral, the area under the curve of a Brownian motion,
 follows a Gaussian distribution.
 :::
+
+## Unit Root Process
+
+Let $y_t$ be a unit root process,
+
+$$
+y_t = y_{t-1} + \epsilon_t = \sum_{j=1}^{t}\epsilon_j,
+$$
+
+where $\epsilon_t\sim\text{WN}(0,1)$, $t=1,2,\dots,T$. It is not
+surprising to see the unit root process converges to Brownian motion if
+stabilizing it by $T^{-1/2}$ :
+
+$$
+\begin{aligned}
+\frac{1}{\sqrt{T}}y_t &= \frac{1}{\sqrt{T}}\sum_{j=1}^{t}\epsilon_j \\
+&= \frac{1}{\sqrt{T}}\sum_{j=1}^{Tr}\epsilon_j \quad(r=t/T) \\
+&= \sqrt{r}\left(\frac{1}{\sqrt{Tr}}\sum_{j=1}^{Tr}\epsilon_j\right) \\[1em]
+&\to \sqrt{r} N(0, 1) \sim N(0,r) \quad(\text{by CLT}) \\[1em]
+&\to W(r) \quad(\text{by definition}).
+\end{aligned}
+$$
+
+If $\epsilon_t$ has variance $\sigma^2$, we would have
+$T^{-1/2}y_t \to \sigma W(t/T)$. Note if $y_t$ is stationary, $y_t$ will
+not deviate too far from $\mathbb E(y_t)$, we would have
+$T^{-1/2} y_t \to 0$.
+
+Now let's consider the behaviour of the mean:
+$\bar y=\frac{1}{T}\sum_{t=1}^T y_t$. Define $\xi_T(r)=T^{-1/2}y_t$ ,
+where $r=t/T$.
+
+$$
+\begin{aligned}
+\frac{1}{\sqrt T} \bar{y} &= \frac{1}{\sqrt T}\left(\frac{1}{T}\sum_{t=1}^T y_t\right) \\
+&= \frac{1}{T}\sum_{t=1}^T \left(\frac{1}{\sqrt T}y_t\right)=\frac{1}{T}\sum_{t=1}^T \xi\left(\frac{t}{T}\right) \\
+&= \Delta r \sum_{r=0}^{1} \xi(r) \quad (r=t/T, \Delta r = 1/T) \\
+&\to \int_0^1 \sigma W(r) dr \quad (\Delta r \to 0)
+\end{aligned}
+$$Remember for stationary process, we would have
+$\bar y \to \mathbb E(y_t)$ . With unit root process, the mean no longer
+converges to a constant, but to a distribution
+$\int_0^1 W(r)dr\sim N(0,\frac{1}{3})$.
+
+Consider the sum of squared $y_t$:
+
+$$
+\begin{aligned}
+\frac{1}{T^2}\sum_{t=1}^{T}y_t^2 &= \frac{1}{T}\sum_{t=1}^{T}\left(\frac{1}{\sqrt T}y_t\right)^2 \\
+&= \frac{1}{T}\sum_{t=1}^{T}\left[\xi\left(\frac{t}{T}\right)\right]^2 \\
+&= \sum_{r=0}^{1} [\xi(r)]^2 \Delta r \\
+&\to \int_0^1 \sigma^2 W^2(r) dr
+\end{aligned}
+$$
+
+By continuous mapping theorem, it can be shown, in general
+
+$$
+\frac{1}{T^{1+k/2}}\sum_{i=1}^T y_t^k \to \sigma^k\int_0^1 W^k(r)dr.
+$$
+
+Consider
+
+$$
+\begin{aligned}
+\sum_{t=1}^{T}y_{t-1}\epsilon_t &= \sum_{i=1}^{T} (\epsilon_1+\cdots+\epsilon_{t-1})\epsilon_t = \sum_{s<t}^{T}\epsilon_s\epsilon_t \\
+&= \frac{1}{2}\left[(\epsilon_1+\cdots+\epsilon_T)^2-\sum_{t=1}^{T}\epsilon_t^2\right] \\
+&= \frac{1}{2}y_T^2 - \frac{1}{2}\sum_{t=1}^{T}\epsilon_t^2
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+\begin{aligned}
+\frac{1}{T}\sum_{t=1}^{T}y_{t-1}\epsilon_t 
+&= \frac{1}{2}\left(\frac{1}{\sqrt T}y_T\right)^2 - \frac{1}{2T}\sum_{t=1}^{T}\epsilon_t^2 \\
+&= \frac{1}{2}[\xi^2(1)-\hat\sigma^2] \\
+&\to \frac{1}{2}[\sigma^2 W^2(1) - \sigma^2] \\
+&= \frac{1}{2}\sigma^2 [ W^2(1) - 1] \\
+&= \sigma^2 \int_0^1 W dW
+\end{aligned}
+$$
+
+So far we have assumed $\epsilon_t$ are not autocorrelated. This
+assumption can be relieved. Let
+
+$$
+y_t = y_{t-1} + v_t,
+$$
+
+where $v_t$ is a stationary process
+$v_t = \sum_{j=0}^{\infty} c_j\epsilon_{t-j}$. Let $\omega^2$ be the
+long-run variance of $v_t$:
+
+$$
+\omega^2 = \sum_{-\infty}^{\infty} \gamma_j
+$$
+
+Most of the previous conclusions carry through:
+
+$$
+\begin{aligned}
+\frac{1}{\sqrt T} y_t &\to \omega W(r) \\
+\frac{1}{T^{3/2}}\sum_{t=1}^{T} y_t &\to \omega\int_0^1 W(r) dr
+\end{aligned}
+$$
+
+An exception is
+
+$$
+\begin{aligned}
+\frac{1}{T}\sum_{t=1}^{T} y_{t-1}v_t 
+&= \frac{1}{2T}y_T^2 - \frac{1}{2T}\sum_{t=1}^{T}v_t^2 \\
+&\to \frac{1}{2} [\omega^2 W^2(1) - \zeta^2] \\
+&\to \omega^2\int_0^1 W dW + \frac{\omega^2-\zeta^2}{2}
+\end{aligned}
+$$
+
+where $\frac{\omega^2-\zeta^2}{2}$ is a "nuisance" parameter.
