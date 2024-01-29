@@ -18,7 +18,7 @@ applied to stationary processes. This makes unit root analysis an rather
 independent topic. The obsession with unit root in academia have faded
 away in recent decades (I do not know if this assessment is accurate).
 Despite the topic posses immense theoretical interest, it does not seem
-to provide proportionate value for applied studies. Nonertheless, the
+to provide proportionate value for applied studies. Nonetheless, the
 topic is indispensable for a comprehensive understanding of time series
 analysis.
 
