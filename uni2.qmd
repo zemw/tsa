@@ -1,0 +1,162 @@
+# Unit Root Process (contd)
+
+## Univariate case
+
+We now have all the ingredient to further analyse the unit root process
+
+$$
+y_t = \phi y_{t-1} + \epsilon_t,
+$$
+
+where $\phi=1$, and its OLS estimator
+
+$$
+T(\hat\phi-1) = \frac{T^{-1}\sum_t y_{t-1}\epsilon_t}{T^{-2}\sum_t y_{t-1}^2}.
+$$
+
+We have shown that
+
+$$
+\begin{aligned}
+T^{-1}\sum_t y_{t-1}\epsilon_t &\to \sigma^2\int_0^1 W dW =\frac{\sigma^2}{2}(W^2(1)-1)\\
+T^{-2}\sum_t y_{t-1}^2 &\to \sigma^2\int_0^1 W^2 ds
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+T(\hat\phi -1) \to \frac{\int_0^1 W dW}{\int_0^1 W^2 ds}.
+$$
+
+$\int W dW$ is centered around $0$, meaning $\hat\phi$ is consistent for
+large samples. But it is biased in small smaples. Moreover, the
+distribution is not Gaussian, rending all conventional $t$-test or
+$F$-test meaningless. We contrast the properties of stationary processes
+and unit root processes below.
+
+|                                           | Stationary                                 | Unit Root                                             |
+|------------------------|------------------------|------------------------|
+| Model                                     | $y_t =\phi y_{t-1} +\epsilon_t$            | $y_t = y_{t-1}+\epsilon_t$                            |
+| Asymptotic distribution of $\hat\phi$     | $\sqrt{T}(\hat\phi-\phi)\to N(0,1-\phi^2)$ | $\sqrt{T}(\hat\phi-1)\to\frac{\int WdW}{\int W^2 dt}$ |
+| Asymptotic distribution of $t$-statistics | $t \to N(0,1)$                             | $t \to \frac{\int WdW}{\sqrt{\int W^2dt}}$            |
+
+: Stationary AR(1) process vs unit root process
+
+## Spurious regression
+
+We now dive deeper into the nature of spurious regression problem
+presented at the beginning of the chapter. We formulate the problem as
+below. Suppose
+
+$$
+y_{t} = \alpha + \beta x_{t} + u_t,
+$$
+
+where $y_{t}$ and $x_{t}$ are unit root processes and there does not
+exist $(\alpha, \beta)$ such that the residual $u_t$ is stationary. In
+this case, OLS is likely to produce spurious result: even if $y_{t}$ is
+completely unrelated to $x_t$, the estimated value of $\hat\beta$ is
+likely to appear to be statistically significantly different from zero.
+
+Spurious regression happens when
+
+1.  Dependent/independent variables are non-stationary;
+2.  The residual is non-stationary for all possible values of the
+    coefficient vector.
+
+To understand why this happens, consider the OLS estimator:
+
+$$
+\hat b=\begin{bmatrix}\hat\alpha \\ \hat\beta\end{bmatrix} = 
+\begin{bmatrix}T & \sum x_t \\ \sum x_t & \sum x_t^2 \end{bmatrix}^{-1} 
+\begin{bmatrix}\sum y_t \\ \sum x_ty_t\end{bmatrix}
+$$
+
+To account for different convergent speed, similar to the
+trend-stationary case, we multiply the estimators by a matrix,
+
+$$
+\begin{aligned}
+\begin{bmatrix}\sqrt{T}^{-1} & \\ & 1\end{bmatrix}
+\begin{bmatrix}\hat\alpha \\ \hat\beta\end{bmatrix} &=
+\begin{bmatrix}\sqrt{T}^{-1} & \\ & 1\end{bmatrix}
+\begin{bmatrix}T & \sum x_t \\ \sum x_t & \sum x_t^2 \end{bmatrix}^{-1} 
+\begin{bmatrix}\sqrt{T}^{-1} & \\ & 1\end{bmatrix}^{-1}
+\begin{bmatrix}\sqrt{T}^{-1} & \\ & 1\end{bmatrix}
+\begin{bmatrix}\sum y_t \\ \sum x_ty_t\end{bmatrix} \\ &=
+\begin{bmatrix}1 & T^{-3/2}\sum x_t \\ T^{-3/2}\sum x_t & T^{-2}\sum x_t^2 \end{bmatrix}^{-1} 
+\begin{bmatrix}\sum T^{-3/2}y_t \\ T^{-2}\sum x_ty_t\end{bmatrix} \\ &\to
+\begin{bmatrix}1 & \int W_X dt \\ \int W_X dt & \int W_X^2 dt\end{bmatrix}^{-1}
+\begin{bmatrix}\int W_Y dt \\ \int W_X W_Y dt\end{bmatrix}
+\end{aligned}
+$$
+
+This means, $\hat\alpha$ actually diverges. Because it needs to be
+divided by $\sqrt T$ to be able to converge to a stable distribution,
+rather than being multiplied by a stabilizing factor. $\hat\beta$
+converges, but it is not consistent. If there is no $\alpha$, we would
+have
+
+$$\hat\beta = \frac{\sum x_ty_t}{\sum x_t^2}\to\frac{\int W_XW_Y dt}{\int W_X^2 dt},$$
+
+which is inconsistent. So we won't get zero even in very large samples.
+
+The OLS estimate of the variance of $u_t$ also diverges. It needs to be
+divided by $T$ to converge:
+
+$$
+\begin{aligned}
+\frac{1}{T}\hat\sigma^2 &= \frac{1}{T^2}\sum(y_t-\hat\beta x_t)^2 \\
+&= \frac{1}{T^2}\sum y_t^2 - 2\hat\beta\frac{1}{T^2}\sum x_ty_t + \hat\beta^2\frac{1}{T^2}\sum x_t^2 \\
+&\to \int W_Y^2 dt - 2\hat\beta\int W_X W_Y dt + \hat\beta^2 \int W_X^2 dt \\
+&\to \int W_Y^2 dt - \frac{(\int W_X W_Y dt)^2}{\int W_X^2 dt}.
+\end{aligned}
+$$
+
+The $t$ or $F$ statistics also diverge. $t$-stat has to be divided by
+$\sqrt T$ to converge; $F$-stat needs to be divided by $T$ to converge.
+
+$$
+t = \frac{\hat\beta}{\hat\sigma}\sqrt{\sum x_t^2} = 
+\sqrt{T}\frac{\hat\beta}{\sqrt{T^{-1}\hat\sigma^2}}\sqrt{T^{-2}\sum x_t^2} \to \sqrt{T}\cdot C
+$$
+
+Thus, as sample size $T$ grows, $t$-test will appear very large and
+significant, despite $y_t$ and $x_t$ are completely independent.
+
+## Cures for spurious regression
+
+1.  Include lagged values of both dependent and independent variables in
+    the regression: $$
+    y_t = \alpha + \phi y_{t-1} + \beta x_t + \gamma x_{t-1} + u_t
+    $$Now there exists a coefficient vector
+    $[\phi,\beta,\gamma]=[1,0,0]$ such that $u_t$ is $I(0)$ stationary.
+    In this case, OLS yields consistent estimates for all the
+    coefficients. $t$-test converges to Gaussian, though $F$-test of
+    joint hypotheses has non-standard asymptotic distribution. We will
+    come back to this point later.
+
+2.  Difference the data to stationary: $$
+    \Delta y_t = \alpha + \beta\Delta x_t + u_t
+    $$ Because $\Delta y_t$ and $\Delta x_t$ are all $I(0)$. Standard
+    OLS is valid.
+
+3.  Estimate with Cochrane-Orcutt adjustment for first-order
+    correlations in the residuals. This method is asymptotically
+    equivalent to the second method.
+
+## Summary
+
+::: callout-important
+## Key Point Summary
+
+1.  The OLS estimator for unit root coefficient converges to
+    non-standard distributions involving Brownian motions. Thus,
+    standard statistical inferences are meaningless.
+2.  Regressing unit root processes lead to spurious results, because the
+    diverging behavior of $t$-stats makes artificially significant
+    values.
+3.  Include lagged values or difference the data to stationary when
+    working with non-stationary time series.
+:::
