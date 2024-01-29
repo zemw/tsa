@@ -1,6 +1,6 @@
-# A Crash Course on Brownian Motion
+# Brownian Motion
 
-## Brownian Motion
+## Continuous random walk
 
 **Brownian motion**, or **Wiener process**, is the continuous-time
 extension of a discrete-time random walk. To define the continuous
@@ -13,7 +13,7 @@ extends to a continuous function.
 <!-- WARNING: switch to visual model breaks the table -->
 
 |                     | Random Walk                                 | Brownian Motion                                                 |
-|----------------|-----------------------|---------------------------------|
+|------------------|-----------------------|-------------------------------|
 | Innovation          | $\epsilon_i\sim\text{WN}(0,1)$              | ![](fig/epsilon.png){width="200px"}                             |
 | Stochastic process  | $y_t = \epsilon_1 + \cdots + \epsilon_t$    | $W(t)_{t\in[0,1]} = \lim_{n\to\infty}\sum_{i=1}^{nt}\epsilon_i$ |
 | Expectation         | $\mathbb E[y_t]=0$                          | $\mathbb E[W(t)] = 0$                                           |
@@ -35,18 +35,20 @@ variation) even sum up to a deterministic constant.
 #| echo: false
 #| fig-cap: "Multiple Realizations of Brownian Motion"
 #| label: fig-simbm
+N = 1000
 brownian = function(r, n=1000) {
   cumsum(rnorm(n*r,0,1/n))
 }
 # plot multiple realizations of Brownian motion
 {
-  plot(brownian(1), type = "l", ylim = c(-.1,.1))
+  x = seq(0,.999,1/N)
+  plot(x, brownian(1), type = "l", ylim = c(-.1,.1))
   for(i in 1:20) 
-    lines(brownian(1), col = rgb(0,0,0,runif(1,0,.3)))
+    lines(x, brownian(1), col = rgb(0,0,0,runif(1,0,.3)))
 }
 ```
 
-## Basic Properties
+## Some properties
 
 The **quadratic variation** is one the most important properties of
 Brownian motion. Intuitively, it says the squared tiny changes sum up to
@@ -58,7 +60,9 @@ not diminish away. To see this, imagine summing up the squares of
 infinitely many small increments up to $t$:
 
 $$
-\lim_{n\to\infty}\sum_{i=1}^{nt}\left[X\left(\frac{i}{n}\right)-X\left(\frac{i-1}{n}\right)\right]^2 = \lim_{n\to\infty}\sum_{i=1}^{nt}\epsilon_i^2,
+\lim_{n\to\infty}\sum_{i=1}^{nt}\left[ 
+  X\left(\frac{i}{n}\right) - X\left(\frac{i-1}{n}\right)
+  \right]^2 = \lim_{n\to\infty}\sum_{i=1}^{nt}\epsilon_i^2,
 $$
 
 with $\epsilon_i\sim N\left(0,\frac{1}{n}\right)$. Therefore,
@@ -66,7 +70,8 @@ $\mathbb E(\epsilon_i^2)=\frac{1}{n}$. Let $z_i = \epsilon_i^2$. The sum
 above can be rewritten as
 
 $$
-\sum_{i=1}^{nt} z_i = nt\left(\frac{1}{nt}\sum_{i=1}^{nt} z_i\right) \overset{\text{LLN}}\to nt\mathbb{E}(z_i)=t.
+\sum_{i=1}^{nt} z_i = nt\left(\frac{1}{nt}\sum_{i=1}^{nt} z_i\right) 
+\overset{\text{LLN}}\to nt\mathbb{E}(z_i) = t.
 $$
 
 The integral version is the quadratic variation
@@ -91,7 +96,8 @@ additional properties of Brownian motions.
 By Central Limit Theorem, it holds that
 
 $$
-\frac{1}{\sqrt{nt}} W(t) = \sqrt{nt}\frac{1}{nt}\sum_{i=1}^{nt}\epsilon_i\to N\left(0,\frac{1}{n}\right)
+\frac{1}{\sqrt{nt}} W(t) = \sqrt{nt}\frac{1}{nt}\sum_{i=1}^{nt}\epsilon_i
+\to N\left(0,\frac{1}{n}\right)
 $$
 
 Therefore,
@@ -112,7 +118,51 @@ $$
 dW \sim N(0, dt)
 $$ {#eq-brdr}
 
-## Itô Calculus
+## Functional CLT
+
+We reformulate the intuition above to a more formal definition and
+theorem.
+
+::: {#def-brown}
+## Brownian motion
+
+A Brownian motion (Wiener process) is a stochastic function $W(t)$ such
+that
+
+1.  $W(0)=0$;
+2.  For $0 \leq t \leq s \leq 1$, $W(s)-W(t) \sim N(0, s-t)$;
+3.  For any realization, $W(t)$ is continuous in $t$.
+:::
+
+::: {#thm-fclt}
+## Donsker's Theorem
+
+Define $$\xi_T(r) = \frac{1}{\sqrt T}\sum_{i=1}^{Tr}\epsilon_i$$ where
+$\epsilon_t \sim IID(0,\sigma^2)$, $0 \leq r\leq 1$. We have
+$$\xi_T(r) \to \sigma W(r)$$ as $T\to\infty$.
+:::
+
+This is a reformulation of the definition in the first section. Instead
+of assuming each $\epsilon_t$ has a standard deviation $\frac{1}{n}$, we
+approach it with a more common formulation: assuming the standard
+deviation is constant $\sigma^2$, and stabilizing it by $\sqrt{T}^{-1}$.
+
+The Donsker's Theorem is also called the **functional central limit
+theorem**. When $r=1$, the standard CLT implies
+
+$$ \xi_T(1) = \frac{1}{\sqrt T} \sum_{i=1}^T \epsilon_i \to N(0, \sigma^2). $$
+The theorem claims the convergence to normality for any $r$. As an
+illustration, suppose $r=\frac{1}{2}$, then
+
+$$ 
+\xi_T\left(\frac{1}{2}\right) = \frac{1}{\sqrt T} \sum_{i=1}^{T/2}\epsilon_i = 
+\frac{1}{2}\left(\frac{1}{\sqrt{T/2}} \sum_{i=1}^{T/2}\epsilon_i \right)
+\to N\left(0, \frac{\sigma^2}{2}\right). 
+$$
+
+The convergence would hold for any $r$ if $T$ is large enough.
+
+## Itô calculus
 
 ::: {#thm-ito1}
 Let $F(W)$ be a "smooth" function of a Brownian motion $W(t)$. Then
@@ -129,7 +179,7 @@ $$
 F(W_{t+h})-F(W_t)=F'(W_{t+h}-W_t)+\frac{1}{2}F''(W_{t+h}-W_t)^2+\cdots
 $$
 
-As $h\to 0$,
+We abbreviate $W(t+h)$ as $W_{t+h}$. As $h\to 0$,
 
 $$
 dF = F'dW + \frac{1}{2}F''(dW)^2.
@@ -167,14 +217,16 @@ $$
 $F(t, W)=tW \implies d(tW) = W dt + t dW$
 :::
 
-The reverse operation of stochastic differentiation is stochastic
-integral.
+Stochastic integrals are defined as the reverse operation of the
+stochastic differentiation. The following rules are immediately from the
+fundamental theorem of calculus assuming $W(0)=0$. Note that we change
+$W(t)$ to $W(s)$ when it enters as the integrand.
 
 ::: {#thm-itoint}
 1.  $\int_{0}^{t} dW = W(t)$;
-2.  $F(W_t)=\int_0^t f(W_s)dW_s$ , if $\mathrm{d}F = f\mathrm{d}W$;
-3.  $F(t, W_t) = \int_0^t f(s, W_s)dW_s + \int_0^t g(s, W_s)dt$ , if
-    $\mathrm{d}F = f\mathrm{d}W + g\mathrm{d}t$.
+2.  $F(W_t)=\int_0^t f(W_s)dW_s$ , if $dF = f\ dW$;
+3.  $F(t, W_t) = \int_0^t f(s, W_s)dW_s + \int_0^t g(s, W_s)ds$ , if
+    $dF = f\ dW + g\ dt$.
 :::
 
 ::: {#exm-3}
@@ -269,36 +321,28 @@ Thus, the integral, the area under the curve of a Brownian motion,
 follows a Gaussian distribution.
 :::
 
-## Unit Root Process
+## Unit root process
 
-Let $y_t$ be a unit root process,
+Consider a unit root process,
 
 $$
 y_t = y_{t-1} + \epsilon_t = \sum_{j=1}^{t}\epsilon_j,
 $$
 
-where $\epsilon_t\sim\text{WN}(0,1)$, $t=1,2,\dots,T$. It is not
-surprising to see the unit root process converges to Brownian motion if
-stabilizing it by $T^{-1/2}$ :
+where $\epsilon_t\sim\text{WN}(0,\sigma^2)$, $t=1,2,\dots,T$. By
+Donsker's theorem, it is easy to show the unit root process converges to
+Brownian motion if stabilizing it by $T^{-1/2}$ :
 
 $$
-\begin{aligned}
-\frac{1}{\sqrt{T}}y_t &= \frac{1}{\sqrt{T}}\sum_{j=1}^{t}\epsilon_j \\
-&= \frac{1}{\sqrt{T}}\sum_{j=1}^{Tr}\epsilon_j \quad(r=t/T) \\
-&= \sqrt{r}\left(\frac{1}{\sqrt{Tr}}\sum_{j=1}^{Tr}\epsilon_j\right) \\[1em]
-&\to \sqrt{r} N(0, 1) \sim N(0,r) \quad(\text{by CLT}) \\[1em]
-&\to W(r) \quad(\text{by definition}).
-\end{aligned}
+\frac{1}{\sqrt{T}}y_t = \frac{1}{\sqrt{T}}\sum_{j=1}^{t}\epsilon_j \to \sigma W(r)
 $$
 
-If $\epsilon_t$ has variance $\sigma^2$, we would have
-$T^{-1/2}y_t \to \sigma W(t/T)$. Note if $y_t$ is stationary, $y_t$ will
-not deviate too far from $\mathbb E(y_t)$, we would have
-$T^{-1/2} y_t \to 0$.
+where $r=t/T$. Note if $y_t$ is stationary, $y_t$ will not deviate too
+far from $\mathbb E(y_t)$, we would have $T^{-1/2} y_t \to 0$.
 
-Now let's consider the behaviour of the mean:
-$\bar y=\frac{1}{T}\sum_{t=1}^T y_t$. Define $\xi_T(r)=T^{-1/2}y_t$ ,
-where $r=t/T$.
+Now let's consider the behaviour of the mean
+$\bar y=\frac{1}{T}\sum_{t=1}^T y_t$. Define as usual,
+$\xi_T(r)=T^{-1/2}y_t$ , where $r=t/T$. We have
 
 $$
 \begin{aligned}
@@ -312,7 +356,7 @@ $\bar y \to \mathbb E(y_t)$ . With unit root process, the mean no longer
 converges to a constant, but to a distribution
 $\int_0^1 W(r)dr\sim N(0,\frac{1}{3})$.
 
-Consider the sum of squared $y_t$:
+For higher orders of $y_t$, we have
 
 $$
 \begin{aligned}
@@ -329,7 +373,7 @@ $$
 \frac{1}{T^{1+k/2}}\sum_{i=1}^T y_t^k \to \sigma^k\int_0^1 W^k(r)dr.
 $$
 
-Consider
+Consider the numerator of the OLS estimator of the unit root process,
 
 $$
 \begin{aligned}
@@ -339,7 +383,7 @@ $$
 \end{aligned}
 $$
 
-Therefore,
+Divide it by $T$, we have
 
 $$
 \begin{aligned}
@@ -348,43 +392,22 @@ $$
 &= \frac{1}{2}[\xi^2(1)-\hat\sigma^2] \\
 &\to \frac{1}{2}[\sigma^2 W^2(1) - \sigma^2] \\
 &= \frac{1}{2}\sigma^2 [ W^2(1) - 1] \\
-&= \sigma^2 \int_0^1 W dW
+&= \sigma^2 \int_0^1 W dW.
 \end{aligned}
 $$
 
-So far we have assumed $\epsilon_t$ are not autocorrelated. This
-assumption can be relieved. Let
+We summarize the results below.
 
-$$
-y_t = y_{t-1} + v_t,
-$$
+::: callout-important
+## Key Point Summary
 
-where $v_t$ is a stationary process
-$v_t = \sum_{j=0}^{\infty} c_j\epsilon_{t-j}$. Let $\omega^2$ be the
-long-run variance of $v_t$:
+1.  $\int_0^T W dt = N(0, \frac{T^3}{3})$
+2.  $\int_0^T W dW = \frac{1}{2}[ W^2(T) - T]$
+3.  $\frac{1}{T^{3/2}}\sum_{t=1}^T y_t \to \sigma \int_0^1 W(r)dr$
+4.  $\frac{1}{T^{1+k/2}}\sum_{i=1}^T y_t^k \to \sigma^k\int_0^1 W^k(r)dr$
+5.  $\frac{1}{T}\sum_{t=1}^{T}y_{t-1}\epsilon_t \to \sigma^2\int_0^1 WdW$
+6.  $\frac{1}{T^2}\sum_{t=1}^{T}y_{1t}y_{2t} \to \sigma_1\sigma_2\int_0^1 W_1(r)W_2(r)dr$
+:::
 
-$$
-\omega^2 = \sum_{-\infty}^{\infty} \gamma_j
-$$
-
-Most of the previous conclusions carry through:
-
-$$
-\begin{aligned}
-\frac{1}{\sqrt T} y_t &\to \omega W(r) \\
-\frac{1}{T^{3/2}}\sum_{t=1}^{T} y_t &\to \omega\int_0^1 W(r) dr
-\end{aligned}
-$$
-
-An exception is
-
-$$
-\begin{aligned}
-\frac{1}{T}\sum_{t=1}^{T} y_{t-1}v_t 
-&= \frac{1}{2T}y_T^2 - \frac{1}{2T}\sum_{t=1}^{T}v_t^2 \\
-&\to \frac{1}{2} [\omega^2 W^2(1) - \zeta^2] \\
-&\to \omega^2\int_0^1 W dW + \frac{\omega^2-\zeta^2}{2}
-\end{aligned}
-$$
-
-where $\frac{\omega^2-\zeta^2}{2}$ is a "nuisance" parameter.
+The last rule was given without proof, as we will need it in the
+following chapters.
