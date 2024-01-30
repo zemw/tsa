@@ -1,4 +1,4 @@
-# Nonstationary Process
+# Spurious Regression
 
 It is said, all stationary series are alike, but each non-stationary
 series is non-stationary in its own way (remember Leo Tolstoy's famous
@@ -32,12 +32,12 @@ paragraphs on unit root processes.
 
 We start by pointing out that, it is very dangerous to blindly include
 non-stationary variables in a regression. To illustrate this, we
-simulate two random walks (with drifts):
+simulate two random walks:
 
 $$
 \begin{aligned}
-x_{t} &= \mu_X + x_{t-1} + \epsilon_{t},\quad\epsilon_{t}\overset{iid}\sim N(0,\sigma_X^2)\\
-y_{t} &= \mu_Y + y_{t-1} + \eta_{t},\quad\eta_{t}\overset{iid}\sim N(0,\sigma_Y^2)
+x_{t} &= x_{t-1} + \epsilon_{t},\quad\epsilon_{t}\overset{iid}\sim N(0,\sigma_X^2)\\
+y_{t} &= y_{t-1} + \eta_{t},\quad\eta_{t}\overset{iid}\sim N(0,\sigma_Y^2)
 \end{aligned}
 $$
 
@@ -49,13 +49,14 @@ library(lmtest)
 ```
 
 ```{r}
-x = cumsum(.1 + rnorm(200))
-y = cumsum(.1 + rnorm(200))
+set.seed(2024)
+x = cumsum(rnorm(200))
+y = cumsum(rnorm(200))
 ts.plot(cbind(x,y), col=1:2)
 ```
 
 We would expect the two series completely uncorrelated, as they are two
-irrelevant random processes. However, if we regress $y_t$ on $x_t$, we
+independent random processes. However, if we regress $y_t$ on $x_t$, we
 would likely find a very strong correlation. This is called a **spurious
 regression**.
 
@@ -74,28 +75,28 @@ correlation disappears.
 coeftest(lm(diff(y) ~ diff(x)))
 ```
 
-What's even worse, if we run a Monte Carlo simulation to approximate the
-distribution of $\hat\beta$, we would find the distribution is not
-Gaussian at all. It is not centered around 0 and left-skewed. This
-means, all the conventional asymptotic theories, the $t$-statistics or
-$F$-statistics, do not make sense any more.
+If we approximate the distribution of the $t$-value for $\hat\beta$ with
+run Monte Carlo simulations, we would find the distribution is not
+Gaussian and has much heavier tails. That means we would much more
+likely to find significant results with spurious regression.
 
 ```{r}
 # Monte Carlo simulation
-beta = sapply(1:1000, function(i) {
-  x = cumsum(.1 + rnorm(200))
-  y = cumsum(.1 + rnorm(200))
-  coef(lm (y ~ x))[2]
+tvalue = sapply(1:1000, function(i) {
+  x = cumsum(rnorm(200))
+  y = cumsum(rnorm(200))
+  # extract t-value
+  summary(lm(y~x))$coef['x','t value']
 })
 # plot the density with Gaussian curve
 {
-  hist(beta, prob = TRUE)
-  range = seq(-3, 3, by = .1)
+  hist(tvalue, prob = TRUE, breaks = 40, xlim=c(-20,20), ylim = c(0,.4))
+  range = seq(-20, 20, by = .2)
   lines(range, dnorm(range), col = 2)
 }
 ```
 
-Therefore, the normal OLS against non-stationary series is totally
-misleading. The rest of the chapter will demystify the nature of
-spurious regression and present how we can properly deal with
+Therefore, the conventional statistical inference against non-stationary
+series is totally misleading. The rest of the chapter will demystify the
+nature of spurious regression and discuss how we can properly deal with
 non-stationary time series.
