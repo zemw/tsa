@@ -7,13 +7,13 @@ extension of a discrete-time random walk. To define the continuous
 version of a random walk, we cannot simply sum up infinite number of
 white noises, which will certainly explode. Instead, we chop up a finite
 interval into infinitely many small intervals, each one corresponding to
-a tiny white noise. The following table shows how a discrete random walk
-extends to a continuous function.
+a tiny Gaussian white noise. The following table shows how a discrete
+random walk extends to a continuous function.
 
 <!-- WARNING: switch to visual model breaks the table -->
 
 |                     | Random Walk                                 | Brownian Motion                                                 |
-|------------------|-----------------------|-------------------------------|
+|-------------------|-----------------------|------------------------------|
 | Innovation          | $\epsilon_i\sim\text{WN}(0,1)$              | ![](fig/epsilon.png){width="200px"}                             |
 | Stochastic process  | $y_t = \epsilon_1 + \cdots + \epsilon_t$    | $W(t)_{t\in[0,1]} = \lim_{n\to\infty}\sum_{i=1}^{nt}\epsilon_i$ |
 | Expectation         | $\mathbb E[y_t]=0$                          | $\mathbb E[W(t)] = 0$                                           |
@@ -36,6 +36,7 @@ variation) even sum up to a deterministic constant.
 #| fig-cap: "Multiple Realizations of Brownian Motion"
 #| label: fig-simbm
 N = 1000
+set.seed(1)
 brownian = function(r, n=1000) {
   cumsum(rnorm(n*r,0,1/n))
 }
@@ -50,10 +51,10 @@ brownian = function(r, n=1000) {
 
 ## Some properties
 
-The **quadratic variation** is one the most important properties of
-Brownian motion. Intuitively, it says the squared tiny changes sum up to
-a constant with probability 1 no matter which realized path it takes.
-Smooth functions will not have such property, because $(dX)^2$
+The **quadratic variation** is one of the most important properties of
+Brownian motions. Intuitively, it says the squared tiny changes sum up
+to a constant with probability $1$ no matter which realized path it
+takes. Smooth functions will not have such property, because $(dX)^2$
 diminishes much faster than $dX$, surely we get $\int_0^t(dX)^2 =0$.
 Because Brownian motion fluctuations too much, the squared changes do
 not diminish away. To see this, imagine summing up the squares of
@@ -88,8 +89,8 @@ $$ {#eq-quad}
 
 It should be stressed, $W$ is not differentiable. We use the notation
 $dW$, but it is not the same as conventional differentials. The calculus
-for Brownian motions, the Itô calculus, which is introduced below, is a
-different class of calculus specifically designed for stochastic
+for Brownian motions, the Itô calculus, which will be introduced below,
+is a different class of calculus specifically designed for stochastic
 functions. Before we get to that, let's first have a look at some
 additional properties of Brownian motions.
 
@@ -103,27 +104,26 @@ $$
 Therefore,
 
 $$
-W(t) \sim \sqrt{nt} N\left(0,\frac{1}{n}\right) \sim N(0,t)
+W(t) \sim \sqrt{nt} N\left(0,\frac{1}{n}\right) \sim N(0,t);
 $$ {#eq-brnorm}
 
 It follows that, for any $r<s$,
 
 $$
-W(s) - W(t) \sim N(0, s-t)
+W(s) - W(t) \sim N(0, s-t);
 $$ {#eq-brdiff}
 
 As $s$ and $t$ become arbitrarily close, we have
 
 $$
-dW \sim N(0, dt)
+dW \sim N(0, dt).
 $$ {#eq-brdr}
 
-## Functional CLT
+In essence, Brownian motion is the accumulation of tiny independent
+Gaussian innovations. We give the formal definition of Brownian motions
+below.
 
-We reformulate the intuition above to a more formal definition and
-theorem.
-
-::: {#def-brown}
+::: {.callout-important icon="false"}
 ## Brownian motion
 
 A Brownian motion (Wiener process) is a stochastic function $W(t)$ such
@@ -133,34 +133,6 @@ that
 2.  For $0 \leq t \leq s \leq 1$, $W(s)-W(t) \sim N(0, s-t)$;
 3.  For any realization, $W(t)$ is continuous in $t$.
 :::
-
-::: {#thm-fclt}
-## Donsker's Theorem
-
-Define $$\xi_T(r) = \frac{1}{\sqrt T}\sum_{i=1}^{Tr}\epsilon_i$$ where
-$\epsilon_t \sim IID(0,\sigma^2)$, $0 \leq r\leq 1$. We have
-$$\xi_T(r) \to \sigma W(r)$$ as $T\to\infty$.
-:::
-
-This is a reformulation of the definition in the first section. Instead
-of assuming each $\epsilon_t$ has a standard deviation $\frac{1}{n}$, we
-approach it with a more common formulation: assuming the standard
-deviation is constant $\sigma^2$, and stabilizing it by $\sqrt{T}^{-1}$.
-
-The Donsker's Theorem is also called the **functional central limit
-theorem**. When $r=1$, the standard CLT implies
-
-$$ \xi_T(1) = \frac{1}{\sqrt T} \sum_{i=1}^T \epsilon_i \to N(0, \sigma^2). $$
-The theorem claims the convergence to normality for any $r$. As an
-illustration, suppose $r=\frac{1}{2}$, then
-
-$$ 
-\xi_T\left(\frac{1}{2}\right) = \frac{1}{\sqrt T} \sum_{i=1}^{T/2}\epsilon_i = 
-\frac{1}{2}\left(\frac{1}{\sqrt{T/2}} \sum_{i=1}^{T/2}\epsilon_i \right)
-\to N\left(0, \frac{\sigma^2}{2}\right). 
-$$
-
-The convergence would hold for any $r$ if $T$ is large enough.
 
 ## Itô calculus
 
@@ -176,10 +148,10 @@ $$
 For an informal proof, it immediately follows from the Taylor expansion
 
 $$
-F(W_{t+h})-F(W_t)=F'(W_{t+h}-W_t)+\frac{1}{2}F''(W_{t+h}-W_t)^2+\cdots
+F(W(t+h))-F(W(t))=F'(W(t+h)-W(t))+\frac{1}{2}F''(W(t+h)-W(t))^2+\cdots
 $$
 
-We abbreviate $W(t+h)$ as $W_{t+h}$. As $h\to 0$,
+As $h\to 0$,
 
 $$
 dF = F'dW + \frac{1}{2}F''(dW)^2.
@@ -209,8 +181,10 @@ Let $F(t, W)$ be a function of real-valued $t$ and Brownian motion
 $W(t)$. Then
 
 $$
-dF = (F_t + F_{ww}) dt + F_w dW.
+dF = (F_t + F_{ww}) dt + F_w dW
 $$
+
+where $F_t$ and $F_w$ denote partial derivatives.
 :::
 
 ::: {#exm-2}
@@ -224,8 +198,8 @@ $W(t)$ to $W(s)$ when it enters as the integrand.
 
 ::: {#thm-itoint}
 1.  $\int_{0}^{t} dW = W(t)$;
-2.  $F(W_t)=\int_0^t f(W_s)dW_s$ , if $dF = f\ dW$;
-3.  $F(t, W_t) = \int_0^t f(s, W_s)dW_s + \int_0^t g(s, W_s)ds$ , if
+2.  $F(W(t))=\int_0^t f(W(s))dW$ , if $dF = f\ dW$;
+3.  $F(t, W(t)) = \int_0^t f(s, W(s))dW + \int_0^t g(s, W(s))ds$ , if
     $dF = f\ dW + g\ dt$.
 :::
 
@@ -233,11 +207,11 @@ $W(t)$ to $W(s)$ when it enters as the integrand.
 Given $dW^2 = 2W dW + dt$, take integral on both sides:
 
 $$
-W^2(t) = 2\int_0^t W_s dW_s + \int_0^t ds
+W^2(t) = 2\int_0^t W(s) dW + \int_0^t ds
 $$
 
 $$
-\implies \int_0^t W_s dW_s = \frac{1}{2}[W^2(t) - t].
+\implies \int_0^t W dW = \frac{1}{2}[W^2(t) - t].
 $$
 
 Setting $t=1$, it follows that
@@ -266,7 +240,7 @@ $$
 $$
 :::
 
-::: callout-note
+::: {.callout-tip icon="false"}
 ## Making Sense of Itô Calculus
 
 Let $F(t)$ be a continuous-time trading strategy that holds an amount of
@@ -329,20 +303,28 @@ $$
 y_t = y_{t-1} + \epsilon_t = \sum_{j=1}^{t}\epsilon_j,
 $$
 
-where $\epsilon_t\sim\text{WN}(0,\sigma^2)$, $t=1,2,\dots,T$. By
-Donsker's theorem, it is easy to show the unit root process converges to
-Brownian motion if stabilizing it by $T^{-1/2}$ :
+where $\epsilon_t\sim\text{WN}(0,1)$, $t=1,2,\dots,T$. It is not
+surprising to see the unit root process converges to Brownian motion if
+stabilizing it by $T^{-1/2}$ :
 
 $$
-\frac{1}{\sqrt{T}}y_t = \frac{1}{\sqrt{T}}\sum_{j=1}^{t}\epsilon_j \to \sigma W(r)
+\begin{aligned}
+\frac{1}{\sqrt{T}}y_t &= \frac{1}{\sqrt{T}}\sum_{j=1}^{t}\epsilon_j \\
+&= \frac{1}{\sqrt{T}}\sum_{j=1}^{Tr}\epsilon_j \quad(r=t/T) \\
+&= \sqrt{r}\left(\frac{1}{\sqrt{Tr}}\sum_{j=1}^{Tr}\epsilon_j\right) \\[1em]
+&\to \sqrt{r} N(0, 1) \sim N(0,r) \quad(\text{by CLT}) \\[1em]
+&\to W(r) \quad(\text{by definition}).
+\end{aligned}
 $$
 
-where $r=t/T$. Note if $y_t$ is stationary, $y_t$ will not deviate too
-far from $\mathbb E(y_t)$, we would have $T^{-1/2} y_t \to 0$.
+If $\epsilon_t$ has variance $\sigma^2$, we would have
+$T^{-1/2}y_t \to \sigma W(t/T)$. Note if $y_t$ is stationary, $y_t$ will
+not deviate too far from $\mathbb E(y_t)$, we would have
+$T^{-1/2} y_t \to 0$.
 
-Now let's consider the behaviour of the mean
-$\bar y=\frac{1}{T}\sum_{t=1}^T y_t$. Define as usual,
-$\xi_T(r)=T^{-1/2}y_t$ , where $r=t/T$. We have
+Now let's consider the behaviour of the mean:
+$\bar y=\frac{1}{T}\sum_{t=1}^T y_t$. Define $\xi_T(r)=T^{-1/2}y_t$ ,
+where $r=t/T$. We have
 
 $$
 \begin{aligned}
@@ -396,10 +378,10 @@ $$
 \end{aligned}
 $$
 
-We summarize the results below.
+We summarize the important results below.
 
-::: callout-important
-## Key Point Summary
+::: {.callout-important icon="false"}
+## Key Rules Summary
 
 1.  $\int_0^T W dt = N(0, \frac{T^3}{3})$
 2.  $\int_0^T W dW = \frac{1}{2}[ W^2(T) - T]$
