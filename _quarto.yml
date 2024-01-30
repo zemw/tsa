@@ -9,38 +9,38 @@ book:
     - index.qmd
     - part: "The Basics"
       chapters: 
-        - basics.qmd
-        - decomp.qmd
-        - autocov.qmd
-        - stationary.qmd
+        - 01_base.qmd
+        - 02_dec.qmd
+        - 03_acf.qmd
+        - 04_st.qmd
     - part: "ARIMA Model"
       chapters: 
-        - models.qmd
-        - ar.qmd
-        - ma.qmd
-        - arma.qmd
-        - wold.qmd
+        - 05_spec.qmd
+        - 06_ar.qmd
+        - 07_ma.qmd
+        - 08_arma.qmd
+        - 09_wold.qmd
     - part: "Time Series Regression"
       chapters: 
-        - ols.qmd
-        - ols2.qmd
-        - mle.qmd
-        - forecast.qmd
-        - dce.qmd
-        - ssf.qmd
-        - adl.qmd
-        - lpiv.qmd
-    - part: "Unit Root Process"
+        - 10_ols.qmd
+        - 11_ols2.qmd
+        - 12_mle.qmd
+        - 13_fc.qmd
+        - 14_dce.qmd
+        - 15_ssf.qmd
+        - 16_adl.qmd
+        - 17_iv.qmd
+    - part: "Nonstationary Time Series"
       chapters: 
-        - nonstat.qmd
-        - trend.qmd
-        - uroot.qmd
-        - ito.qmd
-        - uni2.qmd
-    - summary.qmd
-    - references.qmd
+        - 18_sp.qmd
+        - 19_ts.qmd
+        - 20_uni.qmd
+        - 21_ito.qmd
+        - 22_uni2.qmd
+    - sum.qmd
+    - ref.qmd
 
-bibliography: references.bib
+bibliography: ref.bib
 
 format:
   html:
