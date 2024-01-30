@@ -28,9 +28,13 @@ Hypothesis).
 #| fig-cap: "Stock market index (black) vs Simulation of a unit root process (red)"
 #| label: fig-ursim
 library(zoo)
+
 data = readRDS("data/mts.Rds")
 y = as.ts(data$SHSE)
+
+set.seed(1)
 x = cumsum(rnorm(length(y), 5, 200))
+
 ts.plot(cbind(y,x), col=1:2)
 ```
 
