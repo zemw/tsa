@@ -1,0 +1,22 @@
+# Cointegration
+
+```{r}
+#| echo: false
+#| message: false
+#| fig-cap: "Superconsistentcy with cointegrated variables (even with endogeneity)"
+#| label: fig-supcoint
+bhat = sapply(20:1000, function(size) {
+  set.seed(1)
+  u = rnorm(size)
+  z = rnorm(size)
+  x = cumsum(u)
+  q = .5
+  e = q*u + sqrt(1-q^2)*z
+  b = .5
+  y = b*x + e
+  #summary(lm(y~x))
+  summary(lm(y~x))$coef['x', 'Estimate']
+})
+plot(20:1000, bhat, type="l", xlab="Sample Size")
+abline(h=.5, col=8)
+```
