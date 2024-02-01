@@ -134,9 +134,15 @@ that
 3.  For any realization, $W(t)$ is continuous in $t$.
 :::
 
+Brownian motions are frequently used to model stock returns. For a fixed
+horizon $T$, the returns are normally distributed, with volatility
+scaled by $\sqrt T$. And the returns over different periods are
+independent, which means no predictability from past returns to future
+returns.
+
 ## Itô calculus
 
-::: {#thm-ito1}
+::: {#lem-ito1}
 Let $F(W)$ be a "smooth" function of a Brownian motion $W(t)$. Then
 
 $$
@@ -164,43 +170,81 @@ dF = F'dW + \frac{1}{2}F''dt.
 $$
 :::
 
-Note that how this differs from the differential formula for normal
-functions: $dF = F'dW$. The second-order term does not disappear
-precisely because the quadratic variation does not go to zero.
+This formula is known as the **Itô's lemma**, which is the key equation
+of Itô calculus. Note that how this differs from the differential
+formula for normal functions: $dF = F'dW$. The *second-order* term does
+not disappear precisely because the quadratic variation does not go to
+zero.
 
 ::: {#exm-1}
 $F(W) = W^2 \implies dF = 2WdW + dt$
 :::
 
-An extension of @thm-ito1 include an additional variable $t$. It follows
-immediately from the the partial differentiation rule and the result
-above.
-
-::: {#thm-ito2}
-Let $F(t, W)$ be a function of real-valued $t$ and Brownian motion
-$W(t)$. Then
-
-$$
-dF = (F_t + F_{ww}) dt + F_w dW
-$$
-
-where $F_t$ and $F_w$ denote partial derivatives.
-:::
-
 ::: {#exm-2}
-$F(t, W)=tW \implies d(tW) = W dt + t dW$
+Let's do a more involved example to familiar ourselves with the Itô's
+lemma, especially how the second-order differentiation of the Brownian
+motions plays out in computation.
+
+We like to model the continuous-time stock price with Brownian motions.
+Let $S_t$ be the stock price at time $t$. Assume the behavior of $S_t$
+follows a stochastic differential equation:
+
+$$
+\frac{dS_t}{S_t}=\mu dt + \sigma dW
+$$
+
+That is, the percentage of $S_t$ is a continuous time random walk with
+drift $\mu$ and volatility $\sigma$. Let's compute the log-return of the
+stock over the horizon $T$:
+
+$$
+R_T = \ln (S_T) - \ln (S_0) = f(S_T)
+$$
+
+Apply second-order Taylor expansion:
+
+$$
+\begin{aligned}
+dR_T &= f' dS_T + \frac{1}{2}f'' (dS_T)^2 \\
+&= \frac{1}{S_T} dS_T - \frac{1}{2}\frac{1}{S_T^2} (dS_T)^2 \\
+&= \frac{dS_T}{S_T} - \frac{1}{2}\left(\frac{dS_T}{S_T}\right)^2 \\
+&= (\mu dt + \sigma dW) - \frac{1}{2}(\mu dt + \sigma dW)^2 \\
+&= (\mu dt + \sigma dW) - \frac{1}{2}(\mu^2 dt^2 + 2\mu\sigma dtdW + \sigma^2 dW^2) \\
+&\to (\mu dt + \sigma dW) - \frac{1}{2} \sigma^2 dt \\
+&= \left(\mu - \frac{1}{2} \sigma^2\right) dt + \sigma dW
+\end{aligned}
+$$
+
+The second last step holds because, as $dt \to 0$, the terms $dt^2$ and
+$dt dW$ tend to zero faster than $dW^2$. The only term left is
+$dW^2 = dt$. If we define integral as the inverse of differentiation, we
+have
+
+$$
+\begin{aligned}
+R_T = \int_0^T dR_T &= \left(\mu - \frac{1}{2} \sigma^2\right) \int_0^T dt + \sigma \int_0^T dW \\
+&= \left(\mu - \frac{1}{2} \sigma^2\right)T + \sigma\sqrt{T}\epsilon_T
+\end{aligned}
+$$
+
+where $\epsilon_T$ is a standard normal variable. The model tells us
+that the log-return of a stock over a fixed horizon of $T$ is normally
+distributed with mean $(\mu - \sigma^2/2)T$ and standard deviation of
+$\sigma\sqrt{T}$. Everything looks familiar, except the Ito's term,
+$\sigma^2/2$, which comes from the non-zero second-order differential
+$dW^2$. The famous Black-Scholes formula for option pricing is derived
+from this model.
 :::
 
-Stochastic integrals are defined as the reverse operation of the
-stochastic differentiation. The following rules are immediately from the
-fundamental theorem of calculus assuming $W(0)=0$. Note that we change
-$W(t)$ to $W(s)$ when it enters as the integrand.
+::: {#def-itoint}
+Stochastic integrals as the reverse operation of the stochastic
+differentiation. Note that we change $W(t)$ to $W(s)$ when it enters as
+the integrand.
 
-::: {#thm-itoint}
-1.  $\int_{0}^{t} dW = W(t)$;
-2.  $F(W(t))=\int_0^t f(W(s))dW$ , if $dF = f\ dW$;
-3.  $F(t, W(t)) = \int_0^t f(s, W(s))dW + \int_0^t g(s, W(s))ds$ , if
-    $dF = f\ dW + g\ dt$.
+1.  $\displaystyle \int_{0}^{t} dW = W(t)$;
+2.  $\displaystyle F(W(t))=\int_0^t f(W(s))dW$ , if $dF = f\ dW$;
+3.  $\displaystyle F(t, W(t)) = \int_0^t f(s, W(s))dW + \int_0^t g(s, W(s))ds$
+    , if $dF = f\ dW + g\ dt$.
 :::
 
 ::: {#exm-3}
@@ -225,7 +269,7 @@ expectation 1. Thus $\int_0^1 W dW$ is centered at 0 but skewed.
 :::
 
 ::: {#exm-4}
-Given $d(tW) = Wdt + t\ dW$, we have
+Given $d(tW) = Wdt + t\ dW$ (verify this with Ito's lemma), we have
 
 $$
 tW(t) = \int_0^t W(s)ds + \int_0^t s\ dW
@@ -249,7 +293,7 @@ $W(t)$. $dW$ represents the movement of stock price. Consider the Itô's
 integral
 
 $$
-Y_t = \int_0^t F dW
+Y_t = \int_0^t F\ dW
 $$
 
 The stochastic integral represents the payoff of the trading strategy up
@@ -257,9 +301,9 @@ to time $t$. Note that the integral always evaluates *at the left*. So
 the strategy can only make decision based on available information.
 :::
 
-::: {#thm-isometry}
+::: {#prp-isometry}
 Let $W(t)$ be a Brownian motion. Let $f(t)$ be a nonrandom function of
-time. Then the following holds
+time. Then
 
 1.  $\mathbb{E}\left[\int_0^t f(s)dW\right]=0$;
 2.  $\mathbb{E}\left[\left(\int_0^t f(s)dW\right)^2\right]=\mathbb{E}\left[\int_0^t f^2 ds\right]$
