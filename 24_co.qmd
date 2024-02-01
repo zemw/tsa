@@ -1,5 +1,104 @@
 # Cointegration
 
+We have shown that regressing on non-stationary time series might lead
+to spurious regressions that produce nonsensible large $t$-values. The
+conventional asymptotic theorems no longer hold for series with very
+high persistence such as unit root processes. But unit roots are not
+always an enemy, sometimes it can be a friend, as in the case of
+cointegration. In this case, the OLS estimates are super-consistent.
+They are consistent even when there is an endogeneity issue (which is
+amazing!)
+
+## Cointegration and super-consistency
+
+Consider a regression with two random walks $x_t$ and $y_t$:
+
+$$
+y_t = \beta x_t + e_t
+$$
+
+where $e_t$ is stationary. In this case, $y_t$ and $x_t$ are
+**cointegrated**, because the linear combination of the two $I(1)$
+processes becomes $I(0)$. If this is the case, we no longer have a
+spurious regression. In fact, $\hat\beta$ is not only consistent, but
+**super-consistent**. Consider the OLS estimator
+
+$$
+T(\hat\beta -\beta) = \frac{T^{-1}\sum x_t e_t}{T^{-2}\sum x_t^2} 
+\to \frac{\int W_1 dW_2}{\int W_1^2 dt}.
+$$
+
+Note that $\int W_1 dW_2$ is centered at zero. Hence $\hat\beta$ is
+consistent, despite the distribution is non-Gaussian. It converges at
+rate $T$, faster than the standard case $\sqrt T$. So it is called
+super-consistency.
+
+The argument extends to general regressions with multiple regressors. As
+long as there exists a vector of coefficients that makes the
+non-stationary variables cointegrated, the OLS estimator is
+super-consistent. For example,
+
+$$
+y_t = \phi y_{t-1} + \beta x_t + e_t
+$$
+
+If $y_t$ is $I(1)$, then $y_t - y_{t-1}$ is $I(0)$ (cointegrated with
+itself). Therefore, $[0, 1]$ is the cointegration vector that makes
+$e_t$ stationary even if $x_t$ is not cointegrated with $y_t$. In this
+case, OLS estimates for $\hat\rho$ and $\hat\beta$ will be
+super-consistent.
+
+The intuition of super-consistency is that OLS minimizes squared
+residuals. If the coefficients deviate from the cointegration vector,
+$\hat e_t^2$ would diverge. $\hat e_t^2$ is minimized only when the
+coefficients coincide with the cointegration vector. That makes OLS
+converges even faster.
+
+The super-consistency is so strong, that the OLS estimators for
+cointegrated variables are consistent even when there is endogeneity
+problem. We demonstrate this with an example. Suppose $x_t$ follows a
+random walk, and $y_t$ cointegrates with $x_t$:
+
+$$
+\begin{aligned}
+x_t &= x_{t-1} + u_t \\
+y_t &= \beta x_t + e_t
+\end{aligned}
+$$
+
+Assume $u_t$ and $e_t$ are correlated with
+$\mathbb E (e_t^2)=\mathbb E (u_t^2)=1$ and $\text{cov}(e_t,u_t)=1$. For
+simplicity, also assume $e_t = \phi u_t + \sqrt{1-\phi^2}\eta_t$ where
+$\eta_t$ is $iid$ standard normal. As $e_t$ is correlated with $x_t$
+through $u_t$, there is clearly an endogeneity problem. The OLS
+estimator is given by
+
+$$
+T(\hat\beta-\beta) = \frac{\frac{1}{T}\sum x_t e_t}{\frac{1}{T^2}\sum x_t^2}
+= \frac{\frac{1}{T}\sum x_{t-1} e_t + \frac{1}{T}\sum u_t e_t}{\frac{1}{T^2}\sum x_t^2}
+$$
+
+where
+
+$$
+\begin{aligned}
+\frac{1}{T}\sum x_{t-1} e_t &= \frac{\phi}{T}\sum x_{t-1} u_t + \frac{\sqrt{1-\phi^2}}{T}\sum x_{t-1} \eta_t \\
+&\to \phi\int W_1 dW_1 + \sqrt{1-\phi^2}\int W_1 dW_2
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+T(\hat\beta-\beta) \to \frac{\phi\int W_1 dW_1 + \sqrt{1-\phi^2}\int W_1dW_2+\phi}{\int W_1^2 dt}.
+$$
+
+When $\phi\neq 0$, that is endogneity exists, the limiting distribution
+is shifted. As a result $\hat\beta$ has a finite sample bias of order
+$\frac{1}{T}$. But as $T\to\infty$, the estimator is consistent.
+@fig-supcoint demonstrates the convergence of $\hat\beta$ as sample size
+increases (the true $\beta=0.5$).
+
 ```{r}
 #| echo: false
 #| message: false
@@ -20,3 +119,15 @@ bhat = sapply(20:1000, function(size) {
 plot(20:1000, bhat, type="l", xlab="Sample Size")
 abline(h=.5, col=8)
 ```
+
+::: {.callout-important icon="false"}
+## Summary of Cointegration
+
+Regression with persistent but cointegrated regressors:
+
+1.  The rate of convergence on persistent regressor is stronger;
+2.  If the regressors are cointegrated, small endogneity does not
+    preclude us from having a consistent estimator;
+3.  Behavior of cointegrated case is strikingly different from
+    non-cointegrated cases.
+:::

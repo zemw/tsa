@@ -37,6 +37,8 @@ book:
         - 20_uni.qmd
         - 21_ito.qmd
         - 22_uni2.qmd
+        - 23_ut.qmd
+        - 24_co.qmd
     - sum.qmd
     - ref.qmd
 
