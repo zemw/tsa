@@ -120,14 +120,158 @@ plot(20:1000, bhat, type="l", xlab="Sample Size")
 abline(h=.5, col=8)
 ```
 
+## Inference under cointegration
+
+We have seen the limiting distributions of persistent regressors could
+be non-standard. But luckily, in many cases, we can still get Gaussian
+distributions. This is hard to believe. But it can be shown. Consider a
+regression of the **canonical form** --- that is a regression with four
+types of regressors: stationary $I(0)$, non-stationary $I(1)$, constant
+and trend. It can be shown any regression can be rewritten in the
+canonical form.
+
+$$
+y_t = \boldsymbol{\gamma z_t} + e_t
+$$ where
+
+$$
+\boldsymbol z_t = 
+\begin{bmatrix}
+F_1(L) & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+F_2(L) & G & H & 0 \\
+F_3(L) & T & K & 1
+\end{bmatrix}
+\begin{bmatrix}
+\boldsymbol\epsilon_t \\
+1\\
+\boldsymbol\eta_t \\
+t
+\end{bmatrix}
+$$
+
+and $e_t$ is stationary. Consider the OLS estimator:
+$\hat\gamma=\gamma + (Z'Z)'Z'e$ with a scaling matrix
+
+$$
+Q =\begin{bmatrix}
+\sqrt{T}\boldsymbol{I}_{k_1} & & & \\
+& \sqrt{T} & & \\
+& & T\boldsymbol{I}_{k_3} & \\
+& & & T^{3/2}
+\end{bmatrix}
+$$
+
+Multiply them together,
+
+$$
+\begin{aligned}
+Q(\hat\gamma - \gamma) &= (Q^{-1}Z'ZQ^{-1})^{-1} Q^{-1}Z'e \\
+&= \begin{bmatrix} 
+\underset{k_1\times k_1}{\text{const}} & 0\quad 0\quad 0 \\
+0 & \text{Functions of} \\
+0 & \text{Brownian} \\
+0 & \text{motions} \\
+\end{bmatrix}^{-1}
+\begin{bmatrix}
+N(0,?)\\
+N(0,?)\\
+?\int W dW ?\\
+N(0,?)
+\end{bmatrix}
+\end{aligned}
+$$
+
+We don't care the specific functional forms of the converged
+distribution. What matters is the speed of convergence. Note that
+
+$$
+\begin{aligned}
+\sqrt{T}(\hat\gamma_1-\gamma_1) &\to N(0,?) \\
+\sqrt{T}(\hat\gamma_2-\gamma_2) &\to \text{Something 2} \\
+T(\hat\gamma_3-\gamma_3) &\to \text{Something 3} \\
+T^{3/2}(\hat\gamma_4-\gamma_4) &\to \text{Something 4} 
+\end{aligned}
+$$
+
+Constant and stationary regressors have the slowest converging speed
+$\sqrt T$. Only stationary regressors converge to Gaussian distribution.
+
+Now consider a general regression,
+
+$$
+y_t = \boldsymbol{\beta x_t} + e_t
+$$
+
+where $e_t$ is stationary. Sims (1990) shows that we can always find a
+linear combination $\boldsymbol{Dx_t=z_t}$ that transforms the
+regression into a canonical form
+
+$$
+y_t = \boldsymbol{\gamma z_t} + e_t
+$$
+
+where $\boldsymbol{\gamma=\beta D^{-1}}$. This means, if a component of
+$\hat\beta$ can be written as a linear combination of
+$\hat\gamma_1, \hat\gamma_3, \hat\gamma_4$, its distribution will be
+dominated by the behavior of $\hat\gamma_1$ due to its slower
+convergence speed. As such, it will behave like asymptotic normal and
+converge at speed $\sqrt T$.
+
+In essence, the coefficients that can be represented as a linear
+combination involving stationary regressors will be asymptotically
+normal and converge at rate $\sqrt T$. Consider an example,
+
+$$
+y_t = \alpha + \rho_1 y_{t-1} + \rho_2 y_{t-2} + \beta_1 x_t + \beta_2 x_{t-1} + e_t
+$$
+
+where $y_t$ and $x_t$ are $I(1)$. The regression can be rewritten as
+
+$$
+\begin{aligned}
+y_t &= \alpha + \rho_1\Delta y_{t-1} + (\rho_1+\rho_2)y_{t-2} + \beta_1\Delta x_t + (\beta_1+\beta_2)x_{t-1} + e_t \\
+&= \alpha + \rho_1\Delta y_{t-1} + \lambda y_{t-2} + \beta_1\Delta x_t + \delta x_{t-1} + e_t 
+\end{aligned}
+$$
+
+in which, $\rho_1$ and $\beta_1$ are coefficients on stationary
+regressors, therefore converging to Gaussian; $\rho_2=\lambda-\rho_1$
+and $\beta_2=\delta-\beta_1$ are linear combinations involving
+coefficients on stationary regressors, whose distributions will be
+dominated by that of $\rho_1$ and $\beta_1$. Hence, all coefficients
+will have asymptotically normal distributions. Standard inference
+applies. We verify the claim with a Monte Carlo simulation.
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+library(dynlm)
+beta = sapply(1:1000, function(i) {
+  x = arima.sim(list(order=c(1,1,0),ar=.5), 200)
+  y = arima.sim(list(order=c(0,1,1),ma=.7), 200)
+  coef(dynlm(y ~ L(y,1:2) + L(x,0:1)))
+}) |> t() 
+{
+  par(mfrow=c(2,2), mar=c(2,2,2,2))
+  hist(beta[,'L(y, 1:2)1'], freq=F, main="y(t-1)")
+  hist(beta[,'L(y, 1:2)2'], freq=F, main="y(t-2)")
+  hist(beta[,'L(x, 0:1)0'], freq=F, main="x(t)")
+  hist(beta[,'L(x, 0:1)1'], freq=F, main="x(t-1)")
+}
+```
+
+## Conclusion
+
 ::: {.callout-important icon="false"}
-## Summary of Cointegration
+## Key Takeaways
 
-Regression with persistent but cointegrated regressors:
-
-1.  The rate of convergence on persistent regressor is stronger;
-2.  If the regressors are cointegrated, small endogneity does not
-    preclude us from having a consistent estimator;
-3.  Behavior of cointegrated case is strikingly different from
-    non-cointegrated cases.
+1.  Regressions with non-stationary regressors are likely to be spurious
+    regressions. Do not regress two non-stationary series unless they
+    are cointegrated.
+2.  Including lags of dependent and independent variables protests you
+    from spurious regressions.
+3.  Persistence in time series makes statistical inference complicated.
+    Sometimes standard inference works, but not always.
 :::
