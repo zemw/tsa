@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Zem Wang">
-<meta name="dcterms.date" content="2024-01-01">
 
-<title>Time Series Analysis for Economists</title>
+<title>Time Series Analysis for Economists - 19&nbsp; Trend Stationary</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./01_base.html" rel="next">
+<link href="./20_uni.html" rel="next">
+<link href="./18_sp.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -72,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Time Series Analysis for Economists</h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Trend Stationary</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -97,7 +96,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">Preface</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -230,7 +229,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./19_ts.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Trend Stationary</span></a>
+  <a href="./19_ts.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Trend Stationary</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -275,39 +274,21 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Time Series Analysis for Economists</h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Trend Stationary</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Zem Wang </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -315,16 +296,151 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="preface" class="level1 unnumbered">
-<h1 class="unnumbered">Preface</h1>
-<p>Empirical macroeconomics frequently involves the analysis of time series data, encompassing variables such as GDP, inflation, and interest rates, employing methodologies distinct from those utilized in cross-sectional studies. The goal of this book is to bridge the gap between introductory time series textbooks and theoretical econometrics. In the realm of empirical research, a rudimentary comprehension of the subject matter often proves insufficient. While computational tasks can be executed through simple computer commands, practitioners must go beyond surface-level in order to understand the intricacies and limitations of the involved techniques. Conversely, an exhaustive exploration of advanced econometric theories would be excessive for practical purposes. For instance, introductory textbooks would caution against applying OLS on non-stationary time series, citing the potential risk of spurious regression. Students often accept this as a rule of thumb without a grasp of its underlying rationale. Yet, delving into intricate topics such as Itô calculus is deemed unnecessary for empirical researchers.</p>
-<p>This book seeks to acquaint readers with essential time series topics crucial for understanding and conducting empirical research, with a specific focus on macroeconomic applications. In addition to introducing basic concepts and applications, such as running a regression and interpreting the result, the book endeavors to elevate comprehension to a deeper level by elucidating the “why” alongside the “what” and “how.” However, the objective is not to provide an exhaustive treatment replete with formal proofs; rather, emphasis is placed on providing intuitive explanations. Consequently, readers may encounter instances of non-rigorous proofs where a more formal approach is deemed unnecessary for an understanding required by applied works. This book can be read as intermediary materials between undergraduate econometrics and more rigorous treatments of the subject, such as Hamilton’s <em>Time Series Analysis</em>.</p>
-<p>The materials presented are drawn from or influenced by various sources, which are listed in the References at the end of the book without being cited individually in the context. Regarding notations, I use lowercase letters for random variables, such as <span class="math inline">\(x_t\)</span> and <span class="math inline">\(y_t\)</span>. Realizations of random variables are expressed as <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, and so on. The context will make it clear whether I am referring to a random variable or its realizations. Capital letters are reserved for matrices, such as <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. Vectors and matrices are sometimes written in bold for emphasizing, such as <span class="math inline">\(\boldsymbol X\)</span> and <span class="math inline">\(\boldsymbol y_t\)</span>, or in plain format as scalars if that does not lead to confusion. Greek letters are preferred for parameters, such as <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. Estimators are indicated with a hat, such as <span class="math inline">\(\hat{\alpha}\)</span> and <span class="math inline">\(\hat{\beta}\)</span>.</p>
-<p>I use the statistical language R whenever programming is involved. I am aware that there are many time series solutions available in R. To avoid burdening readers with excessive packages, I stick to base R as much as possible with a little help from the <em>zoo</em> package.</p>
-<p>I would like to emphasize that my knowledge and understanding of the subject are limited, and I acknowledge that there may be mistakes or areas where I could have provided a more accurate explanation. I deeply appreciate any feedback or corrections from readers that could improve the accuracy and clarity of this book.</p>
+<p>Trend-stationary process is a stationary process round a deterministic trend:</p>
+<p><span class="math display">\[
+y_t = \alpha + \delta t + \psi(L)\epsilon_t,
+\]</span></p>
+<p>where <span class="math inline">\(\delta t\)</span> is a deterministic linear time trend, <span class="math inline">\(\psi(L)\epsilon_t\)</span> is a stationary process. After de-trending <span class="math inline">\(-(\alpha+\delta t)\)</span> , the result is a stationary process.</p>
+<div class="callout-caution callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Trend stationary vs stochastic trend
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Trend-stationary processes must be distinguished from <em>stochastic trend process</em> (unit root with a drift):</p>
+<p><span class="math display">\[
+y_t = \delta + y_{t-1} +\epsilon_t = y_0+\delta t+\sum_{j=1}^{t}\epsilon_j.
+\]</span></p>
+<p>Both of them have a time trend component. But in the latter model, the stochastic component is not stationary. In other words, a innovation in a trend-stationary model does not have long-lasting effect, whereas the effect is persistent in a stochastic trend model.</p>
+<p>The difference becomes clearer by comparing the variances. The variance of the trend-stationary process</p>
+<p><span class="math display">\[
+\text{var}(y_t) = \psi^2(L)\sigma^2
+\]</span></p>
+<p>is constant which does not depend on time. However, the variance of the stochastic trend process</p>
+<p><span class="math display">\[
+\text{var}(y_t) = \text{var}(\sum_{j=1}^{t} \epsilon_j) = \sigma^2 t
+\]</span></p>
+<p>is increasing over time. Therefore, stochastic trend process fluctuates more widely as time goes by.</p>
+</div>
+</div>
+<p>Unlike unit root processes, trend-stationary processes can be safely estimated by OLS. The usual <span class="math inline">\(t\)</span> and <span class="math inline">\(F\)</span> statistics have the same asymptotic distribution as they are for stationary processes. But they converge at a different speed, due to the presence of the trend. To see this, rewrite the regression in vector form</p>
+<p><span class="math display">\[
+\begin{aligned}
+y_t = \alpha + \delta t + \epsilon_t
+= \begin{bmatrix}1 &amp; t\end{bmatrix}\begin{bmatrix}\alpha\\\delta\end{bmatrix} + \epsilon_t = \boldsymbol{x_t'\beta} + \epsilon_t;
+\end{aligned}
+\]</span></p>
+<p>For simplicity, assume <span class="math inline">\(\epsilon_t \sim IID(0,\sigma^2)\)</span> for the following computation. The result can be generalized to <span class="math inline">\(\epsilon_t\)</span> being stationary. The OLS estimator is given by</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat\beta = \begin{bmatrix}\hat\alpha\\ \hat\delta\end{bmatrix} &amp;= \left(\sum_t x_tx_t'\right)^{-1} \left(\sum_t x_ty_t\right), \\
+\sqrt{T}(\hat\beta-\beta) &amp;= \left(\frac{1}{T}\sum_t x_tx_t'\right)^{-1} \left(\frac{1}{\sqrt T}\sum_t x_t\epsilon_t\right).
+\end{aligned}
+\]</span></p>
+<p>The usual asymptotic results are</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{1}{T}\sum_t x_t x_t' &amp;\to Q \\
+\frac{1}{\sqrt T}\sum_t x_t \epsilon_t &amp;\to N(0,\sigma^2 Q) \\
+\sqrt{T}(\hat\beta -\beta) &amp;\to N(0, \sigma^2 Q^{-1})
+\end{aligned}
+\]</span></p>
+<p>But this is not the case with deterministic trend if we do the computation:</p>
+<p><span class="math display">\[
+\frac{1}{T}\sum_t x_t x_t' =
+\begin{bmatrix}
+1 &amp; \frac{1}{T}\sum t \\
+\frac{1}{T}\sum t &amp; \frac{1}{T}\sum t^2
+\end{bmatrix}
+\]</span></p>
+<p>does not converge. Because <span class="math inline">\(\sum_{t=1}^{T} t = \frac{T(T+1)}{2}\)</span>, and <span class="math inline">\(\sum_{t=1}^{T} t^2 = \frac{T(T+1)(2T+1)}{6}\)</span>. It requires stronger divider to make them converge, <span class="math inline">\(T^{-2}\sum_{t=1}^{T}t\to\frac{1}{2}\)</span>, <span class="math inline">\(T^{-3}\sum_{t=1}^{T}t^2\to\frac{1}{3}\)</span>. In general,</p>
+<p><span class="math display">\[
+\frac{1}{T^{v+1}} \sum_{t=1}^{T} t^v \to \frac{1}{v+1}.
+\]</span></p>
+<p>Dividing by <span class="math inline">\(T^3\)</span> will make the convergence</p>
+<p><span class="math display">\[
+\frac{1}{T^3}\sum_t x_t x_t' \to \begin{bmatrix}0 &amp; 0\\0 &amp; \frac{1}{3}\end{bmatrix}
+\]</span></p>
+<p>However, this matrix is not invertible. We need different rates of convergence for <span class="math inline">\(\hat\alpha\)</span> and <span class="math inline">\(\hat\delta\)</span>.</p>
+<p>Define</p>
+<p><span class="math display">\[
+\boldsymbol\gamma_T = \begin{bmatrix}\sqrt{T} &amp; 0 \\ 0 &amp; T^{3/2}\end{bmatrix}
+\]</span></p>
+<p>Multiple this matrix with the coefficient vector would apply different convergence speed to different coefficients:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\begin{bmatrix}\sqrt{T}(\hat\alpha-\alpha) \\ T^{3/2}(\hat\delta - \delta)\end{bmatrix}
+&amp;= \gamma_T\left(\sum_t x_tx_t'\right)^{-1} \left(\sum_t x_t\epsilon_t\right) \\
+&amp;= \left[\gamma_T^{-1}\left(\sum_t x_tx_t'\right)\gamma_T^{-1}\right]^{-1} \left[\gamma_T^{-1}\left(\sum_t x_t\epsilon_t\right)\right]
+\end{aligned}
+\]</span></p>
+<p>in which</p>
+<p><span class="math display">\[
+\begin{aligned}
+\gamma_T^{-1}\left(\sum_t x_tx_t'\right)\gamma_T^{-1} &amp;=
+\begin{bmatrix}T^{-1/2} &amp; \\ &amp; T^{-3/2}\end{bmatrix}
+\begin{bmatrix}\sum 1 &amp; \sum t \\ \sum t &amp; \sum t^2 \end{bmatrix}
+\begin{bmatrix}T^{-1/2} &amp; \\ &amp; T^{-3/2}\end{bmatrix} \\ &amp;=
+\begin{bmatrix}T^{-1}\sum 1 &amp; T^{-2}\sum t \\ T^{-2}\sum t &amp; T^{-3}\sum t^2 \end{bmatrix} \to
+\begin{bmatrix}1 &amp; \frac{1}{2}\\ \frac{1}{2} &amp; \frac{1}{3}\end{bmatrix}=Q.
+\end{aligned}
+\]</span></p>
+<p>Turning to the second term:</p>
+<p><span class="math display">\[
+\gamma_T^{-1}\left(\sum_t x_t\epsilon_t\right) =
+\begin{bmatrix}T^{-1/2} &amp; \\ &amp; T^{-3/2}\end{bmatrix}
+\begin{bmatrix}\sum\epsilon_t \\ \sum t\epsilon_t\end{bmatrix} =
+\begin{bmatrix}T^{-1/2}\sum\epsilon_t \\ T^{-1/2}\sum\frac{t}{T}\epsilon_t\end{bmatrix}
+\]</span></p>
+<p><span class="math inline">\(T^{-1/2}\sum\epsilon_t\to N(0,\sigma^2)\)</span> by standard CLT. Observe that <span class="math inline">\(\zeta_t = \frac{t}{T}\epsilon_t\)</span> is not serially correlated,</p>
+<p><span class="math display">\[
+\mathbb E(\zeta_t\zeta_{t-j})=\frac{t(t-j)}{T^2}\mathbb{E}(\epsilon_t\epsilon_{t-j})=0
+\]</span></p>
+<p>with stabilized variance</p>
+<p><span class="math display">\[
+\text{var}(T^{-1/2}\sum\zeta_t)=\frac{1}{T}\sum\text{var}\left(\frac{t}{T}\epsilon_t\right) = \frac{\sigma^2}{T^3}\sum t^2 \to \frac{\sigma^2}{3}
+\]</span></p>
+<p>Therefore, <span class="math inline">\(T^{-1/2}\sum\frac{t}{T}\epsilon_t\to N(0,\frac{\sigma^2}{3})\)</span>. We also need to consider the covariance,</p>
+<p><span class="math display">\[
+\text{cov}(T^{-1/2}\sum\epsilon_t, T^{-1/2}\sum \frac{t}{T}\epsilon_t) =
+\frac{1}{T}\mathbb{E}\left(\sum\epsilon_t\sum\frac{t}{T}\epsilon_t\right) = \frac{\sigma^2}{T^2}\sum t \to \frac{\sigma^2}{2}
+\]</span></p>
+<p>Therefore, we have</p>
+<p><span class="math display">\[
+\begin{bmatrix}T^{-1/2}\sum\epsilon_t \\ T^{-1/2}\sum\frac{t}{T}\epsilon_t\end{bmatrix} \to
+\begin{bmatrix}
+\sigma^2 &amp; \frac{\sigma^2}{2} \\
+\frac{\sigma^2}{2} &amp; \frac{\sigma^2}{3}
+\end{bmatrix} = \sigma^2 Q
+\]</span></p>
+<p>Finally, putting everything together,</p>
+<p><span class="math display">\[
+\gamma_T(\hat\beta-\beta)\to N(0, \sigma^2 Q^{-1}).
+\]</span></p>
+<p>This means the usual OLS <span class="math inline">\(t\)</span>-test and <span class="math inline">\(F\)</span>-test are asymptotically valid, despite at different convergence rates. After all, trend-stationary process is stationary after de-trending. But unit root process is a totally different species.</p>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Key Point Summary
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Trend-stationary process vs stochastic-trend process;</li>
+<li>Applying different convergence rates to OLS estimator;</li>
+<li>Usual <span class="math inline">\(t\)</span>-test and <span class="math inline">\(F\)</span>-test are still valid.</li>
+</ol>
+</div>
+</div>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -462,10 +578,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./18_sp.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spurious Regression</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./01_base.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./20_uni.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Unit Root Process</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

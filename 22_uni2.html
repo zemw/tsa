@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Zem Wang">
-<meta name="dcterms.date" content="2024-01-01">
 
-<title>Time Series Analysis for Economists</title>
+<title>Time Series Analysis for Economists - 22&nbsp; Unit Root Process (contd)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./01_base.html" rel="next">
+<link href="./23_ut.html" rel="next">
+<link href="./21_ito.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -72,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Time Series Analysis for Economists</h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Unit Root Process (contd)</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -97,7 +96,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">Preface</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -245,7 +244,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22_uni2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Unit Root Process (contd)</span></a>
+  <a href="./22_uni2.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Unit Root Process (contd)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -279,7 +278,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a></li>
+  <li><a href="#univariate-case" id="toc-univariate-case" class="nav-link active" data-scroll-target="#univariate-case"><span class="toc-section-number">22.1</span>  Univariate case</a></li>
+  <li><a href="#spurious-regression" id="toc-spurious-regression" class="nav-link" data-scroll-target="#spurious-regression"><span class="toc-section-number">22.2</span>  Spurious regression</a></li>
+  <li><a href="#cures-for-spurious-regression" id="toc-cures-for-spurious-regression" class="nav-link" data-scroll-target="#cures-for-spurious-regression"><span class="toc-section-number">22.3</span>  Cures for spurious regression</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="toc-section-number">22.4</span>  Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -288,26 +290,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Time Series Analysis for Economists</h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Unit Root Process (contd)</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Zem Wang </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -315,13 +305,145 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="preface" class="level1 unnumbered">
-<h1 class="unnumbered">Preface</h1>
-<p>Empirical macroeconomics frequently involves the analysis of time series data, encompassing variables such as GDP, inflation, and interest rates, employing methodologies distinct from those utilized in cross-sectional studies. The goal of this book is to bridge the gap between introductory time series textbooks and theoretical econometrics. In the realm of empirical research, a rudimentary comprehension of the subject matter often proves insufficient. While computational tasks can be executed through simple computer commands, practitioners must go beyond surface-level in order to understand the intricacies and limitations of the involved techniques. Conversely, an exhaustive exploration of advanced econometric theories would be excessive for practical purposes. For instance, introductory textbooks would caution against applying OLS on non-stationary time series, citing the potential risk of spurious regression. Students often accept this as a rule of thumb without a grasp of its underlying rationale. Yet, delving into intricate topics such as Itô calculus is deemed unnecessary for empirical researchers.</p>
-<p>This book seeks to acquaint readers with essential time series topics crucial for understanding and conducting empirical research, with a specific focus on macroeconomic applications. In addition to introducing basic concepts and applications, such as running a regression and interpreting the result, the book endeavors to elevate comprehension to a deeper level by elucidating the “why” alongside the “what” and “how.” However, the objective is not to provide an exhaustive treatment replete with formal proofs; rather, emphasis is placed on providing intuitive explanations. Consequently, readers may encounter instances of non-rigorous proofs where a more formal approach is deemed unnecessary for an understanding required by applied works. This book can be read as intermediary materials between undergraduate econometrics and more rigorous treatments of the subject, such as Hamilton’s <em>Time Series Analysis</em>.</p>
-<p>The materials presented are drawn from or influenced by various sources, which are listed in the References at the end of the book without being cited individually in the context. Regarding notations, I use lowercase letters for random variables, such as <span class="math inline">\(x_t\)</span> and <span class="math inline">\(y_t\)</span>. Realizations of random variables are expressed as <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, and so on. The context will make it clear whether I am referring to a random variable or its realizations. Capital letters are reserved for matrices, such as <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. Vectors and matrices are sometimes written in bold for emphasizing, such as <span class="math inline">\(\boldsymbol X\)</span> and <span class="math inline">\(\boldsymbol y_t\)</span>, or in plain format as scalars if that does not lead to confusion. Greek letters are preferred for parameters, such as <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. Estimators are indicated with a hat, such as <span class="math inline">\(\hat{\alpha}\)</span> and <span class="math inline">\(\hat{\beta}\)</span>.</p>
-<p>I use the statistical language R whenever programming is involved. I am aware that there are many time series solutions available in R. To avoid burdening readers with excessive packages, I stick to base R as much as possible with a little help from the <em>zoo</em> package.</p>
-<p>I would like to emphasize that my knowledge and understanding of the subject are limited, and I acknowledge that there may be mistakes or areas where I could have provided a more accurate explanation. I deeply appreciate any feedback or corrections from readers that could improve the accuracy and clarity of this book.</p>
+<section id="univariate-case" class="level2" data-number="22.1">
+<h2 data-number="22.1" class="anchored" data-anchor-id="univariate-case"><span class="header-section-number">22.1</span> Univariate case</h2>
+<p>We now have all the ingredient to further analyse the unit root process</p>
+<p><span class="math display">\[
+y_t = \phi y_{t-1} + \epsilon_t,
+\]</span></p>
+<p>where <span class="math inline">\(\phi=1\)</span>, and its OLS estimator</p>
+<p><span class="math display">\[
+T(\hat\phi-1) = \frac{T^{-1}\sum_t y_{t-1}\epsilon_t}{T^{-2}\sum_t y_{t-1}^2}.
+\]</span></p>
+<p>We have shown that</p>
+<p><span class="math display">\[
+\begin{aligned}
+T^{-1}\sum_t y_{t-1}\epsilon_t &amp;\to \sigma^2\int_0^1 W dW =\frac{\sigma^2}{2}(W^2(1)-1)\\
+T^{-2}\sum_t y_{t-1}^2 &amp;\to \sigma^2\int_0^1 W^2 ds
+\end{aligned}
+\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+T(\hat\phi -1) \to \frac{\int_0^1 W dW}{\int_0^1 W^2 ds}.
+\]</span></p>
+<p><span class="math inline">\(\int W dW\)</span> is centered around <span class="math inline">\(0\)</span>, meaning <span class="math inline">\(\hat\phi\)</span> is consistent for large samples. But it is biased in small smaples. Moreover, the distribution is not Gaussian, rending all conventional <span class="math inline">\(t\)</span>-test or <span class="math inline">\(F\)</span>-test meaningless. We contrast the properties of stationary processes and unit root processes below.</p>
+<table class="table">
+<caption>Stationary AR(1) process vs unit root process</caption>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Stationary</th>
+<th>Unit Root</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Model</td>
+<td><span class="math inline">\(y_t =\phi y_{t-1} +\epsilon_t\)</span></td>
+<td><span class="math inline">\(y_t = y_{t-1}+\epsilon_t\)</span></td>
+</tr>
+<tr class="even">
+<td>Asymptotic distribution of <span class="math inline">\(\hat\phi\)</span></td>
+<td><span class="math inline">\(\sqrt{T}(\hat\phi-\phi)\to N(0,1-\phi^2)\)</span></td>
+<td><span class="math inline">\(\sqrt{T}(\hat\phi-1)\to\frac{\int WdW}{\int W^2 dt}\)</span></td>
+</tr>
+<tr class="odd">
+<td>Asymptotic distribution of <span class="math inline">\(t\)</span>-statistics</td>
+<td><span class="math inline">\(t \to N(0,1)\)</span></td>
+<td><span class="math inline">\(t \to \frac{\int WdW}{\sqrt{\int W^2dt}}\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="spurious-regression" class="level2" data-number="22.2">
+<h2 data-number="22.2" class="anchored" data-anchor-id="spurious-regression"><span class="header-section-number">22.2</span> Spurious regression</h2>
+<p>We now dive deeper into the nature of spurious regression problem presented at the beginning of the chapter. We formulate the problem as below. Suppose</p>
+<p><span class="math display">\[
+y_{t} = \alpha + \beta x_{t} + u_t,
+\]</span></p>
+<p>where <span class="math inline">\(y_{t}\)</span> and <span class="math inline">\(x_{t}\)</span> are unit root processes and there does not exist <span class="math inline">\((\alpha, \beta)\)</span> such that the residual <span class="math inline">\(u_t\)</span> is stationary. In this case, OLS is likely to produce spurious result: even if <span class="math inline">\(y_{t}\)</span> is completely unrelated to <span class="math inline">\(x_t\)</span>, the estimated value of <span class="math inline">\(\hat\beta\)</span> is likely to appear to be statistically significantly different from zero.</p>
+<p>Spurious regression happens when</p>
+<ol type="1">
+<li>Dependent/independent variables are non-stationary;</li>
+<li>The residual is non-stationary for all possible values of the coefficient vector.</li>
+</ol>
+<p>To understand why this happens, consider the OLS estimator:</p>
+<p><span class="math display">\[
+\hat b=\begin{bmatrix}\hat\alpha \\ \hat\beta\end{bmatrix} =
+\begin{bmatrix}T &amp; \sum x_t \\ \sum x_t &amp; \sum x_t^2 \end{bmatrix}^{-1}
+\begin{bmatrix}\sum y_t \\ \sum x_ty_t\end{bmatrix}
+\]</span></p>
+<p>To account for different convergent speed, similar to the trend-stationary case, we multiply the estimators by a matrix,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\begin{bmatrix}\sqrt{T}^{-1} &amp; \\ &amp; 1\end{bmatrix}
+\begin{bmatrix}\hat\alpha \\ \hat\beta\end{bmatrix} &amp;=
+\begin{bmatrix}\sqrt{T}^{-1} &amp; \\ &amp; 1\end{bmatrix}
+\begin{bmatrix}T &amp; \sum x_t \\ \sum x_t &amp; \sum x_t^2 \end{bmatrix}^{-1}
+\begin{bmatrix}\sqrt{T}^{-1} &amp; \\ &amp; 1\end{bmatrix}^{-1}
+\begin{bmatrix}\sqrt{T}^{-1} &amp; \\ &amp; 1\end{bmatrix}
+\begin{bmatrix}\sum y_t \\ \sum x_ty_t\end{bmatrix} \\ &amp;=
+\begin{bmatrix}1 &amp; T^{-3/2}\sum x_t \\ T^{-3/2}\sum x_t &amp; T^{-2}\sum x_t^2 \end{bmatrix}^{-1}
+\begin{bmatrix}\sum T^{-3/2}y_t \\ T^{-2}\sum x_ty_t\end{bmatrix} \\ &amp;\to
+\begin{bmatrix}1 &amp; \int W_X dt \\ \int W_X dt &amp; \int W_X^2 dt\end{bmatrix}^{-1}
+\begin{bmatrix}\int W_Y dt \\ \int W_X W_Y dt\end{bmatrix}
+\end{aligned}
+\]</span></p>
+<p>This means, <span class="math inline">\(\hat\alpha\)</span> actually diverges. Because it needs to be divided by <span class="math inline">\(\sqrt T\)</span> to be able to converge to a stable distribution, rather than being multiplied by a stabilizing factor. <span class="math inline">\(\hat\beta\)</span> converges, but it is not consistent. If there is no <span class="math inline">\(\alpha\)</span>, we would have</p>
+<p><span class="math display">\[\hat\beta = \frac{\sum x_ty_t}{\sum x_t^2}\to\frac{\int W_XW_Y dt}{\int W_X^2 dt},\]</span></p>
+<p>which is inconsistent. So we won’t get zero even in very large samples.</p>
+<p>The OLS estimate of the variance of <span class="math inline">\(u_t\)</span> also diverges. It needs to be divided by <span class="math inline">\(T\)</span> to converge:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{1}{T}\hat\sigma^2 &amp;= \frac{1}{T^2}\sum(y_t-\hat\beta x_t)^2 \\
+&amp;= \frac{1}{T^2}\sum y_t^2 - 2\hat\beta\frac{1}{T^2}\sum x_ty_t + \hat\beta^2\frac{1}{T^2}\sum x_t^2 \\
+&amp;\to \int W_Y^2 dt - 2\hat\beta\int W_X W_Y dt + \hat\beta^2 \int W_X^2 dt \\
+&amp;\to \int W_Y^2 dt - \frac{(\int W_X W_Y dt)^2}{\int W_X^2 dt}.
+\end{aligned}
+\]</span></p>
+<p>The <span class="math inline">\(t\)</span> or <span class="math inline">\(F\)</span> statistics also diverge. <span class="math inline">\(t\)</span>-stat has to be divided by <span class="math inline">\(\sqrt T\)</span> to converge; <span class="math inline">\(F\)</span>-stat needs to be divided by <span class="math inline">\(T\)</span> to converge.</p>
+<p><span class="math display">\[
+t = \frac{\hat\beta}{\hat\sigma}\sqrt{\sum x_t^2} =
+\sqrt{T}\frac{\hat\beta}{\sqrt{T^{-1}\hat\sigma^2}}\sqrt{T^{-2}\sum x_t^2} \to \sqrt{T}\cdot C
+\]</span></p>
+<p>Thus, as sample size <span class="math inline">\(T\)</span> grows, <span class="math inline">\(t\)</span>-test will appear very large and significant, despite <span class="math inline">\(y_t\)</span> and <span class="math inline">\(x_t\)</span> are completely independent.</p>
+</section>
+<section id="cures-for-spurious-regression" class="level2" data-number="22.3">
+<h2 data-number="22.3" class="anchored" data-anchor-id="cures-for-spurious-regression"><span class="header-section-number">22.3</span> Cures for spurious regression</h2>
+<ol type="1">
+<li><p>Include lagged values of both dependent and independent variables in the regression: <span class="math display">\[
+y_t = \alpha + \phi y_{t-1} + \beta x_t + \gamma x_{t-1} + u_t
+\]</span>Now there exists a coefficient vector <span class="math inline">\([\phi,\beta,\gamma]=[1,0,0]\)</span> such that <span class="math inline">\(u_t\)</span> is <span class="math inline">\(I(0)\)</span> stationary. In this case, OLS yields consistent estimates for all the coefficients. <span class="math inline">\(t\)</span>-test converges to Gaussian, though <span class="math inline">\(F\)</span>-test of joint hypotheses has non-standard asymptotic distribution. We will come back to this point later.</p></li>
+<li><p>Difference the data to stationary: <span class="math display">\[
+\Delta y_t = \alpha + \beta\Delta x_t + u_t
+\]</span> Because <span class="math inline">\(\Delta y_t\)</span> and <span class="math inline">\(\Delta x_t\)</span> are all <span class="math inline">\(I(0)\)</span>. Standard OLS is valid.</p></li>
+<li><p>Estimate with Cochrane-Orcutt adjustment for first-order correlations in the residuals. This method is asymptotically equivalent to the second method.</p></li>
+</ol>
+</section>
+<section id="summary" class="level2" data-number="22.4">
+<h2 data-number="22.4" class="anchored" data-anchor-id="summary"><span class="header-section-number">22.4</span> Summary</h2>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Key Point Summary
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>The OLS estimator for unit root coefficient converges to non-standard distributions involving Brownian motions. Thus, standard statistical inferences are meaningless.</li>
+<li>Regressing unit root processes lead to spurious results, because the diverging behavior of <span class="math inline">\(t\)</span>-stats makes artificially significant values.</li>
+<li>Include lagged values or difference the data to stationary when working with non-stationary time series.</li>
+</ol>
+</div>
+</div>
 
 
 </section>
@@ -462,10 +584,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./21_ito.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Brownian Motion</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./01_base.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./23_ut.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Unit Root Test</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

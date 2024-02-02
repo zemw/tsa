@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Zem Wang">
-<meta name="dcterms.date" content="2024-01-01">
 
-<title>Time Series Analysis for Economists</title>
+<title>Time Series Analysis for Economists - 5&nbsp; Model vs Spec</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./01_base.html" rel="next">
+<link href="./06_ar.html" rel="next">
+<link href="./04_st.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -72,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Time Series Analysis for Economists</h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model vs Spec</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -97,7 +96,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">Preface</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -140,7 +139,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05_spec.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model vs Spec</span></a>
+  <a href="./05_spec.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model vs Spec</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -279,7 +278,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a></li>
+  <li><a href="#classification" id="toc-classification" class="nav-link active" data-scroll-target="#classification"><span class="toc-section-number">5.1</span>  Classification</a></li>
+  <li><a href="#model-vs-spec" id="toc-model-vs-spec" class="nav-link" data-scroll-target="#model-vs-spec"><span class="toc-section-number">5.2</span>  Model vs Spec</a></li>
   </ul>
 </nav>
     </div>
@@ -288,26 +288,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Time Series Analysis for Economists</h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model vs Spec</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Zem Wang </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -315,13 +303,50 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="preface" class="level1 unnumbered">
-<h1 class="unnumbered">Preface</h1>
-<p>Empirical macroeconomics frequently involves the analysis of time series data, encompassing variables such as GDP, inflation, and interest rates, employing methodologies distinct from those utilized in cross-sectional studies. The goal of this book is to bridge the gap between introductory time series textbooks and theoretical econometrics. In the realm of empirical research, a rudimentary comprehension of the subject matter often proves insufficient. While computational tasks can be executed through simple computer commands, practitioners must go beyond surface-level in order to understand the intricacies and limitations of the involved techniques. Conversely, an exhaustive exploration of advanced econometric theories would be excessive for practical purposes. For instance, introductory textbooks would caution against applying OLS on non-stationary time series, citing the potential risk of spurious regression. Students often accept this as a rule of thumb without a grasp of its underlying rationale. Yet, delving into intricate topics such as Itô calculus is deemed unnecessary for empirical researchers.</p>
-<p>This book seeks to acquaint readers with essential time series topics crucial for understanding and conducting empirical research, with a specific focus on macroeconomic applications. In addition to introducing basic concepts and applications, such as running a regression and interpreting the result, the book endeavors to elevate comprehension to a deeper level by elucidating the “why” alongside the “what” and “how.” However, the objective is not to provide an exhaustive treatment replete with formal proofs; rather, emphasis is placed on providing intuitive explanations. Consequently, readers may encounter instances of non-rigorous proofs where a more formal approach is deemed unnecessary for an understanding required by applied works. This book can be read as intermediary materials between undergraduate econometrics and more rigorous treatments of the subject, such as Hamilton’s <em>Time Series Analysis</em>.</p>
-<p>The materials presented are drawn from or influenced by various sources, which are listed in the References at the end of the book without being cited individually in the context. Regarding notations, I use lowercase letters for random variables, such as <span class="math inline">\(x_t\)</span> and <span class="math inline">\(y_t\)</span>. Realizations of random variables are expressed as <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, and so on. The context will make it clear whether I am referring to a random variable or its realizations. Capital letters are reserved for matrices, such as <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. Vectors and matrices are sometimes written in bold for emphasizing, such as <span class="math inline">\(\boldsymbol X\)</span> and <span class="math inline">\(\boldsymbol y_t\)</span>, or in plain format as scalars if that does not lead to confusion. Greek letters are preferred for parameters, such as <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. Estimators are indicated with a hat, such as <span class="math inline">\(\hat{\alpha}\)</span> and <span class="math inline">\(\hat{\beta}\)</span>.</p>
-<p>I use the statistical language R whenever programming is involved. I am aware that there are many time series solutions available in R. To avoid burdening readers with excessive packages, I stick to base R as much as possible with a little help from the <em>zoo</em> package.</p>
-<p>I would like to emphasize that my knowledge and understanding of the subject are limited, and I acknowledge that there may be mistakes or areas where I could have provided a more accurate explanation. I deeply appreciate any feedback or corrections from readers that could improve the accuracy and clarity of this book.</p>
+<section id="classification" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="classification"><span class="header-section-number">5.1</span> Classification</h2>
+<p>Time series models can be broadly sorted into four categories based on whether we are dealing with stationary or non-stationary time series, or whether the model involves only one variable or multiple variables.</p>
+<table class="table">
+<caption>Time series model classification</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th>Stationary</th>
+<th>Nonstationary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Univariate</strong></td>
+<td>ARMA</td>
+<td>Unit root</td>
+</tr>
+<tr class="even">
+<td><strong>Multivariate</strong></td>
+<td>VAR</td>
+<td>Cointegration</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="model-vs-spec" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="model-vs-spec"><span class="header-section-number">5.2</span> Model vs Spec</h2>
+<p>We use the word “model” rather loosely in economics and econometrics. Anything that deals with the quantified relationships between variables can be called a model. A general equilibrium model is a model. A regression is also a model.</p>
+<p>To make things less confusing, we would use the word “model” more restrictively in this chapter. We reserve the word <strong>model</strong> to those representing the <strong>data generating processes</strong> (DGPs). That is, when we write down a model in an equation, we literally mean it. If we say <span class="math inline">\(y_t\)</span> follows an AR(1) model:</p>
+<p><span class="math display">\[
+\begin{aligned}
+y_t &amp;= \phi y_{t-1} + \epsilon_t,\\
+\epsilon_t &amp;\sim N(0,\sigma^2).
+\end{aligned}
+\]</span></p>
+<p>We literally mean <span class="math inline">\(y_t\)</span> is determined by its previous value and an contemporary innovation drawn from a Gaussian distribution.</p>
+<p>A model is distinguished from a <strong>specification</strong>. Suppose <span class="math inline">\(\{y_t\}\)</span> represent the GDP series, we can estimate a regression:</p>
+<p><span class="math display">\[
+y_t = \phi y_{t-1} + e_t
+\]</span></p>
+<p>This is a specification not a model. Because the DGP of GDP data is unknown, definitely not an AR(1). We can nontheless fit this spec with the data and get an estimated <span class="math inline">\(\hat\phi\)</span>. If <span class="math inline">\(e_t\)</span> satisfies some nice properties, for example, uncorrelated with the regressor, then we know this <span class="math inline">\(\hat\phi\)</span> is consistent.</p>
+<p>When we run regressions with real-life data, we are actually working with specifications. They are not the DGPs of the random variables. But they allow us to recover some useful information from the data when certain assumptions are met. Mostly we are interested in the relationships between variables. A specification describes this relationship, even though it does not describe the full DGP.</p>
+<p>This chapter deals with models in the abstract sense. The next chapter will discuss how to fit a model or a spec with real data.</p>
 
 
 </section>
@@ -462,10 +487,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./04_st.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stationarity</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./01_base.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./06_ar.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">AR Models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

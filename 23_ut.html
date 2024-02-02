@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Zem Wang">
-<meta name="dcterms.date" content="2024-01-01">
 
-<title>Time Series Analysis for Economists</title>
+<title>Time Series Analysis for Economists - 23&nbsp; Unit Root Test</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./01_base.html" rel="next">
+<link href="./24_co.html" rel="next">
+<link href="./22_uni2.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -72,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Time Series Analysis for Economists</h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Unit Root Test</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -97,7 +96,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">Preface</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -250,7 +249,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./23_ut.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Unit Root Test</span></a>
+  <a href="./23_ut.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Unit Root Test</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -279,7 +278,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a></li>
+  <li><a href="#dickey-fuller-test" id="toc-dickey-fuller-test" class="nav-link active" data-scroll-target="#dickey-fuller-test"><span class="toc-section-number">23.1</span>  Dickey-Fuller Test</a></li>
+  <li><a href="#augmented-dickey-fuller-test" id="toc-augmented-dickey-fuller-test" class="nav-link" data-scroll-target="#augmented-dickey-fuller-test"><span class="toc-section-number">23.2</span>  Augmented Dickey-Fuller Test</a></li>
+  <li><a href="#phillips-perron-test" id="toc-phillips-perron-test" class="nav-link" data-scroll-target="#phillips-perron-test"><span class="toc-section-number">23.3</span>  Phillips-Perron Test</a></li>
   </ul>
 </nav>
     </div>
@@ -288,26 +289,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Time Series Analysis for Economists</h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Unit Root Test</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Zem Wang </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -315,13 +304,124 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="preface" class="level1 unnumbered">
-<h1 class="unnumbered">Preface</h1>
-<p>Empirical macroeconomics frequently involves the analysis of time series data, encompassing variables such as GDP, inflation, and interest rates, employing methodologies distinct from those utilized in cross-sectional studies. The goal of this book is to bridge the gap between introductory time series textbooks and theoretical econometrics. In the realm of empirical research, a rudimentary comprehension of the subject matter often proves insufficient. While computational tasks can be executed through simple computer commands, practitioners must go beyond surface-level in order to understand the intricacies and limitations of the involved techniques. Conversely, an exhaustive exploration of advanced econometric theories would be excessive for practical purposes. For instance, introductory textbooks would caution against applying OLS on non-stationary time series, citing the potential risk of spurious regression. Students often accept this as a rule of thumb without a grasp of its underlying rationale. Yet, delving into intricate topics such as Itô calculus is deemed unnecessary for empirical researchers.</p>
-<p>This book seeks to acquaint readers with essential time series topics crucial for understanding and conducting empirical research, with a specific focus on macroeconomic applications. In addition to introducing basic concepts and applications, such as running a regression and interpreting the result, the book endeavors to elevate comprehension to a deeper level by elucidating the “why” alongside the “what” and “how.” However, the objective is not to provide an exhaustive treatment replete with formal proofs; rather, emphasis is placed on providing intuitive explanations. Consequently, readers may encounter instances of non-rigorous proofs where a more formal approach is deemed unnecessary for an understanding required by applied works. This book can be read as intermediary materials between undergraduate econometrics and more rigorous treatments of the subject, such as Hamilton’s <em>Time Series Analysis</em>.</p>
-<p>The materials presented are drawn from or influenced by various sources, which are listed in the References at the end of the book without being cited individually in the context. Regarding notations, I use lowercase letters for random variables, such as <span class="math inline">\(x_t\)</span> and <span class="math inline">\(y_t\)</span>. Realizations of random variables are expressed as <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, and so on. The context will make it clear whether I am referring to a random variable or its realizations. Capital letters are reserved for matrices, such as <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. Vectors and matrices are sometimes written in bold for emphasizing, such as <span class="math inline">\(\boldsymbol X\)</span> and <span class="math inline">\(\boldsymbol y_t\)</span>, or in plain format as scalars if that does not lead to confusion. Greek letters are preferred for parameters, such as <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. Estimators are indicated with a hat, such as <span class="math inline">\(\hat{\alpha}\)</span> and <span class="math inline">\(\hat{\beta}\)</span>.</p>
-<p>I use the statistical language R whenever programming is involved. I am aware that there are many time series solutions available in R. To avoid burdening readers with excessive packages, I stick to base R as much as possible with a little help from the <em>zoo</em> package.</p>
-<p>I would like to emphasize that my knowledge and understanding of the subject are limited, and I acknowledge that there may be mistakes or areas where I could have provided a more accurate explanation. I deeply appreciate any feedback or corrections from readers that could improve the accuracy and clarity of this book.</p>
+<p>A presence of unit root necessitates special treatment in empirical applications. Therefore it is of vital importance to pre-test the existence of unit root.</p>
+<p>However, there is no clear cut between stationary and unit root processes for finite samples. Consider an AR(1) process with <span class="math inline">\(\phi=0.999\)</span>, which is a stationary process that behaves very close to a unit root process. In other words, unit root and stationary processes differ in their implications at <em>infinite</em> time horizons, but for any <em>finite</em> number of observations, there is always a representation from either class of models that could account for all the observed features of the data. So it is <em>not</em> possible to tell whether the DGP is stationary or not. We can formulate testable hypothesis only if we were willing to restrict the class of models being considered. Suppose we were committed to an AR(1) model: <span class="math inline">\(y_t =\phi y_{t-1}+\epsilon_t\)</span>. The hypothesis <span class="math inline">\(\phi=1\)</span> is definitely testable.</p>
+<section id="dickey-fuller-test" class="level2" data-number="23.1">
+<h2 data-number="23.1" class="anchored" data-anchor-id="dickey-fuller-test"><span class="header-section-number">23.1</span> Dickey-Fuller Test</h2>
+<p>Consider an AR(1) process</p>
+<p><span class="math display">\[
+y_t = \phi y_{t-1} + u_t,
+\]</span></p>
+<p>assuming no series correlation in the innovations <span class="math inline">\(u_t\sim IID(0,\sigma^2)\)</span>. We have shown that under the hypothesis <span class="math inline">\(\phi=1\)</span>,</p>
+<p><span class="math display">\[
+T(\hat\phi-1)\to\frac{\int W dW}{\int W^2 dt}.
+\]</span></p>
+<p>We can the hypothesis <span class="math inline">\(H_0:\ \phi=1\)</span> utilizing this distribution. The critical values can be obtained by Monte Carlo simulations. The test was proposed by Fuller (1976).</p>
+<p>The Dickey-Fuller tests involve three sets of equations depending whether a drift or trend is included, assuming <span class="math inline">\(iid\)</span> innovations.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Delta y_t &amp;= \gamma y_{t-1} + u_t \\
+\Delta y_t &amp;= \alpha_0 + \gamma y_{t-1} + u_t\\
+\Delta y_t &amp;= \alpha_0 + \gamma y_{t-1} + \alpha_2t + u_t
+\end{aligned}
+\]</span></p>
+<p>Testing <span class="math inline">\(\phi=1\)</span> is equivalent to testing <span class="math inline">\(\gamma=0\)</span>. The critical values depends on the form of the regression and the sample size (including a drift or trend results in different limiting distributions for <span class="math inline">\(\gamma\)</span>).</p>
+<table class="table">
+<caption>Critical values of Dickey-Fuller tests</caption>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Hypothesis</th>
+<th>95%</th>
+<th>99%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Default</td>
+<td><span class="math inline">\(\gamma=0\)</span></td>
+<td>-1.95</td>
+<td>-2.60</td>
+</tr>
+<tr class="even">
+<td>With drift</td>
+<td><span class="math inline">\(\gamma=0\)</span></td>
+<td>-2.89</td>
+<td>-3.51</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><span class="math inline">\(\alpha_0=\gamma=0\)</span></td>
+<td>4.71</td>
+<td>6.70</td>
+</tr>
+<tr class="even">
+<td>With drift and trend</td>
+<td><span class="math inline">\(\gamma=0\)</span></td>
+<td>-3.45</td>
+<td>-4.04</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><span class="math inline">\(\gamma=\alpha_2=0\)</span></td>
+<td>6.49</td>
+<td>8.73</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><span class="math inline">\(\alpha_0=\gamma=\alpha_2=0\)</span></td>
+<td>4.88</td>
+<td>6.50</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="augmented-dickey-fuller-test" class="level2" data-number="23.2">
+<h2 data-number="23.2" class="anchored" data-anchor-id="augmented-dickey-fuller-test"><span class="header-section-number">23.2</span> Augmented Dickey-Fuller Test</h2>
+<p>The assumption that <span class="math inline">\(\epsilon_t\)</span> being uncorrelated is too strong for empirical applications. Suppose the data is generated by an AR(<span class="math inline">\(p\)</span>) process with an unit root,</p>
+<p><span class="math display">\[
+\begin{aligned}
+a(L) y_t &amp;= \epsilon_t \\
+(1-L)y_t &amp;= \underbrace{b^{-1}(L)\epsilon_t}_{u_t}
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(a(L) = (1-L)b(L)\)</span> in which <span class="math inline">\(b(L)\)</span> is stationary. In this case, <span class="math inline">\(u_t\)</span> will be autocorrelated. In empirical works, it is more reasonable to assume <span class="math inline">\(u_t\)</span> being serially correlated.</p>
+<p>If we difference <span class="math inline">\(y_t\)</span> once, we have</p>
+<p><span class="math display">\[
+\begin{aligned}
+b(L)\Delta y_t &amp;= \epsilon_t \\
+y_t &amp;= y_{t-1} + \sum_{j=1}^{p}\beta_j\Delta y_{t-j} + \epsilon_t
+\end{aligned}
+\]</span>This motivates Dickey-Fuller tests with lags <span class="math inline">\(\{\Delta y_{t-j}\}\)</span>. This is called augmented Dickey-Fuller test. The set of equations change to</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Delta y_t &amp;= \gamma y_{t-1} + \sum_{j=1}^{p}\beta_j\Delta y_{t-j} + u_t \\
+\Delta y_t &amp;= \alpha_0 + \gamma y_{t-1} + \sum_{j=1}^{p}\beta_j\Delta y_{t-j} + u_t\\
+\Delta y_t &amp;= \alpha_0 + \gamma y_{t-1} + \alpha_2t + \sum_{j=1}^{p}\beta_j\Delta y_{t-j} + u_t
+\end{aligned}
+\]</span></p>
+<p>The coefficients on <span class="math inline">\(\Delta y_{t-j}\)</span> converge to Gaussian. The coefficient on <span class="math inline">\(y_{t-1}\)</span> converges to non-standard distribution. The critical values are unchanged with lags are included.</p>
+</section>
+<section id="phillips-perron-test" class="level2" data-number="23.3">
+<h2 data-number="23.3" class="anchored" data-anchor-id="phillips-perron-test"><span class="header-section-number">23.3</span> Phillips-Perron Test</h2>
+<p>Another approach to test unit root is proposed by Phillips and Perron (1988), which also assumes autocorrelated errors. Our Brownian motion theories derived from <span class="math inline">\(iid\)</span> innovations can be extended to autocorrelated innovations:</p>
+<p><span class="math display">\[
+\xi_T(r) = \frac{1}{\sqrt T}\sum_{t=1}^{Tr} u_t \to \omega W(r)
+\]</span></p>
+<p>where <span class="math inline">\(\omega^2 = \sum_{-\infty}^{\infty}\gamma_j\)</span> is the long-run variance for the autocorrelated process <span class="math inline">\(\{u_t\}\)</span>.</p>
+<p>But, with autocorrelated errors, the limiting distribution of <span class="math inline">\(\hat\phi\)</span> is slightly different, since</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{1}{T}\sum_t y_{t-1}u_t &amp;= \frac{1}{2T}y_T^2 - \frac{1}{2T}\sum_t u_t^2 \\
+&amp;\to \frac{1}{2}[\omega^2W^2(1) - \sigma_u^2] \\
+&amp;\to \omega^2\int W dW + \frac{\omega^2 - \sigma_u^2}{2}
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(\frac{\omega^2-\sigma_u^2}{2}\)</span> is a “nuisance” parameter. The Phillips and Perron proposed a test statistics correcting the nuisance parameter:</p>
+<p><span class="math display">\[
+T(\hat\phi -1 ) + \frac{\frac{1}{2}\hat\omega^2 - \hat\sigma_u^2}{\frac{1}{T^2}\sum y_t^2} \to \frac{\int W dW}{\int W^2 dt}
+\]</span></p>
+<p>where <span class="math inline">\(\hat\omega^2\)</span> can be estimated by Newey-West, <span class="math inline">\(\hat\sigma_u^2\)</span> is the estimated variance of the residuals. After the correction, the unit root test can be applied to processes with autocorrelated errors.</p>
 
 
 </section>
@@ -462,10 +562,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./22_uni2.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Unit Root Process (contd)</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./01_base.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./24_co.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Cointegration</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Time Series Analysis for Economists - 21&nbsp; Brownian Motion</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./22_uni2.html" rel="next">
+<link href="./20_uni.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Brownian Motion</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Time Series Analysis for Economists</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">The Basics</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_base.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_dec.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decomposition</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_acf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ACF and PACF</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_st.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stationarity</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">ARIMA Model</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_spec.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model vs Spec</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_ar.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">AR Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_ma.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MA Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_arma.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">ARMA Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09_wold.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Wold Theorem</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Time Series Regression</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_ols.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Preliminaries</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_ols2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_mle.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MLE for ARMA Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13_fc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Forecasting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14_dce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Dynamic Causal Effect</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15_ssf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The Structural Shock Framework</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16_adl.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimating Dynamic Multipliers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17_iv.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Instrument Variables</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Nonstationary Time Series</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18_sp.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spurious Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19_ts.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Trend Stationary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20_uni.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Unit Root Process</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21_ito.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Brownian Motion</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22_uni2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Unit Root Process (contd)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23_ut.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Unit Root Test</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24_co.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Cointegration</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sum.html" class="sidebar-item-text sidebar-link">Epilogue</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ref.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#continuous-random-walk" id="toc-continuous-random-walk" class="nav-link active" data-scroll-target="#continuous-random-walk"><span class="toc-section-number">21.1</span>  Continuous random walk</a></li>
+  <li><a href="#some-properties" id="toc-some-properties" class="nav-link" data-scroll-target="#some-properties"><span class="toc-section-number">21.2</span>  Some properties</a></li>
+  <li><a href="#itô-calculus" id="toc-itô-calculus" class="nav-link" data-scroll-target="#itô-calculus"><span class="toc-section-number">21.3</span>  Itô calculus</a></li>
+  <li><a href="#unit-root-process" id="toc-unit-root-process" class="nav-link" data-scroll-target="#unit-root-process"><span class="toc-section-number">21.4</span>  Unit root process</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Brownian Motion</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="continuous-random-walk" class="level2" data-number="21.1">
+<h2 data-number="21.1" class="anchored" data-anchor-id="continuous-random-walk"><span class="header-section-number">21.1</span> Continuous random walk</h2>
+<p><strong>Brownian motion</strong>, or <strong>Wiener process</strong>, is the continuous-time extension of a discrete-time random walk. To define the continuous version of a random walk, we cannot simply sum up infinite number of white noises, which will certainly explode. Instead, we chop up a finite interval into infinitely many small intervals, each one corresponding to a tiny Gaussian white noise. The following table shows how a discrete random walk extends to a continuous function.</p>
+
+<!-- WARNING: switch to visual model breaks the table -->
+<table class="table">
+<caption>Random Walk and Brownian Motion</caption>
+<colgroup>
+<col style="width: 26%">
+<col style="width: 31%">
+<col style="width: 41%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Random Walk</th>
+<th>Brownian Motion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Innovation</td>
+<td><span class="math inline">\(\epsilon_i\sim\text{WN}(0,1)\)</span></td>
+<td><img src="fig/epsilon.png" class="img-fluid" width="200"></td>
+</tr>
+<tr class="even">
+<td>Stochastic process</td>
+<td><span class="math inline">\(y_t = \epsilon_1 + \cdots + \epsilon_t\)</span></td>
+<td><span class="math inline">\(W(t)_{t\in[0,1]} = \lim_{n\to\infty}\sum_{i=1}^{nt}\epsilon_i\)</span></td>
+</tr>
+<tr class="odd">
+<td>Expectation</td>
+<td><span class="math inline">\(\mathbb E[y_t]=0\)</span></td>
+<td><span class="math inline">\(\mathbb E[W(t)] = 0\)</span></td>
+</tr>
+<tr class="even">
+<td>Variance</td>
+<td><span class="math inline">\(\text{Var}[y_t]=t\text{Var}[\epsilon_i]=t\)</span></td>
+<td><span class="math inline">\(\text{Var}[W(t)]=nt\text{Var}[\epsilon_i]=t\)</span></td>
+</tr>
+<tr class="odd">
+<td>Quadratic variation</td>
+<td><span class="math inline">\(\mathbb E\sum_{i=1}^{t}(y_i-y_{i-1})^2=t\)</span></td>
+<td><span class="math inline">\(\int_0^t(dW)^2 = t\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Brownian motion <span class="math inline">\(W(t)\)</span> is a stochastic function. Its realized path is different each time we take a draw from it. But every piece of it follows a tiny Gaussian process. <strong>The function is continuous, but nowhere differentiable.</strong> It is hard to imagine such a function at first glance. But as we proceed, we will appreciate its amazing properties. Despite its path is random, the area under the curve integrates to a well-defined probability distribution. The squared changes (quadratic variation) even sum up to a deterministic constant.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-simbm" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="21_ito_files/figure-html/fig-simbm-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;21.1: Multiple Realizations of Brownian Motion</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="some-properties" class="level2" data-number="21.2">
+<h2 data-number="21.2" class="anchored" data-anchor-id="some-properties"><span class="header-section-number">21.2</span> Some properties</h2>
+<p>The <strong>quadratic variation</strong> is one of the most important properties of Brownian motions. Intuitively, it says the squared tiny changes sum up to a constant with probability <span class="math inline">\(1\)</span> no matter which realized path it takes. Smooth functions will not have such property, because <span class="math inline">\((dX)^2\)</span> diminishes much faster than <span class="math inline">\(dX\)</span>, surely we get <span class="math inline">\(\int_0^t(dX)^2 =0\)</span>. Because Brownian motion fluctuations too much, the squared changes do not diminish away. To see this, imagine summing up the squares of infinitely many small increments up to <span class="math inline">\(t\)</span>:</p>
+<p><span class="math display">\[
+\lim_{n\to\infty}\sum_{i=1}^{nt}\left[
+  X\left(\frac{i}{n}\right) - X\left(\frac{i-1}{n}\right)
+  \right]^2 = \lim_{n\to\infty}\sum_{i=1}^{nt}\epsilon_i^2,
+\]</span></p>
+<p>with <span class="math inline">\(\epsilon_i\sim N\left(0,\frac{1}{n}\right)\)</span>. Therefore, <span class="math inline">\(\mathbb E(\epsilon_i^2)=\frac{1}{n}\)</span>. Let <span class="math inline">\(z_i = \epsilon_i^2\)</span>. The sum above can be rewritten as</p>
+<p><span class="math display">\[
+\sum_{i=1}^{nt} z_i = nt\left(\frac{1}{nt}\sum_{i=1}^{nt} z_i\right)
+\overset{\text{LLN}}\to nt\mathbb{E}(z_i) = t.
+\]</span></p>
+<p>The integral version is the quadratic variation</p>
+<p><span id="eq-quad2"><span class="math display">\[
+\int_0^t(dW)^2 = t,
+\tag{21.1}\]</span></span></p>
+<p>or written in differential form</p>
+<p><span id="eq-quad"><span class="math display">\[
+(dW)^2 = dt.
+\tag{21.2}\]</span></span></p>
+<p>It should be stressed, <span class="math inline">\(W\)</span> is not differentiable. We use the notation <span class="math inline">\(dW\)</span>, but it is not the same as conventional differentials. The calculus for Brownian motions, the Itô calculus, which will be introduced below, is a different class of calculus specifically designed for stochastic functions. Before we get to that, let’s first have a look at some additional properties of Brownian motions.</p>
+<p>By Central Limit Theorem, it holds that</p>
+<p><span class="math display">\[
+\frac{1}{\sqrt{nt}} W(t) = \sqrt{nt}\frac{1}{nt}\sum_{i=1}^{nt}\epsilon_i
+\to N\left(0,\frac{1}{n}\right)
+\]</span></p>
+<p>Therefore,</p>
+<p><span id="eq-brnorm"><span class="math display">\[
+W(t) \sim \sqrt{nt} N\left(0,\frac{1}{n}\right) \sim N(0,t);
+\tag{21.3}\]</span></span></p>
+<p>It follows that, for any <span class="math inline">\(r&lt;s\)</span>,</p>
+<p><span id="eq-brdiff"><span class="math display">\[
+W(s) - W(t) \sim N(0, s-t);
+\tag{21.4}\]</span></span></p>
+<p>As <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> become arbitrarily close, we have</p>
+<p><span id="eq-brdr"><span class="math display">\[
+dW \sim N(0, dt).
+\tag{21.5}\]</span></span></p>
+<p>In essence, Brownian motion is the accumulation of tiny independent Gaussian innovations. We give the formal definition of Brownian motions below.</p>
+<div class="callout-important callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Brownian motion
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A Brownian motion (Wiener process) is a stochastic function <span class="math inline">\(W(t)\)</span> such that</p>
+<ol type="1">
+<li><span class="math inline">\(W(0)=0\)</span>;</li>
+<li>For <span class="math inline">\(0 \leq t \leq s \leq 1\)</span>, <span class="math inline">\(W(s)-W(t) \sim N(0, s-t)\)</span>;</li>
+<li>For any realization, <span class="math inline">\(W(t)\)</span> is continuous in <span class="math inline">\(t\)</span>.</li>
+</ol>
+</div>
+</div>
+<p>Brownian motions are frequently used to model stock returns. For a fixed horizon <span class="math inline">\(T\)</span>, the returns are normally distributed, with volatility scaled by <span class="math inline">\(\sqrt T\)</span>. And the returns over different periods are independent, which means no predictability from past returns to future returns.</p>
+</section>
+<section id="itô-calculus" class="level2" data-number="21.3">
+<h2 data-number="21.3" class="anchored" data-anchor-id="itô-calculus"><span class="header-section-number">21.3</span> Itô calculus</h2>
+<div id="lem-ito1" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 21.1 </strong></span>Let <span class="math inline">\(F(W)\)</span> be a “smooth” function of a Brownian motion <span class="math inline">\(W(t)\)</span>. Then</p>
+<p><span class="math display">\[
+dF = F'dW + \frac{1}{2}F''dt.
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em>. </span>For an informal proof, it immediately follows from the Taylor expansion</p>
+<p><span class="math display">\[
+F(W(t+h))-F(W(t))=F'(W(t+h)-W(t))+\frac{1}{2}F''(W(t+h)-W(t))^2+\cdots
+\]</span></p>
+<p>As <span class="math inline">\(h\to 0\)</span>,</p>
+<p><span class="math display">\[
+dF = F'dW + \frac{1}{2}F''(dW)^2.
+\]</span></p>
+<p>By <a href="#eq-quad">Equation&nbsp;<span>21.2</span></a>, <span class="math inline">\((dW)^2= dt\)</span>. Therefore,</p>
+<p><span class="math display">\[
+dF = F'dW + \frac{1}{2}F''dt.
+\]</span></p>
+</div>
+<p>This formula is known as the <strong>Itô’s lemma</strong>, which is the key equation of Itô calculus. Note that how this differs from the differential formula for normal functions: <span class="math inline">\(dF = F'dW\)</span>. The <em>second-order</em> term does not disappear precisely because the quadratic variation does not go to zero.</p>
+<div id="exm-1" class="theorem example">
+<p><span class="theorem-title"><strong>Example 21.1 </strong></span><span class="math inline">\(F(W) = W^2 \implies dF = 2WdW + dt\)</span></p>
+</div>
+<div id="exm-2" class="theorem example">
+<p><span class="theorem-title"><strong>Example 21.2 </strong></span>Let’s do a more involved example to familiar ourselves with the Itô’s lemma, especially how the second-order differentiation of the Brownian motions plays out in computation.</p>
+<p>We like to model the continuous-time stock price with Brownian motions. Let <span class="math inline">\(S_t\)</span> be the stock price at time <span class="math inline">\(t\)</span>. Assume the behavior of <span class="math inline">\(S_t\)</span> follows a stochastic differential equation:</p>
+<p><span class="math display">\[
+\frac{dS_t}{S_t}=\mu dt + \sigma dW
+\]</span></p>
+<p>That is, the percentage of <span class="math inline">\(S_t\)</span> is a continuous time random walk with drift <span class="math inline">\(\mu\)</span> and volatility <span class="math inline">\(\sigma\)</span>. Let’s compute the log-return of the stock over the horizon <span class="math inline">\(T\)</span>:</p>
+<p><span class="math display">\[
+R_T = \ln (S_T) - \ln (S_0) = f(S_T)
+\]</span></p>
+<p>Apply second-order Taylor expansion:</p>
+<p><span class="math display">\[
+\begin{aligned}
+dR_T &amp;= f' dS_T + \frac{1}{2}f'' (dS_T)^2 \\
+&amp;= \frac{1}{S_T} dS_T - \frac{1}{2}\frac{1}{S_T^2} (dS_T)^2 \\
+&amp;= \frac{dS_T}{S_T} - \frac{1}{2}\left(\frac{dS_T}{S_T}\right)^2 \\
+&amp;= (\mu dt + \sigma dW) - \frac{1}{2}(\mu dt + \sigma dW)^2 \\
+&amp;= (\mu dt + \sigma dW) - \frac{1}{2}(\mu^2 dt^2 + 2\mu\sigma dtdW + \sigma^2 dW^2) \\
+&amp;\to (\mu dt + \sigma dW) - \frac{1}{2} \sigma^2 dt \\
+&amp;= \left(\mu - \frac{1}{2} \sigma^2\right) dt + \sigma dW
+\end{aligned}
+\]</span></p>
+<p>The second last step holds because, as <span class="math inline">\(dt \to 0\)</span>, the terms <span class="math inline">\(dt^2\)</span> and <span class="math inline">\(dt dW\)</span> tend to zero faster than <span class="math inline">\(dW^2\)</span>. The only term left is <span class="math inline">\(dW^2 = dt\)</span>. If we define integral as the inverse of differentiation, we have</p>
+<p><span class="math display">\[
+\begin{aligned}
+R_T = \int_0^T dR_T &amp;= \left(\mu - \frac{1}{2} \sigma^2\right) \int_0^T dt + \sigma \int_0^T dW \\
+&amp;= \left(\mu - \frac{1}{2} \sigma^2\right)T + \sigma\sqrt{T}\epsilon_T
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(\epsilon_T\)</span> is a standard normal variable. The model tells us that the log-return of a stock over a fixed horizon of <span class="math inline">\(T\)</span> is normally distributed with mean <span class="math inline">\((\mu - \sigma^2/2)T\)</span> and standard deviation of <span class="math inline">\(\sigma\sqrt{T}\)</span>. Everything looks familiar, except the Ito’s term, <span class="math inline">\(\sigma^2/2\)</span>, which comes from the non-zero second-order differential <span class="math inline">\(dW^2\)</span>. The famous Black-Scholes formula for option pricing is derived from this model.</p>
+</div>
+<div id="def-itoint" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 21.1 </strong></span>Stochastic integrals as the reverse operation of the stochastic differentiation. Note that we change <span class="math inline">\(W(t)\)</span> to <span class="math inline">\(W(s)\)</span> when it enters as the integrand.</p>
+<ol type="1">
+<li><span class="math inline">\(\displaystyle \int_{0}^{t} dW = W(t)\)</span>;</li>
+<li><span class="math inline">\(\displaystyle F(W(t))=\int_0^t f(W(s))dW\)</span> , if <span class="math inline">\(dF = f\ dW\)</span>;</li>
+<li><span class="math inline">\(\displaystyle F(t, W(t)) = \int_0^t f(s, W(s))dW + \int_0^t g(s, W(s))ds\)</span> , if <span class="math inline">\(dF = f\ dW + g\ dt\)</span>.</li>
+</ol>
+</div>
+<div id="exm-3" class="theorem example">
+<p><span class="theorem-title"><strong>Example 21.3 </strong></span>Given <span class="math inline">\(dW^2 = 2W dW + dt\)</span>, take integral on both sides:</p>
+<p><span class="math display">\[
+W^2(t) = 2\int_0^t W(s) dW + \int_0^t ds
+\]</span></p>
+<p><span class="math display">\[
+\implies \int_0^t W dW = \frac{1}{2}[W^2(t) - t].
+\]</span></p>
+<p>Setting <span class="math inline">\(t=1\)</span>, it follows that</p>
+<p><span class="math display">\[
+\int_0^1 W dW = \frac{1}{2}[W^2(1)-1].
+\]</span></p>
+<p>Note that <span class="math inline">\(W(1) \sim N(0,1)\)</span>. So <span class="math inline">\(W^2(1) \sim \chi^2(1)\)</span> with expectation 1. Thus <span class="math inline">\(\int_0^1 W dW\)</span> is centered at 0 but skewed.</p>
+</div>
+<div id="exm-4" class="theorem example">
+<p><span class="theorem-title"><strong>Example 21.4 </strong></span>Given <span class="math inline">\(d(tW) = Wdt + t\ dW\)</span> (verify this with Ito’s lemma), we have</p>
+<p><span class="math display">\[
+tW(t) = \int_0^t W(s)ds + \int_0^t s\ dW
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\implies \int_0^t W(s)ds &amp;= tW(t) - \int_0^t s\ dW \\
+&amp;=t\int_0^t dW - \int_0^t s\ dW \\
+&amp;=\int_0^t (t-s) dW.
+\end{aligned}
+\]</span></p>
+</div>
+<div class="callout-tip callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Making Sense of Itô Calculus
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let <span class="math inline">\(F(t)\)</span> be a continuous-time trading strategy that holds an amount of <span class="math inline">\(F(t)\)</span> of a stock at time <span class="math inline">\(t\)</span>. The stock price is a Brownian motion <span class="math inline">\(W(t)\)</span>. <span class="math inline">\(dW\)</span> represents the movement of stock price. Consider the Itô’s integral</p>
+<p><span class="math display">\[
+Y_t = \int_0^t F\ dW
+\]</span></p>
+<p>The stochastic integral represents the payoff of the trading strategy up to time <span class="math inline">\(t\)</span>. Note that the integral always evaluates <em>at the left</em>. So the strategy can only make decision based on available information.</p>
+</div>
+</div>
+<div id="prp-isometry" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 21.1 </strong></span>Let <span class="math inline">\(W(t)\)</span> be a Brownian motion. Let <span class="math inline">\(f(t)\)</span> be a nonrandom function of time. Then</p>
+<ol type="1">
+<li><span class="math inline">\(\mathbb{E}\left[\int_0^t f(s)dW\right]=0\)</span>;</li>
+<li><span class="math inline">\(\mathbb{E}\left[\left(\int_0^t f(s)dW\right)^2\right]=\mathbb{E}\left[\int_0^t f^2 ds\right]\)</span> (Itô isometry);</li>
+<li><span class="math inline">\(\int_0^t f(s) dW \sim N\left(0, \int_0^t f^2 ds\right)\)</span>.</li>
+</ol>
+</div>
+<p>If <span class="math inline">\(f(t)\)</span> represents a trading strategy and the stock price follows a Brownian motion, the theorem tells us the expected payoff of this strategy is zero; more precisely, the payoff follows a Gaussian distribution.</p>
+<div id="exm-5" class="theorem example">
+<p><span class="theorem-title"><strong>Example 21.5 </strong></span>Following the last example,</p>
+<p><span class="math display">\[
+\int_0^t W ds = \int_0^t (t-s) dW
+\]</span></p>
+<p><span class="math inline">\(f(s) = t-s\)</span> is a nonrandom function, apply the theorem above</p>
+<p><span class="math display">\[
+\text{var}\left[\int_0^t W ds\right]=\int_0^t (t-s)^2ds = \frac{1}{3}t^3
+\]</span></p>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\int_0^t W(s) ds \sim N\left(0, \frac{1}{3}t^3\right).
+\]</span></p>
+<p>Thus, the integral, the area under the curve of a Brownian motion, follows a Gaussian distribution.</p>
+</div>
+</section>
+<section id="unit-root-process" class="level2" data-number="21.4">
+<h2 data-number="21.4" class="anchored" data-anchor-id="unit-root-process"><span class="header-section-number">21.4</span> Unit root process</h2>
+<p>Consider a unit root process,</p>
+<p><span class="math display">\[
+y_t = y_{t-1} + \epsilon_t = \sum_{j=1}^{t}\epsilon_j,
+\]</span></p>
+<p>where <span class="math inline">\(\epsilon_t\sim\text{WN}(0,1)\)</span>, <span class="math inline">\(t=1,2,\dots,T\)</span>. It is not surprising to see the unit root process converges to Brownian motion if stabilizing it by <span class="math inline">\(T^{-1/2}\)</span> :</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{1}{\sqrt{T}}y_t &amp;= \frac{1}{\sqrt{T}}\sum_{j=1}^{t}\epsilon_j \\
+&amp;= \frac{1}{\sqrt{T}}\sum_{j=1}^{Tr}\epsilon_j \quad(r=t/T) \\
+&amp;= \sqrt{r}\left(\frac{1}{\sqrt{Tr}}\sum_{j=1}^{Tr}\epsilon_j\right) \\[1em]
+&amp;\to \sqrt{r} N(0, 1) \sim N(0,r) \quad(\text{by CLT}) \\[1em]
+&amp;\to W(r) \quad(\text{by definition}).
+\end{aligned}
+\]</span></p>
+<p>If <span class="math inline">\(\epsilon_t\)</span> has variance <span class="math inline">\(\sigma^2\)</span>, we would have <span class="math inline">\(T^{-1/2}y_t \to \sigma W(t/T)\)</span>. Note if <span class="math inline">\(y_t\)</span> is stationary, <span class="math inline">\(y_t\)</span> will not deviate too far from <span class="math inline">\(\mathbb E(y_t)\)</span>, we would have <span class="math inline">\(T^{-1/2} y_t \to 0\)</span>.</p>
+<p>Now let’s consider the behaviour of the mean: <span class="math inline">\(\bar y=\frac{1}{T}\sum_{t=1}^T y_t\)</span>. Define <span class="math inline">\(\xi_T(r)=T^{-1/2}y_t\)</span> , where <span class="math inline">\(r=t/T\)</span>. We have</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{1}{\sqrt T} \bar{y} &amp;= \frac{1}{\sqrt T}\left(\frac{1}{T}\sum_{t=1}^T y_t\right) \\
+&amp;= \frac{1}{T}\sum_{t=1}^T \left(\frac{1}{\sqrt T}y_t\right)=\frac{1}{T}\sum_{t=1}^T \xi\left(\frac{t}{T}\right) \\
+&amp;= \Delta r \sum_{r=0}^{1} \xi(r) \quad (r=t/T, \Delta r = 1/T) \\
+&amp;\to \int_0^1 \sigma W(r) dr \quad (\Delta r \to 0)
+\end{aligned}
+\]</span>Remember for stationary process, we would have <span class="math inline">\(\bar y \to \mathbb E(y_t)\)</span> . With unit root process, the mean no longer converges to a constant, but to a distribution <span class="math inline">\(\int_0^1 W(r)dr\sim N(0,\frac{1}{3})\)</span>.</p>
+<p>For higher orders of <span class="math inline">\(y_t\)</span>, we have</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{1}{T^2}\sum_{t=1}^{T}y_t^2 &amp;= \frac{1}{T}\sum_{t=1}^{T}\left(\frac{1}{\sqrt T}y_t\right)^2 \\
+&amp;= \frac{1}{T}\sum_{t=1}^{T}\left[\xi\left(\frac{t}{T}\right)\right]^2 \\
+&amp;= \sum_{r=0}^{1} [\xi(r)]^2 \Delta r \\
+&amp;\to \int_0^1 \sigma^2 W^2(r) dr
+\end{aligned}
+\]</span></p>
+<p>By continuous mapping theorem, it can be shown, in general</p>
+<p><span class="math display">\[
+\frac{1}{T^{1+k/2}}\sum_{i=1}^T y_t^k \to \sigma^k\int_0^1 W^k(r)dr.
+\]</span></p>
+<p>Consider the numerator of the OLS estimator of the unit root process,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\sum_{t=1}^{T}y_{t-1}\epsilon_t &amp;= \sum_{i=1}^{T} (\epsilon_1+\cdots+\epsilon_{t-1})\epsilon_t = \sum_{s&lt;t}^{T}\epsilon_s\epsilon_t \\
+&amp;= \frac{1}{2}\left[(\epsilon_1+\cdots+\epsilon_T)^2-\sum_{t=1}^{T}\epsilon_t^2\right] \\
+&amp;= \frac{1}{2}y_T^2 - \frac{1}{2}\sum_{t=1}^{T}\epsilon_t^2
+\end{aligned}
+\]</span></p>
+<p>Divide it by <span class="math inline">\(T\)</span>, we have</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{1}{T}\sum_{t=1}^{T}y_{t-1}\epsilon_t
+&amp;= \frac{1}{2}\left(\frac{1}{\sqrt T}y_T\right)^2 - \frac{1}{2T}\sum_{t=1}^{T}\epsilon_t^2 \\
+&amp;= \frac{1}{2}[\xi^2(1)-\hat\sigma^2] \\
+&amp;\to \frac{1}{2}[\sigma^2 W^2(1) - \sigma^2] \\
+&amp;= \frac{1}{2}\sigma^2 [ W^2(1) - 1] \\
+&amp;= \sigma^2 \int_0^1 W dW.
+\end{aligned}
+\]</span></p>
+<p>We summarize the important results below.</p>
+<div class="callout-important callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Key Rules Summary
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><span class="math inline">\(\int_0^T W dt = N(0, \frac{T^3}{3})\)</span></li>
+<li><span class="math inline">\(\int_0^T W dW = \frac{1}{2}[ W^2(T) - T]\)</span></li>
+<li><span class="math inline">\(\frac{1}{T^{3/2}}\sum_{t=1}^T y_t \to \sigma \int_0^1 W(r)dr\)</span></li>
+<li><span class="math inline">\(\frac{1}{T^{1+k/2}}\sum_{i=1}^T y_t^k \to \sigma^k\int_0^1 W^k(r)dr\)</span></li>
+<li><span class="math inline">\(\frac{1}{T}\sum_{t=1}^{T}y_{t-1}\epsilon_t \to \sigma^2\int_0^1 WdW\)</span></li>
+<li><span class="math inline">\(\frac{1}{T^2}\sum_{t=1}^{T}y_{1t}y_{2t} \to \sigma_1\sigma_2\int_0^1 W_1(r)W_2(r)dr\)</span></li>
+</ol>
+</div>
+</div>
+<p>The last rule was given without proof, as we will need it in the following chapters.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./20_uni.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Unit Root Process</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./22_uni2.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Unit Root Process (contd)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

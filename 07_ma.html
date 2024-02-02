@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Zem Wang">
-<meta name="dcterms.date" content="2024-01-01">
 
-<title>Time Series Analysis for Economists</title>
+<title>Time Series Analysis for Economists - 7&nbsp; MA Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +20,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -32,7 +93,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./01_base.html" rel="next">
+<link href="./08_arma.html" rel="next">
+<link href="./06_ar.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -72,7 +134,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Time Series Analysis for Economists</h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MA Models</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -97,7 +159,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">Preface</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -150,7 +212,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07_ma.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MA Models</span></a>
+  <a href="./07_ma.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MA Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -279,7 +341,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a></li>
+  <li><a href="#ma1-process" id="toc-ma1-process" class="nav-link active" data-scroll-target="#ma1-process"><span class="toc-section-number">7.1</span>  MA(1) Process</a></li>
+  <li><a href="#maq-process" id="toc-maq-process" class="nav-link" data-scroll-target="#maq-process"><span class="toc-section-number">7.2</span>  MA(q) Process</a></li>
+  <li><a href="#mainfty-process" id="toc-mainfty-process" class="nav-link" data-scroll-target="#mainfty-process"><span class="toc-section-number">7.3</span>  MA(<span class="math inline">\(\infty\)</span>) Process</a></li>
   </ul>
 </nav>
     </div>
@@ -288,26 +352,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Time Series Analysis for Economists</h1>
+<h1 class="title"><span id="sec-ma-models" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MA Models</span></span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Zem Wang </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -315,13 +367,121 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="preface" class="level1 unnumbered">
-<h1 class="unnumbered">Preface</h1>
-<p>Empirical macroeconomics frequently involves the analysis of time series data, encompassing variables such as GDP, inflation, and interest rates, employing methodologies distinct from those utilized in cross-sectional studies. The goal of this book is to bridge the gap between introductory time series textbooks and theoretical econometrics. In the realm of empirical research, a rudimentary comprehension of the subject matter often proves insufficient. While computational tasks can be executed through simple computer commands, practitioners must go beyond surface-level in order to understand the intricacies and limitations of the involved techniques. Conversely, an exhaustive exploration of advanced econometric theories would be excessive for practical purposes. For instance, introductory textbooks would caution against applying OLS on non-stationary time series, citing the potential risk of spurious regression. Students often accept this as a rule of thumb without a grasp of its underlying rationale. Yet, delving into intricate topics such as Itô calculus is deemed unnecessary for empirical researchers.</p>
-<p>This book seeks to acquaint readers with essential time series topics crucial for understanding and conducting empirical research, with a specific focus on macroeconomic applications. In addition to introducing basic concepts and applications, such as running a regression and interpreting the result, the book endeavors to elevate comprehension to a deeper level by elucidating the “why” alongside the “what” and “how.” However, the objective is not to provide an exhaustive treatment replete with formal proofs; rather, emphasis is placed on providing intuitive explanations. Consequently, readers may encounter instances of non-rigorous proofs where a more formal approach is deemed unnecessary for an understanding required by applied works. This book can be read as intermediary materials between undergraduate econometrics and more rigorous treatments of the subject, such as Hamilton’s <em>Time Series Analysis</em>.</p>
-<p>The materials presented are drawn from or influenced by various sources, which are listed in the References at the end of the book without being cited individually in the context. Regarding notations, I use lowercase letters for random variables, such as <span class="math inline">\(x_t\)</span> and <span class="math inline">\(y_t\)</span>. Realizations of random variables are expressed as <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, and so on. The context will make it clear whether I am referring to a random variable or its realizations. Capital letters are reserved for matrices, such as <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. Vectors and matrices are sometimes written in bold for emphasizing, such as <span class="math inline">\(\boldsymbol X\)</span> and <span class="math inline">\(\boldsymbol y_t\)</span>, or in plain format as scalars if that does not lead to confusion. Greek letters are preferred for parameters, such as <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. Estimators are indicated with a hat, such as <span class="math inline">\(\hat{\alpha}\)</span> and <span class="math inline">\(\hat{\beta}\)</span>.</p>
-<p>I use the statistical language R whenever programming is involved. I am aware that there are many time series solutions available in R. To avoid burdening readers with excessive packages, I stick to base R as much as possible with a little help from the <em>zoo</em> package.</p>
-<p>I would like to emphasize that my knowledge and understanding of the subject are limited, and I acknowledge that there may be mistakes or areas where I could have provided a more accurate explanation. I deeply appreciate any feedback or corrections from readers that could improve the accuracy and clarity of this book.</p>
+<section id="ma1-process" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="ma1-process"><span class="header-section-number">7.1</span> MA(1) Process</h2>
+<p>Again, let’s start with the simplest moving average model. A first-order moving average process, or MA(1), is defined as</p>
+<p><span id="eq-ma1mu"><span class="math display">\[
+y_t = \mu + \epsilon_t + \theta\epsilon_{t-1},
+\tag{7.1}\]</span></span></p>
+<p>where <span class="math inline">\(\{\epsilon_t\} \sim \text{WN}(0, \sigma^2)\)</span> are uncorrelated innovations. The MA model says the current value <span class="math inline">\(y_t\)</span> is a moving average of past innovations (in MA(1), the weight on <span class="math inline">\(\epsilon_{t-1}\)</span> is <span class="math inline">\(\theta\)</span>). MA models directly relate the observable variable to past innovations. If we know the past innvation <span class="math inline">\(\epsilon_{t-j}\)</span>, we can easily figure out its contribution to the outcome variable (unlike AR models where the effect of a past innovation is transmitted through <span class="math inline">\(y_{t-j},\dots,y_{t-1}\)</span>). So MA models are the preferred analytic tool in many applications, despite it looks odd from the eyes of regression modelers. You may wonder how it is possible to estimate such a model. We will put off the estimation techniques to the next chapter.</p>
+<p>It is clear that <span class="math inline">\(y_t\)</span> has a constant mean, <span class="math inline">\(\mathbb{E}(y_t) = \mu\)</span>. We can omit the constant if we work with the demeaned series <span class="math inline">\(\tilde{y}_t = y_t - \mu\)</span>. Without loss of generality, we assume for the rest <span class="math inline">\(\{y_t\}\)</span> has zero mean, so the model is simplified as</p>
+<p><span id="eq-ma1"><span class="math display">\[
+y_t = \epsilon_t + \theta\epsilon_{t-1}.
+\tag{7.2}\]</span></span></p>
+<p>Let’s compute its variance and covariances:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\gamma_0 &amp;= \text{var} (\epsilon_t + \theta\epsilon_{t-1}) = \text{var}(\epsilon_t) + \theta^2\text{var}(\epsilon_{t-1}) = (1+\theta^2)\sigma^2;\\
+\gamma_1 &amp;= \text{cov}(y_t, y_{t-1}) = \text{cov}(\epsilon_{t} + \theta\epsilon_{t-1}, \epsilon_{t-1} + \theta\epsilon_{t-2}) = \text{cov} (\theta\epsilon_{t-1}, \epsilon_{t-1} + \theta\epsilon_{t-2}) = \theta\sigma^2; \\
+\gamma_2 &amp;= \text{cov}(y_t, y_{t-2}) = \text{cov}(\epsilon_{t} + \theta\epsilon_{t-1}, \epsilon_{t-2} + \theta\epsilon_{t-3}) = 0; \\
+&amp;\vdots\\
+\gamma_j &amp;= 0 \text{ for } |j|\geq 2.
+\end{aligned}
+\]</span></p>
+<p>It is clear that the MA(1) process is <em>stationary</em>. And the ACF cuts off after the first lag. Because more distant lags <span class="math inline">\(y_{t-k}\)</span> are constituted by even more distant innovations <span class="math inline">\(\epsilon_{t-k}, \epsilon_{t-k-1}, ...\)</span> which has no relevance for <span class="math inline">\(y_t\)</span> given the MA(1) structure.</p>
+<p>We have seen AR processes are equivalent to MA(<span class="math inline">\(\infty\)</span>) processes. Similar results hold for MA models. Rewrite the MA(1) process with the lag operator, assuming <span class="math inline">\(|\theta| &lt; 1\)</span>,</p>
+<p><span class="math display">\[
+y_t = (1 + \theta L) \epsilon_t \Leftrightarrow
+(1+\theta L)^{-1} y_t = \epsilon_t \Leftrightarrow
+\sum_{j=0}^{\infty} (-\theta)^j y_{t-j} = \epsilon_t.
+\]</span></p>
+<p>That means an MA(1) is equivalent to an AR(<span class="math inline">\(\infty\)</span>) process if <span class="math inline">\((1+\theta L)\)</span> is <em>invertible</em>. This shows AR and MA are really the same family of models. The model AR or MA is chosen by parsimonious principle. For example, an AR model with many lags can possibly be modeled by a parsimonious MA model.</p>
+<p>Since an MA(1) is equivalent to some AR(<span class="math inline">\(\infty\)</span>) process, the PACF of an MA(1) should tail off gradually.</p>
+<div class="cell" data-fig.asp="0.4">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">arima.sim</span>(<span class="fu">list</span>(<span class="at">ma=</span><span class="fl">0.8</span>), <span class="at">n=</span><span class="dv">2000</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">mar=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(y); <span class="fu">pacf</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-ma1acf" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="07_ma_files/figure-html/fig-ma1acf-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7.1: ACF and PACF of MA(1) process</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Invertibility
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If <span class="math inline">\(|\theta|&gt;1\)</span>, <span class="math inline">\(\theta(L)\)</span> is not invertible. Define another MA(1) process,</p>
+<p><span class="math display">\[
+y_t = \epsilon_t + \theta^{-1}\epsilon_{t-1},\quad\epsilon_t\sim\text{WN}(0,\theta^2\sigma^2).
+\]</span></p>
+<p>We can verify that its variance and covariances are exactly the same as <a href="#eq-ma1">Equation&nbsp;<span>7.2</span></a>. For non-invertible MA process, as long as <span class="math inline">\(\theta(L)\)</span> avoids unit root, we can always find an invertible process that shares the same ACF. This means, for a stationary MA process, it makes no harm to just assume it is invertible.</p>
+</div>
+</div>
+</section>
+<section id="maq-process" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="maq-process"><span class="header-section-number">7.2</span> MA(q) Process</h2>
+<p>A <span class="math inline">\(q\)</span>-th order moving average, or MA(<span class="math inline">\(q\)</span>) process, is written as</p>
+<p><span id="eq-maqmu"><span class="math display">\[
+y_t = \mu + \epsilon_t + \theta_1\epsilon_{t-1} + \dots + \theta_q\epsilon_{t-q},
+\tag{7.3}\]</span></span></p>
+<p>where <span class="math inline">\(\{\epsilon_t\} \sim \text{WN}(0, \sigma^2)\)</span>.</p>
+<div id="prp-maqstat" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 7.1 </strong></span>An MA(<span class="math inline">\(q\)</span>) process is stationary.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em>. </span>We will show that the mean, variance and covariances of MA(<span class="math inline">\(q\)</span>) are all invariant with time.</p>
+<p><span class="math display">\[
+\mathbb{E}(y_t)= \mu.
+\]</span></p>
+<p>Assume for the rest, <span class="math inline">\(\{y_t\}\)</span> is demeaned.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\gamma_0 &amp;= \mathbb{E}(y_t^2) = \mathbb{E}[(\epsilon_t + \theta_1\epsilon_{t-1} + \dots + \theta_q\epsilon_{t-q})^2] \\
+&amp;= \mathbb{E}[\epsilon^2] + \theta_1^2\mathbb{E}[\epsilon_{t-1}^2] + \dots + \theta_q^2\mathbb{E}[\epsilon_{t-q}^2] \\
+&amp;= (1+\theta_1^2+\dots+\theta_q^2)\sigma^2; \\
+\gamma_1 &amp;= \mathbb{E}[y_ty_{t-1}] = \mathbb{E}[(\epsilon_t + \theta_1\epsilon_{t-1} + \dots + \theta_q\epsilon_{t-q}) \\
+&amp;\hspace{10.2em} (\epsilon_{t-1} + \dots + \theta_{q-1}\epsilon_{t-q} + \theta_q\epsilon_{t-q-1})] \\
+&amp;= \theta_1\mathbb{E}[\epsilon_{t-1}^2] + \theta_2\theta_1\mathbb{E}[\epsilon_{t-2}^2] + \dots + \theta_q\theta_{q-1}\mathbb{E}[\epsilon_{t-q}^2] \\
+&amp;= (\theta_1 + \theta_2\theta_1 + \dots + \theta_q\theta_{q-1})\sigma^2;\\
+&amp;\vdots\\
+\gamma_j &amp;= \mathbb{E}[y_ty_{t-j}] = \mathbb{E}[(\epsilon_t + \dots + \theta_j\epsilon_{t-j} + \dots + \theta_q\epsilon_{t-q}) \\
+&amp;\hspace{12.5em} (\epsilon_{t-j} + \dots + \theta_{q-j}\epsilon_{t-q} + \dots + \theta_q\epsilon_{t-q-j})] \\
+&amp;= \theta_j\mathbb{E}[\epsilon_{t-j}^2] + \theta_{j+1}\theta_1\mathbb{E}[\epsilon_{t-j-1}^2] + \dots + \theta_q\theta_{q-j}\mathbb{E}[\epsilon_{t-q}^2] \\
+&amp;= (\theta_j + \theta_{j+1}\theta_1 + \dots + \theta_q\theta_{q-j})\sigma^2, \text{ for } j\leq q; \\
+\gamma_j &amp;= 0, \text{ for } j &gt; q.
+\end{aligned}
+\]</span></p>
+</div>
+<div id="prp-maqinv" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 7.2 </strong></span>An MA(<span class="math inline">\(q\)</span>) process is invertible iff the roots of <span class="math inline">\(\theta(z)\)</span> are outside the unit circle.</p>
+</div>
+<div id="prp-maqacf" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 7.3 </strong></span>An MA(<span class="math inline">\(q\)</span>) process is characterized by (i) an ACF that is (close to) zero after <span class="math inline">\(q\)</span> lags; and (i) a PACF that is infinite in extend but tails of gradually.</p>
+</div>
+</section>
+<section id="mainfty-process" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="mainfty-process"><span class="header-section-number">7.3</span> MA(<span class="math inline">\(\infty\)</span>) Process</h2>
+<p>MA(<span class="math inline">\(\infty\)</span>) is a special case deserves attention. Partly because all ARMA processes can be reduced to MA(<span class="math inline">\(\infty\)</span>) processes. In addition to MA(<span class="math inline">\(q\)</span>) processes, we need more conditions for MA(<span class="math inline">\(\infty\)</span>) to be stationary. Consider the variance of</p>
+<p><span class="math display">\[
+y_t = \sum_{j=0}^{\infty}\theta_j\epsilon_{t-j},
+\]</span></p>
+<p><span class="math display">\[
+\gamma_0 = \mathbb{E}[y_t^2] = \mathbb{E}\left[\left(\sum_{j=0}^{\infty}\theta_j\epsilon_{t-j}\right)^2\right] = \left(\sum_{j=0}^{\infty}\theta_j^2\right)\sigma^2.
+\]</span></p>
+<p>It only make sense if <span class="math inline">\(\sum_{j=0}^{\infty}\theta_j^2&lt;\infty\)</span>. This property is called <em>square summable</em>.</p>
+<div id="prp-mainfst" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 7.4 </strong></span>An MA(<span class="math inline">\(\infty\)</span>) process is stationary if the coefficients <span class="math inline">\(\{\theta_j\}\)</span> are square summable.</p>
+</div>
 
 
 </section>
@@ -462,10 +622,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./06_ar.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">AR Models</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./01_base.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./08_arma.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">ARMA Models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
