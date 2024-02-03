@@ -1,0 +1,215 @@
+# Structural VAR
+
+## The Structural Framework
+
+Now we reconsider the problem of estimating structural shocks. We have
+introduced the structural shock framework in @sec-ssf the underlying
+econometric framework of understanding our economy. To briefly recap, we
+envision our economy as an MA process in which multiple structural
+shocks are the fundamental driving forces:
+
+$$
+y_t =  \Theta(L) \epsilon_t
+$$ {#eq-sma}
+
+Structural shocks must be distinguished from innovations or errors in a
+regression. Innovations are prediction errors from past observations.
+Innovations can be cross-sectionally or serially correlated. Structural
+shocks are primitive, unforeseeable, and uncorrelated shocks. We do not
+usually observe structural shocks but they are the conceptualized
+driving forces in the background. One of the most important task of
+econometrics is to uncover the impact of these driving forces.
+
+In the MA representation, if $\Theta(L)$ is invertible, we would have
+
+$$
+\Theta^{-1}(L) y_t = \epsilon_t
+$$
+
+which is an infinite order AR process. This motivates us to estimate
+structural shocks via vector autoregressive processes. If we have a VAR
+process:
+
+$$
+A(L) y_t = u_t
+$$ {#eq-var}
+
+where $u_t = y_t - \text{Proj}(y_t | y_{t-1},y_{t-2},\dots)$ are the
+innovations. The question is, to what extend, or under what conditions,
+can we identify the structural shocks from this VAR specification?
+
+The answer is easier than you might have thought. We only require
+
+$$
+u_t = \Theta_0 \epsilon_t
+$$ {#eq-resid}
+
+where $\Theta_0$ is the first coefficient in the lag polynomial. That
+is, the condition for identification is that we can find a linear
+transformation to decompose $u_t$ into $\epsilon_t$.
+
+## Invertibility
+
+The structural MA process is said to be **invertible** if $\epsilon_t$
+can be linearly determined from current and lagged values of $y_t$:
+
+$$
+\epsilon_t = \text{Proj}(\epsilon_t| y_t, y_{t-1},\dots).
+$$
+
+This means there is no "omitted variable" in the observable space, in
+the sense that the space spanned by $\{\epsilon_t, \epsilon_{t-1},...\}$
+is fully covered by $\{y_t, y_{t-1},…\}$.
+
+$$
+\text{span}\{\epsilon_t,\epsilon_{t-1},...\} =
+\text{span}\{y_t, y_{t-1},...\} =
+\text{span}\{u_t, u_{t-1},...\}
+$$
+
+This is a strong assumption. Under invertibility, the knowledge of the
+past true shocks would not even improve the the VAR forecast. But it
+does not require our VAR system being exhaustive, including everything
+observable variable related to our economy. In a particular application,
+we would only be interested in a few structural shocks. The
+invertibility condition requires the observables fully cover the space
+spanned by the structural shocks of particular concern.
+
+With the above condition satisfied, we can show that the identification
+problem is reduced to identify $\Theta_0$. Given @eq-sma and @eq-var, we
+have
+
+$$
+u_t = A(L)y_t = A(L)\Theta(L)\epsilon_t \overset{?}= \Theta_0 \epsilon_t
+$$
+
+By definition of innovation, which are residuals of projections from
+past observations:
+
+$$
+\begin{aligned}
+u_t &= y_t - \text{Proj}[y_t | y_{t-1},y_{t-2},...] \\[1em]
+&=\Theta(L)\epsilon_t - \text{Proj}[\Theta(L)\epsilon_t | y_{t-1},y_{t-2},...]\\[1em]
+&=\Theta_0\epsilon_t + \Theta_1\epsilon_{t-1} +\cdots+
+\text{Proj}[\Theta_0\epsilon_t + \Theta_1\epsilon_{t-1} + \cdots | y_{t-1},y_{t-2},...] \\
+&= \Theta_0\epsilon_t - \Theta_0\underbrace{\text{Proj}[\epsilon_t|y_{t-1},...]}_{=0\ \text{by definition}} + \sum_{j=1}^{\infty}\Theta_j\{\epsilon_{t-j} - \underbrace{\text{Proj}[\epsilon_{t-j}|y_{t-1},...]}_{=\epsilon_{t-j}\ \text{by invertibility}}\} \\
+&= \Theta_0\epsilon_t.
+\end{aligned}
+$$
+
+::: {#prp-svar}
+## Assumptions of Structural VAR
+
+1.  All variables are stationary;
+2.  The space spanned by the innovations and the structural shocks
+    coincide such that $u_t = \Theta_0\epsilon_t$;
+3.  The structural process $y_t = \Theta(L)\epsilon_t$ is invertible.
+
+Under the assumptions, identifying $\Theta_0$ is equivalent to identify
+the structural shocks $\epsilon_t = \Theta_0^{-1} u_t$.
+:::
+
+If the invertibility assumption fails, that means there exists no
+mapping from VAR innovations to the structural shocks. Non-invertibility
+arises when the observed variables fail to perfectly reveal the state
+variables (structural shocks). If this is the case, we can include more
+variables to expand the space hopefully to cover the state variables; or
+we may choose to simply ignore it if we believe the wedge between VAR
+innovations and structural shocks is small.
+
+## Identification
+
+With invertibility, the essential task of SVAR is to decompose @eq-resid
+to recover the structural shocks. The key is to estimate $\Theta_0$.
+Consider the second-order moments of @eq-resid:
+
+$$
+\Theta_0\mathbb{E}(\epsilon_t\epsilon_t')\Theta_0' = \mathbb{E}(u_tu_t')
+$$
+
+Estimating the VAR system @eq-var by OLS gives
+$\hat\Omega = \mathbb{\hat E}(u_tu_t')$. By definition, elements of
+$\epsilon_t$ are orthogonal to each other, so
+$D=\mathbb E (\epsilon_t\epsilon_t')$ is diagonal. Estimated
+$\hat\Omega$ gives $n(n+1)/2$ distinct values. Identification of $D$
+requires $n$ values. So no more than $n(n-1)/2$ parameters in $\Theta_0$
+can be identified. That means, we cannot identify an $n\times n$ matrix
+$\Theta_0$ without restrictions.
+
+### Recursive restriction
+
+One common way to impose restrictions on $\Theta_0$ is to require it
+being lower triangular. Thus eliminating $n(n-1)/2$ entries. We also
+assume the structural shocks have the same magnitude as the innovations,
+so the diagonal entries are $1$s. For example, in the three variable
+Keynesian system, we may assume
+
+$$
+\begin{bmatrix}
+u_t^\pi \\ u_t^y \\ u_t^m
+\end{bmatrix} = 
+\begin{bmatrix}
+1 & 0 & 0 \\
+* & 1 & 0 \\
+* & * & 1
+\end{bmatrix}
+\begin{bmatrix}
+\epsilon_t^{S} \\ \epsilon_t^{IS} \\ \epsilon_t^{MP}
+\end{bmatrix}
+$$
+
+The recursive structure is equivalent to imposing restrictions on the
+contemporaneous relationships between variable, or imposing different
+reaction speed to the structural shocks. In the above example, we assume
+the observed monetary policy (interest rate) responds to IS shock,
+supply shock and monetary policy shock contemporaneously; but inflation
+and output respond to monetary policy shock with a lag (sluggish
+response). Output responds to IS shock and supply shock
+contemporaneously, but inflation responds to IS shock with a lag. Of
+course, one can question the validity of these assumptions, or even the
+validity of the conceptualization of the three structural shocks. But
+this is a structural question, not an econometric one. Economists have
+always been debating what are the proper structures to describe the
+economy.
+
+In the recursive identification scheme, the ordering of the variables is
+the vital decision to make. Typically, the slow-moving variables are
+ordered first, and the fast-moving variables last, provided the
+$\Theta_0$ is upper triangular. In the literature involving monetary
+policy, a "slow-r-fast" scheme is widely adopted. That is, low-moving
+variables such as real output and price levels are ordered before
+interest rates; and fast-moving variables such as financial market
+indexes are ordered after interest rates. Because financial market
+absorbs information very quickly, even ahead of the monetary policy
+decision. But it take time for real variables to materialize the impact
+of monetary policy changes.
+
+### Non-recursive restriction
+
+We may also impose non-recursive structure based on theories or
+intuitions. Consider a model constituted of the demand and supply of an
+agriculture product, and the weather condition that affects the supply
+of the product. We assume weather does not depend on market behaviors.
+In addition, the supply but not the demand is influenced by the weather.
+This results in an identification matrix as follows
+
+$$
+\begin{bmatrix}
+u_t^d \\ u_t^s \\ u_t^w
+\end{bmatrix} = 
+\begin{bmatrix}
+1 & -\beta & 0 \\
+1 & -\gamma & -\delta \\
+0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+\epsilon_t^{d} \\ \epsilon_t^{s} \\ \epsilon_t^{w}
+\end{bmatrix}
+$$
+
+Note that there are only three parameters to be estimated in the matrix.
+So $\Theta_0$ in this case can also be identified.
+
+Structural VAR literature has invented lots of identification schemes,
+such as long-run restrictions, sign restrictions, and so on. These are
+left for the readers to explore themselves.
