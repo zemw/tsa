@@ -1,4 +1,4 @@
-# The Structural Shock Framework
+# The Structural Shock Framework {#sec-ssf}
 
 The counterfactual framework introduced in the last section defines the
 dynamic causal effect of any variable on another. As economists, we are
