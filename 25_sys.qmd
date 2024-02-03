@@ -1,0 +1,82 @@
+# System of Equations
+
+We have discussed how to estimate the effect of one economic variable on
+another, and the assumptions on which the estimate would have a
+(dynamic) causal interpretation. But one equation is not enough to model
+the economy, as it does not take into account the feedback between
+economic variables. For example, an oil price shock would have impact on
+the price levels, which would trigger adjustments in the monetary
+policy, which would further exert impact on price levels, real output
+and so on. To capture the intertwined relationships, it would require a
+**system of equations**.
+
+Consider an example of a backward-looking Keynesian system:
+
+$$
+\begin{aligned}
+y_t &= \phi y_{t-1} -\psi(r_{t-1}-\phi_{t-1}) + \epsilon_t^{IS}\\
+\pi_t &= \delta\pi_{t-1} + k(y_{t-1} - y_{t-1}^n) + \epsilon_t^{S}\\
+r_t &= \beta\pi_t + \gamma(y_t - y_t^n) + \epsilon_t^{MP}
+\end{aligned}
+$$
+
+The first equation is the IS curve, which states the negative
+relationship between output and real interest rate. $\epsilon_t^{IS}$ is
+a structural shock of investment-saving decisions that moves the IS
+curve. We call it structural shock, because it is associated with a
+structural meaning, not a mere residual from a regression. The second
+equation describes the Phillips curve, which postulates a positive
+correlation between inflation and output gap (where $y_{t}^n$ is the
+potential output level). $\epsilon_t^{S}$ is the supply shock, which
+originates from exogenous supply conditions (such as weather), that
+could also affect inflation. The third equation is the Taylor's rule for
+monetary policy, which sets the interest rate in response to inflation
+and output gap. $\epsilon_t^{MP}$ is the monetary policy shock, which is
+the unpredictable part of the monetary policy decision making.
+
+The set of equations are called structural equations, because they are
+derived from economic theories (particularly the Keynesian theory). They
+were very popular in 70s and 80s until Sims (1980) questioned their
+validity. In fact, these equations impose a lot of restrictions on the
+relationships between the variables. For example, why output responds to
+real interest rate but not inflation? Why interest rate does not enter
+the equation of inflation? Yes, the equations are justified by the
+theory. But who knows the theory is correct? In reality, the economic
+variables influence each other, often in a way unknown to economic
+theorists. So why not model the economy unrestrictively and let the data
+tell us the relationships between the variables?
+
+$$
+\begin{aligned}
+y_t &= \phi_{11} y_{t-1} + \phi_{12}\pi_{t-1} + \phi_{13} r_{t-1} +\cdots \\
+\pi_t &= \phi_{21} y_{t-1} + \phi_{22}\pi_{t-1} + \phi_{23} r_{t-1} +\cdots \\
+r_t &= \phi_{31} y_{t-1} + \phi_{32}\pi_{t-1} + \phi_{33} r_{t-1} +\cdots \\
+\end{aligned}
+$$
+
+This gives rise to a vector autoregressive system:
+
+$$
+\begin{bmatrix}
+y_t \\ \pi_t \\ r_t
+\end{bmatrix} = \sum_{j=1}^{p}
+\begin{bmatrix}
+\phi_{j,11} & \phi_{j,12} & \phi_{j,13} \\ 
+\phi_{j,21} & \phi_{j,22} & \phi_{j,23} \\ 
+\phi_{j,31} & \phi_{j,32} & \phi_{j,33} \\ 
+\end{bmatrix}
+\begin{bmatrix}
+y_{t-j} \\ \pi_{t-j} \\ r_{t-j}
+\end{bmatrix} +
+\begin{bmatrix}
+u_t^y \\ u_t^\pi \\ u_t^r 
+\end{bmatrix}
+$$
+
+This is called a **vector autoregression** (**VAR**). Since proposed by
+Sims (1980), VARs have been the Swiss knife for empirical
+macroeconomists. This chapter offers a thorough introduction of this
+Nobel prize winning technique. We start by introduce the general general
+vector processes and the estimation methods. We then explain how VARs
+map to the structural framework (SVAR). We finish the chapter by a
+discussion on what if a VAR system is not stationary.
