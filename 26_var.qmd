@@ -1,0 +1,72 @@
+# Vector Processes
+
+Let $y_t$ be an $n\times 1$ vector. An vector autoregressive process is
+defined as
+
+$$
+y_t = c + \Phi_1 y_{t-1} + \Phi_2 y_{t-2} +\cdots + \Phi_p y_{t-p} + \epsilon_t
+$$
+
+where $\epsilon_t$ is the vector white noise with
+$\mathbb E(\epsilon_t)=0$ and $\mathbb E(\epsilon_t\epsilon_t')=\Omega$
+a diagonal matrix.
+
+To unpack the matrix notation, the first row of the vector system is
+
+$$
+\begin{aligned}
+y_{t}^{(1)} = c^{(1)} 
+& + \phi_{1}^{(11)} y_{t-1}^{(1)} + \phi_{1}^{(12)} y_{t-1}^{(2)} + \cdots + \phi_{1}^{(1n)} y_{t-1}^{(n)} \\
+& + \phi_{2}^{(11)} y_{t-2}^{(1)} + \phi_{2}^{(12)} y_{t-2}^{(2)} + \cdots + \phi_{2}^{(1n)} y_{t-2}^{(n)} \\
+&\:\vdots \\
+& + \phi_{p}^{(11)} y_{t-p}^{(1)} + \phi_{p}^{(12)} y_{t-p}^{(2)} + \cdots + \phi_{p}^{(1n)} y_{t-p}^{(n)} \\
+& + \epsilon_{t}^{(1)}
+\end{aligned}
+$$
+
+where the numbers in parentheses denote the $(k)$-th entry in a vector
+or matrix.
+
+We can rewrite it more compactly with the lag operator:
+
+$$
+(I_n - \Phi_1 L -\Phi_2 L^2 - \cdots -\Phi_p L^p) y_t = \Phi(L) y_t = c + \epsilon_t.
+$$
+
+Similarly, we can generalize an MA process to vector form:
+
+$$
+y_t = \mu + \epsilon_t + \Theta_1\epsilon_{t-1} + \Theta_2\epsilon_{t-2} + \cdots
+= \mu + \Theta(L) \epsilon_t.
+$$
+
+Similar to scalar processes, with stationary $y_t$, VAR and VMA
+processes can be converted to each other by inverting the lag polynomial
+
+$$
+\Psi(L) = \Phi^{-1}(L)
+$$
+
+where the inverse is defined as
+
+$$
+[I_n - \Phi_1 L -\Phi_2 L^2 - \cdots][I_n +\Psi_1\epsilon_{t-1} + \Psi_2\epsilon_{t-2} + \cdots] = I_n.
+$$
+
+Computationally, we can expand the product of the two lag polynomials
+
+$$
+I_n + (\Psi_1-\Phi_1)L + (\Psi_2-\Phi_2-\Phi_1\Psi_1)L^2 + \cdots = I_n
+$$ Thus, the coefficients of the inverse lag polynomial can be computed
+recursively
+
+$$
+\begin{aligned}
+\Psi_1 &= \Phi_1 \\
+\Psi_2 &= \Phi_2 + \Phi_1\Psi_1 \\
+&\vdots \\
+\Psi_s &= \Phi_1\Psi_{s-1} + \Phi_2\Psi_{s-2} + \cdots + \Phi_p\Psi_{s-p}
+\end{aligned}
+$$
+
+with $\Psi_0=I_n$, $\Psi_s=0$ for $s<0$.
