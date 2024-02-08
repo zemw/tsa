@@ -1,0 +1,40 @@
+# Granger Causality
+
+Granger causality conceptualizes how useful some variables are for forecasting
+other variables. $y$ fails to Granger-cause $x$ if for all $s >0$, the MSE
+of a forecast $\hat x_{t+s}$ based on $(x_t,x_{t-1},...)$ is the same as
+the MSE of the forecast based on $(x_t,x_{t-1},... y_t,y_{t-1},...)$:
+
+$$
+\text{MSE}[\hat x_{t+s}|x_t,x_{t-1},...] = 
+\text{MSE}[\hat x_{t+s}|x_t,x_{t-1},...y_t,y_{t-1},...].
+$$
+
+Equivalently, we say $x$ is exogenous with respect to $y$, or $y$ is not linearly
+informative about future $x$.
+
+Granger causality has nothing to do with the causality defined by counterfactuals. 
+The word "causality" is unfortunately misleading. It would be better named as
+"Granger predictability". 
+
+In a VAR setting, $y$ does not Granger-cause $x$ if the coefficient matrix
+$\Phi_j$ are lower triangular for all $j$:
+
+$$
+\begin{bmatrix}x_t \\ y_t\end{bmatrix} = 
+\begin{bmatrix}c_1 \\ c_2\end{bmatrix} +
+\begin{bmatrix}* & 0 \\ * & *\end{bmatrix}
+\begin{bmatrix}x_{t-1} \\ y_{t-1}\end{bmatrix} + 
+\begin{bmatrix}* & 0 \\ * & *\end{bmatrix}
+\begin{bmatrix}x_{t-2} \\ y_{t-2}\end{bmatrix} + \cdots
+$$
+
+In MA representation,
+
+$$
+\begin{bmatrix}x_t \\ y_t\end{bmatrix} = 
+\begin{bmatrix}\mu_1 \\ \mu_2\end{bmatrix} +
+\begin{bmatrix}\theta_{11}(L) & 0 \\ \theta_{21}(L) & \theta_{22}(L)\end{bmatrix}
+\begin{bmatrix}\epsilon_{1,t} \\ \epsilon_{2,t}\end{bmatrix}
+$$
+
