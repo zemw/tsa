@@ -1,5 +1,7 @@
 # Vector Processes
 
+## Definitions
+
 Let $y_t$ be an $n\times 1$ vector. An vector autoregressive process is
 defined as
 
@@ -70,3 +72,74 @@ $$
 $$
 
 with $\Psi_0=I_n$, $\Psi_s=0$ for $s<0$.
+
+## Stationary Conditions
+
+A VAR($p$) process is covariance-stationary if all values of $z$
+satisfying
+
+$$
+\text{det}|I_n- \Phi_1 z - \Phi_2 z^2 - \cdots - \Phi_p z^p| = 0
+$$
+
+lie outside the unit circle.
+
+The VAR is said to contain at least one unit root if
+
+$$
+\text{det}|I_n- \Phi_1 - \Phi_2 - \cdots - \Phi_p | = 0.
+$$
+
+Any VMA($q$) process is covariance-stationary.
+
+## Autocovariance Matrix
+
+The autocovariance matrix for a vector process is defined as
+
+$$
+\Gamma_j = \mathbb E [(y_t - \mu)(y_{t-j} - \mu)'].
+$$
+
+For demeaned $y_t$, we have
+
+$$
+\begin{aligned}
+\Gamma_j &= \mathbb{E} (y_t y_{t-j}') = \mathbb{E}
+\begin{bmatrix}y_{1,t}\\y_{2,t}\\\vdots\\y_{n,t}\end{bmatrix}
+\begin{bmatrix}y_{1,t-j}&y_{2,t-j}&\dots&y_{n,t-j}\end{bmatrix} \\ &=
+\begin{bmatrix}
+\mathbb{E}(y_{1,t}y_{1,t-j}) & \mathbb{E}(y_{1,t}y_{2,t-j}) & \dots & \mathbb{E}(y_{1,t}y_{n,t-j}) \\
+\mathbb{E}(y_{2,t}y_{1,t-j}) & \mathbb{E}(y_{2,t}y_{2,t-j}) & \dots & \mathbb{E}(y_{2,t}y_{n,t-j}) \\
+\vdots & \vdots & \ddots & \vdots \\
+\mathbb{E}(y_{n,t}y_{1,t-j}) & \mathbb{E}(y_{n,t}y_{2,t-j}) & \dots & \mathbb{E}(y_{n,t}y_{n,t-j}) 
+\end{bmatrix} \\ &=
+\begin{bmatrix}
+\gamma_{1}(j) & \gamma_{12}(j) & \dots & \gamma_{1n}(j) \\
+\gamma_{21}(j) & \gamma_{2}(j) & \dots & \gamma_{2n}(j) \\
+\vdots & \vdots & \ddots & \vdots \\
+\gamma_{n1}(j) & \gamma_{n2}(j) & \dots & \gamma_{n}(j) \\
+\end{bmatrix}
+\end{aligned}
+$$
+
+Note that $\Gamma_j \neq \Gamma_{-j}$, but $\Gamma_j' = \Gamma_{-j}$.
+
+## Ergodic Properties
+
+Let $y_t$ be a vector process
+
+$$
+y_t = \mu + \sum_{k=0}^{\infty} \Psi_k\epsilon_{t-k}
+$$
+
+where $\epsilon_t$ is white noise and $\{\Psi_k\}_{k=0}^{\infty}$ is
+absolutely summable (each of its elements are absolutely summable
+$\sum_{s=0}^{\infty}|\psi_{ij}^{(s)}|<\infty$). Then
+
+(i) The autocovariable exists
+    $\Gamma_s = \sum_{v=0}^{\infty}\Psi_{s+v}\Omega\Psi_{v}'$;
+(ii) $\{\Gamma_s\}_{s=0}^{\infty}$ is absolutely summable;
+(iii) $\mathbb E |y_{t1}^{i1} y_{t2}^{i2} y_{t3}^{i3} y_{t4}^{i4}|<\infty$
+      bounded 4th moments;
+(iv) $\frac{1}{T}\sum_{t=1}^{T}y_t^i y_{t-s}^j \to \mathbb{E}(y_t^i y_{t-s}^j)$
+     ergodic for second moments.
