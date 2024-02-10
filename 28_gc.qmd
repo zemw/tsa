@@ -1,24 +1,27 @@
 # Granger Causality
 
-Granger causality conceptualizes how useful some variables are for forecasting
-other variables. $y$ fails to Granger-cause $x$ if for all $s >0$, the MSE
-of a forecast $\hat x_{t+s}$ based on $(x_t,x_{t-1},...)$ is the same as
-the MSE of the forecast based on $(x_t,x_{t-1},... y_t,y_{t-1},...)$:
+## Definition
+
+Granger causality conceptualizes how useful some variables are for
+forecasting other variables. $y$ fails to Granger-cause $x$ if for all
+$s >0$, the MSE of a forecast $\hat x_{t+s}$ based on
+$(x_t,x_{t-1},...)$ is the same as the MSE of the forecast based on
+$(x_t,x_{t-1},... y_t,y_{t-1},...)$:
 
 $$
 \text{MSE}[\hat x_{t+s}|x_t,x_{t-1},...] = 
 \text{MSE}[\hat x_{t+s}|x_t,x_{t-1},...y_t,y_{t-1},...].
 $$
 
-Equivalently, we say $x$ is exogenous with respect to $y$, or $y$ is not linearly
-informative about future $x$.
+Equivalently, we say $x$ is exogenous with respect to $y$, or $y$ is not
+linearly informative about future $x$.
 
-Granger causality has nothing to do with the causality defined by counterfactuals. 
-The word "causality" is unfortunately misleading. It would be better named as
-"Granger predictability". 
+Granger causality has nothing to do with the causality defined by
+counterfactuals. The word "causality" is unfortunately misleading. It
+would be better named as "Granger predictability".
 
-In a VAR setting, $y$ does not Granger-cause $x$ if the coefficient matrix
-$\Phi_j$ are lower triangular for all $j$:
+In a VAR setting, $y$ does not Granger-cause $x$ if the coefficient
+matrix $\Phi_j$ are lower triangular for all $j$:
 
 $$
 \begin{bmatrix}x_t \\ y_t\end{bmatrix} = 
@@ -38,3 +41,143 @@ $$
 \begin{bmatrix}\epsilon_{1,t} \\ \epsilon_{2,t}\end{bmatrix}
 $$
 
+## Likelihood Ratio Test
+
+To test for Granger causality, we need to introduce the likelihood ratio
+(LR) test. Before we do that, let's quickly derive the maximal
+likelihood estimator for the VAR. The joint probability density function
+is
+
+$$
+\begin{aligned}
+f(y_T,y_{T-1},\dots,y_1 | y_0,\dots,y_{1-p};\theta)
+&= f(y_T|y_{T-1},\dots)f(y_{T-1}|y_{T-2},\dots)\cdots f(y_1|y_0,\dots) \\
+&= \prod_{t=1}^{T} f(y_t|y_{t-1},y_{t-2},... ,y_{1-p};\theta)
+\end{aligned}
+$$
+
+The log-likelihood function is
+
+$$
+\begin{aligned}
+\ell(\theta) &= \sum_{t=1}^T \log f(y_t|y_{t-1},y_{t-2},... ,y_{1-p};\theta) \\
+&= -\frac{T}{2}\log |2\pi\Omega^{-1}| - \frac{1}{2}\sum_{t=1}^{T}[(y_t - \Pi'x_t)'\Omega^{-1}(y_t-\Pi'x_t)]
+\end{aligned}
+$$
+
+Maximize the log-likelihood function gives the ML estimator:
+
+$$
+\begin{aligned}
+\hat\Pi'_{n \times (np+1)} &= 
+\left[\sum_{t=1}^{T} y_tx_t'\right]\left[\sum_{t=1}^{T} x_tx_t'\right]^{-1} \\
+\hat\Omega_{n \times n} &= \frac{1}{T} \sum_{t=1}^{T}\hat\epsilon_t \hat\epsilon_t'
+\end{aligned}
+$$
+
+By comparing the likelihood difference, we can test one VAR
+specification versus the alternative. The null hypothesis ($H_0$) could
+be a specification with a particular lag length, or a particularization
+with certain exogeneity restrictions. Then we estimate the covariance
+matrix under the null hypothesis ($H_0$) and the alternative ($H_1$):
+
+$$
+\begin{aligned}
+\hat\Omega_0 &= \frac{1}{T} \sum_t \hat\epsilon_t(H_0) \hat\epsilon_t(H_0)' \\
+\hat\Omega_1 &= \frac{1}{T} \sum_t \hat\epsilon_t(H_1) \hat\epsilon_t(H_1)' \\
+\end{aligned}
+$$
+
+The corresponding likelihood ratios are
+
+$$
+\begin{aligned}
+\ell_0^* &= -\frac{T}{2} \log |2\pi\hat\Omega_0^{-1}| - \frac{Tn}{2} \\
+\ell_1^* &= -\frac{T}{2} \log |2\pi\hat\Omega_1^{-1}| - \frac{Tn}{2} \\
+\end{aligned}
+$$
+
+The LR statistics
+
+$$
+2(\ell_1^* - \ell_0^*) = T(\log |\hat\Omega_0| - \log |\hat\Omega_1|)
+$$
+
+has a $\chi^2$ distribution with degree of freedom $n^2(p_1 - p_0)$.
+
+## Granger Causality Test
+
+Consider a single equation:
+
+$$
+x_t = c_1 + \alpha_1 x_{t-1}+\cdots+\alpha_p x_{t-p} + 
+\beta_1 y_{t-1} + \cdots +\beta_p y_{t-p} + u_t
+$$
+
+Testing $y$ fails to Granger-cause $x$ is equivalent to test
+
+$$
+H_0: \beta_1 = \beta_2=\cdots=\beta_p=0
+$$
+
+The test can be done by computing the residual sum of squares (RSS):
+
+$$
+\text{RSS}_1 = \sum_{t=1}^{T} \hat u_t^2
+$$
+
+With the restricted model (assuming $H_0$ holds true)
+
+$$
+x_t = c_1 + \beta_1 y_{t-1} + \cdots +\beta_p y_{t-p} + v_t
+$$
+
+Estimate the RSS under $H_0$:
+
+$$
+\text{RSS}_0 = \sum_{t=1}^{T} \hat v_t^2
+$$
+
+The joint significance can be tested by the $F$-test:
+
+$$
+S = \frac{(\text{RSS}_0 - \text{RSS}_1)/p}{\text{RSS}_1/(T-2p-1)} \sim F(p, T-2p-1).
+$$
+
+In a multivariate setting,
+
+$$
+\begin{bmatrix}x_t \\ y_t\end{bmatrix} = 
+\begin{bmatrix}c_1 \\ c_2\end{bmatrix} +
+\begin{bmatrix}A_1(L) & A_2(L) \\ B_1(L) & B_2(L)\end{bmatrix}
+\begin{bmatrix}x_t \\ y_t\end{bmatrix} +
+\begin{bmatrix}u_{1,t} \\ u_{2,t}\end{bmatrix} 
+$$
+
+Testing $x$ fails to Granger-cause $y$ is equivalent to test $A_2=0$.
+The restricted regression under $H_0$ is
+
+$$
+x_t = c_1 + A_1(L) x_t + u_{1,t}^{R}
+$$
+
+The unrestricted regression is
+
+$$
+x_t = c_1 + A_1(L) x_t + A_2(L) y_t + u_{1,t}^{U}
+$$
+
+Estimate the variance-covariance matrix
+
+$$
+\begin{aligned}
+\hat\Omega^U &= \frac{1}{T}\sum_t u_t^U {u_t^U}' \\
+\hat\Omega^R &= \frac{1}{T}\sum_t u_t^R {u_t^R}' \\
+\end{aligned}
+$$
+
+Form the LR test statistics
+
+$$
+\text{LR} = T(\log |\hat\Omega^U| - \log |\hat\Omega^R|) \sim \chi^2.
+$$
