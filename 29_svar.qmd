@@ -1,4 +1,4 @@
-# Structural VAR
+# Structural VAR {#sec-svar}
 
 ## The Structural Framework
 
@@ -108,6 +108,12 @@ $$
 Under the assumptions, identifying $\Theta_0$ is equivalent to identify
 the structural shocks $\epsilon_t = \Theta_0^{-1} u_t$.
 :::
+
+In essence, structural identification is equivalent to sorting out the
+contemporaneously correlated residuals into uncorrelated shocks that can
+be attached with economic meanings. As we will see, the decomposition is
+largely subjective, according to researchers' understanding on how
+structural shocks are correlated contemporaneously.
 
 If the invertibility assumption fails, that means there exists no
 mapping from VAR innovations to the structural shocks. Non-invertibility
