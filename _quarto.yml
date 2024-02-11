@@ -39,6 +39,17 @@ book:
         - 22_uni2.qmd
         - 23_ut.qmd
         - 24_co.qmd
+    - part: "Vector Autoregression"
+      chapters: 
+        - 25_sys.qmd
+        - 26_var.qmd
+        - 27_var2.qmd
+        - 28_gc.qmd
+        - 29_svar.qmd
+        - 30_irf.qmd
+        - 31_dfm.qmd
+        - 32_uvar.qmd
+        - 33_vecm.qmd
     - sum.qmd
     - ref.qmd
 
