@@ -1,4 +1,4 @@
-# Estimating VAR
+# Estimating VAR {#sec-var2}
 
 Consider the VAR process
 
