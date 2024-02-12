@@ -2,40 +2,71 @@
 
 ## Definitions
 
-Let $y_t$ be an $n\times 1$ vector. An vector autoregressive process is
-defined as
+Let $\boldsymbol y_t$ be an $n\times 1$ vector. An vector autoregressive
+process is defined as
 
 $$
-y_t = c + \Phi_1 y_{t-1} + \Phi_2 y_{t-2} +\cdots + \Phi_p y_{t-p} + \epsilon_t
+\boldsymbol{y_t = \alpha + \Phi_1 y_{t-1} + \Phi_2 y_{t-2} +\cdots + \Phi_p y_{t-p} + \epsilon_t}
 $$
 
-where $\epsilon_t$ is the vector white noise with
-$\mathbb E(\epsilon_t)=0$ and $\mathbb E(\epsilon_t\epsilon_t')=\Omega$
-a diagonal matrix.
+where $\boldsymbol\epsilon_t$ is the vector white noise with
+$\mathbb E(\boldsymbol\epsilon_t)=\boldsymbol 0$ and
+$\mathbb E(\boldsymbol{\epsilon_t\epsilon_t'})=\boldsymbol\Omega$. In a
+vector form,
 
-To unpack the matrix notation, the first row of the vector system is
+$$
+\begin{bmatrix}
+y_{1,t} \\ y_{2,t} \\ \vdots \\y_{n,t}
+\end{bmatrix} = 
+\begin{bmatrix}
+\alpha_1 \\ \alpha_2 \\ \vdots \\ \alpha_n
+\end{bmatrix} +
+\sum_{j=1}^{p}
+\begin{bmatrix}
+\phi_{j,11} & \phi_{j,12} & \dots & \phi_{j,1n} \\
+\phi_{j,21} & \phi_{j,22} & \dots & \phi_{j,2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+\phi_{j,n1} & \phi_{j,n2} & \dots & \phi_{j,nn} \\
+\end{bmatrix}
+\begin{bmatrix}
+y_{1,t-j} \\ y_{2,t-j} \\ \vdots \\y_{n,t-j}
+\end{bmatrix} +
+\begin{bmatrix}
+\epsilon_{1,t} \\ \epsilon_{2,t} \\ \vdots \\ \epsilon_{n,t}
+\end{bmatrix}
+$$
+
+Each component $y_{j,t}$ corresponds to $T$ observations in the data. So
+from the perspective of data, each VAR is represented by a dataset with
+$T$ rows and $n$ columns. To unpack the matrix notation, the first row
+of the vector system is
 
 $$
 \begin{aligned}
-y_{t}^{(1)} = c^{(1)} 
-& + \phi_{1}^{(11)} y_{t-1}^{(1)} + \phi_{1}^{(12)} y_{t-1}^{(2)} + \cdots + \phi_{1}^{(1n)} y_{t-1}^{(n)} \\
-& + \phi_{2}^{(11)} y_{t-2}^{(1)} + \phi_{2}^{(12)} y_{t-2}^{(2)} + \cdots + \phi_{2}^{(1n)} y_{t-2}^{(n)} \\
+y_{1,t} = \alpha_1 
+& + \phi_{1,11} y_{1,t-1} + \phi_{1,12} y_{2,t-1} + \cdots + \phi_{1,1n} y_{n,t-1} \\
+& + \phi_{2,11} y_{1,t-2} + \phi_{2,12} y_{2,t-2} + \cdots + \phi_{2,1n} y_{n,t-2} \\
 &\:\vdots \\
-& + \phi_{p}^{(11)} y_{t-p}^{(1)} + \phi_{p}^{(12)} y_{t-p}^{(2)} + \cdots + \phi_{p}^{(1n)} y_{t-p}^{(n)} \\
-& + \epsilon_{t}^{(1)}
+& + \phi_{p,11} y_{1,t-p} + \phi_{p,12} y_{2,t-p} + \cdots + \phi_{p,1n} y_{n,t-p} \\
+& + \epsilon_{1,t}
 \end{aligned}
 $$
 
-where the numbers in parentheses denote the $(k)$-th entry in a vector
-or matrix.
+So each variable in a VAR system is a function of the lags of itself and
+all other variables. In the spirit of Sims, the VAR system is intended
+to impose minimal restrictions. All variables are treated as endogenous
+and influencing each other (though we can also include exogenous
+variables).
+
+## VAR and VMA
 
 We can rewrite it more compactly with the lag operator:
 
 $$
-(I_n - \Phi_1 L -\Phi_2 L^2 - \cdots -\Phi_p L^p) y_t = \Phi(L) y_t = c + \epsilon_t.
+(I_n - \Phi_1 L -\Phi_2 L^2 - \cdots -\Phi_p L^p) y_t = \Phi(L) y_t = \alpha + \epsilon_t.
 $$
 
-Similarly, we can generalize an MA process to vector form:
+Similarly, we can generalize an MA process to the vector form:
 
 $$
 y_t = \mu + \epsilon_t + \Theta_1\epsilon_{t-1} + \Theta_2\epsilon_{t-2} + \cdots
@@ -55,11 +86,11 @@ $$
 [I_n - \Phi_1 L -\Phi_2 L^2 - \cdots][I_n +\Psi_1\epsilon_{t-1} + \Psi_2\epsilon_{t-2} + \cdots] = I_n.
 $$
 
-Computationally, we can expand the product of the two lag polynomials
+Computationally, we can expand the product of the lag polynomials
 
 $$
 I_n + (\Psi_1-\Phi_1)L + (\Psi_2-\Phi_2-\Phi_1\Psi_1)L^2 + \cdots = I_n
-$$ Thus, the coefficients of the inverse lag polynomial can be computed
+$$ The coefficients of the inverse lag polynomial can be computed
 recursively
 
 $$
@@ -75,14 +106,14 @@ with $\Psi_0=I_n$, $\Psi_s=0$ for $s<0$.
 
 ## Stationary Conditions
 
-A VAR($p$) process is covariance-stationary if all values of $z$
-satisfying
+::: {#prp-vstat}
+A VAR($p$) process is covariance-stationary if all roots of
 
 $$
 \text{det}|I_n- \Phi_1 z - \Phi_2 z^2 - \cdots - \Phi_p z^p| = 0
 $$
 
-lie outside the unit circle.
+lie outside the unit circle ($z$ is a complex scalar).
 
 The VAR is said to contain at least one unit root if
 
@@ -91,6 +122,14 @@ $$
 $$
 
 Any VMA($q$) process is covariance-stationary.
+:::
+
+If the whole VAR system is stationary it follows that every single
+component is stationary, but not vice versa (requires proof). Similar to
+the univariate case, with stationarity, standard OLS and statistical
+inference applies. In all the sections in the chapter, we assume
+stationary VARs; we address the unit roots in a VAR at the end of the
+chapter.
 
 ## Autocovariance Matrix
 
@@ -106,14 +145,14 @@ $$
 \begin{aligned}
 \Gamma_j &= \mathbb{E} (y_t y_{t-j}') = \mathbb{E}
 \begin{bmatrix}y_{1,t}\\y_{2,t}\\\vdots\\y_{n,t}\end{bmatrix}
-\begin{bmatrix}y_{1,t-j}&y_{2,t-j}&\dots&y_{n,t-j}\end{bmatrix} \\ &=
-\begin{bmatrix}
+\begin{bmatrix}y_{1,t-j}&y_{2,t-j}&\dots&y_{n,t-j}\end{bmatrix} \\[1em] 
+&=\begin{bmatrix}
 \mathbb{E}(y_{1,t}y_{1,t-j}) & \mathbb{E}(y_{1,t}y_{2,t-j}) & \dots & \mathbb{E}(y_{1,t}y_{n,t-j}) \\
 \mathbb{E}(y_{2,t}y_{1,t-j}) & \mathbb{E}(y_{2,t}y_{2,t-j}) & \dots & \mathbb{E}(y_{2,t}y_{n,t-j}) \\
 \vdots & \vdots & \ddots & \vdots \\
 \mathbb{E}(y_{n,t}y_{1,t-j}) & \mathbb{E}(y_{n,t}y_{2,t-j}) & \dots & \mathbb{E}(y_{n,t}y_{n,t-j}) 
-\end{bmatrix} \\ &=
-\begin{bmatrix}
+\end{bmatrix} \\[1em]
+&=\begin{bmatrix}
 \gamma_{1}(j) & \gamma_{12}(j) & \dots & \gamma_{1n}(j) \\
 \gamma_{21}(j) & \gamma_{2}(j) & \dots & \gamma_{2n}(j) \\
 \vdots & \vdots & \ddots & \vdots \\
@@ -123,23 +162,3 @@ $$
 $$
 
 Note that $\Gamma_j \neq \Gamma_{-j}$, but $\Gamma_j' = \Gamma_{-j}$.
-
-## Ergodic Properties
-
-Let $y_t$ be a vector process
-
-$$
-y_t = \mu + \sum_{k=0}^{\infty} \Psi_k\epsilon_{t-k}
-$$
-
-where $\epsilon_t$ is white noise and $\{\Psi_k\}_{k=0}^{\infty}$ is
-absolutely summable (each of its elements are absolutely summable
-$\sum_{s=0}^{\infty}|\psi_{ij}^{(s)}|<\infty$). Then
-
-(i) The autocovariable exists
-    $\Gamma_s = \sum_{v=0}^{\infty}\Psi_{s+v}\Omega\Psi_{v}'$;
-(ii) $\{\Gamma_s\}_{s=0}^{\infty}$ is absolutely summable;
-(iii) $\mathbb E |y_{t1}^{i1} y_{t2}^{i2} y_{t3}^{i3} y_{t4}^{i4}|<\infty$
-      bounded 4th moments;
-(iv) $\frac{1}{T}\sum_{t=1}^{T}y_t^i y_{t-s}^j \to \mathbb{E}(y_t^i y_{t-s}^j)$
-     ergodic for second moments.

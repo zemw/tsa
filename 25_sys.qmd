@@ -2,20 +2,20 @@
 
 We have discussed how to estimate the effect of one economic variable on
 another, and the assumptions on which the estimate would have a
-(dynamic) causal interpretation. But one equation is not enough to model
-the economy, as it does not take into account the feedback between
-economic variables. For example, an oil price shock would have impact on
-the price levels, which would trigger adjustments in the monetary
-policy, which would further exert impact on price levels, real output
-and so on. To capture the intertwined relationships, it would require a
-**system of equations**.
+(dynamic) causal interpretation. But one equation is often inadequate to
+characterize the economy, as it does not take into account the feedback
+between economic variables. For example, an oil price shock would have
+impact on the price levels, which would trigger adjustments in the
+monetary policy, which would further exert impact on price levels, real
+output and so on. To capture the intertwined relationships, it would
+require a **system of equations**.
 
 Consider an example of a backward-looking Keynesian system:
 
 $$
 \begin{aligned}
 y_t &= \phi y_{t-1} -\psi(r_{t-1}-\phi_{t-1}) + \epsilon_t^{IS}\\
-\pi_t &= \delta\pi_{t-1} + k(y_{t-1} - y_{t-1}^n) + \epsilon_t^{S}\\
+\pi_t &= \delta\pi_{t-1} + \kappa(y_{t-1} - y_{t-1}^n) + \epsilon_t^{S}\\
 r_t &= \beta\pi_t + \gamma(y_t - y_t^n) + \epsilon_t^{MP}
 \end{aligned}
 $$
@@ -34,17 +34,18 @@ monetary policy, which sets the interest rate in response to inflation
 and output gap. $\epsilon_t^{MP}$ is the monetary policy shock, which is
 the unpredictable part of the monetary policy decision making.
 
-The set of equations are called structural equations, because they are
-derived from economic theories (particularly the Keynesian theory). They
-were very popular in 70s and 80s until Sims (1980) questioned their
-validity. In fact, these equations impose a lot of restrictions on the
+The set of equations are called structural equations, in a sense that
+they describe the structure of the economy according to some economic
+theories (particularly the Keynesian theory). These equations were very
+popular in 70s and 80s until Sims (1980) questioned their validity. The
+fact is, these equations impose a lot of restrictions on the
 relationships between the variables. For example, why output responds to
 real interest rate but not inflation? Why interest rate does not enter
 the equation of inflation? Yes, the equations are justified by the
-theory. But who knows the theory is correct? In reality, the economic
-variables influence each other, often in a way unknown to economic
-theorists. So why not model the economy unrestrictively and let the data
-tell us the relationships between the variables?
+theory. But who knows the theory is correct? In reality, economic
+variables influence each other, often in a way unknown to theorists. So
+why not model the economy unrestrictively and let the data tell us the
+relationships between the variables?
 
 $$
 \begin{aligned}
@@ -73,10 +74,11 @@ u_t^y \\ u_t^\pi \\ u_t^r
 \end{bmatrix}
 $$
 
-This is called a **vector autoregression** (**VAR**). Since proposed by
-Sims (1980), VARs have been the Swiss knife for empirical
+This is called a **vector autoregression** (**VAR**). Ever since being
+proposed by Sims (1980), VARs have been the Swiss knife for empirical
 macroeconomists. This chapter offers a thorough introduction of this
 Nobel prize winning technique. We start by introduce the general general
 vector processes and the estimation methods. We then explain how VARs
 map to the structural framework (SVAR). We finish the chapter by a
-discussion on what if a VAR system is not stationary.
+discussion on dimension reduction techniques and the cases when a VAR
+system is not stationary.
