@@ -42,17 +42,17 @@ H_0: \beta_1 = \beta_2=\cdots=\beta_q=0
 $$
 
 The test can be done by comparing the residual sum of squares (RSS) with
-and without $x$ as the regressors. Assuming the $H_0$ holds, we would
-have the restricted model:
+and without $x$ as the regressors. Assuming $H_0$ holds, we would have
+the restricted model:
 
 $$
-y_t = \alpha + \phi_1 y_{t-1} + \cdots + \phi_p y_{t-p} + v_t
+y_t = \alpha + \phi_1 y_{t-1} + \cdots + \phi_p y_{t-p} + u_t^R
 $$
 
 Compute RSS for the restricted model:
 
 $$
-\text{RSS}_0 = \sum_{t=1}^{T} \hat v_t^2
+\text{RSS}_0 = \sum_{t=1}^{T} (\hat u_t^{R})^2
 $$
 
 Also compute the RSS for the unrestricted model, i.e. including all $x$
@@ -65,7 +65,7 @@ $$
 The joint significance can be tested by the $F$ ratio:
 
 $$
-S = \frac{(\text{RSS}_0 - \text{RSS}_1)/p}{\text{RSS}_1/(T-2p-1)} \sim F(p, T-2p-1).
+S = \frac{(\text{RSS}_0 - \text{RSS}_1)/q}{\text{RSS}_1/(T-2q-1)} \sim F(q, T-2q-1).
 $$
 
 ## Granger Causality in VAR
@@ -84,18 +84,18 @@ $$
 &= 
 \begin{bmatrix}\alpha_1 \\ \alpha_2\end{bmatrix} +
 \begin{bmatrix}\phi_{11}(L) & 0 \\ \phi_{21}(L) & \phi_{22}(L)\end{bmatrix}
-\begin{bmatrix}y_{t-1} \\ x_{t-1} \end{bmatrix} +
-\begin{bmatrix}\epsilon_{1t} \\ \epsilon_{2t} \end{bmatrix}
+\begin{bmatrix}y_{t} \\ x_{t} \end{bmatrix} +
+\begin{bmatrix}u_{t} \\ v_{t} \end{bmatrix}
 \end{aligned}
 $$
 
-In the MA representation,
+It is equivalent to the MA representation:
 
 $$
 \begin{bmatrix}y_t \\ x_t\end{bmatrix} = 
 \begin{bmatrix}\mu_1 \\ \mu_2\end{bmatrix} +
 \begin{bmatrix}\theta_{11}(L) & 0 \\ \theta_{21}(L) & \theta_{22}(L)\end{bmatrix}
-\begin{bmatrix}\epsilon_{1t} \\ \epsilon_{2t}\end{bmatrix}
+\begin{bmatrix}u_t \\ v_t\end{bmatrix}
 $$
 
 To test Granger causality in a VAR setting, we need to introduce the
@@ -103,21 +103,22 @@ likelihood ratio (LR) test.
 
 ## Likelihood Ratio Test
 
-Let's quickly derive the maximum likelihood estimator for the VAR. The
-joint probability density function is
+Let's quickly derive the maximum likelihood estimator (MLE) for the VAR.
+The joint probability density function is
 
 $$
 \begin{aligned}
-f(y_T,y_{T-1},\dots,y_1 | y_0,\dots,y_{1-p};\theta)
+f(y_T,y_{T-1},\dots,y_1 | y_0,\dots,y_{1-p};\Theta)
 &= f(y_T|y_{T-1}\dots)f(y_{T-1}|y_{T-2}\dots)\cdots f(y_1|y_0\dots) \\[1em]
-&= \prod_{t=1}^{T} f(y_t|y_{t-1},y_{t-2},... ,y_{1-p};\theta)
+&= \prod_{t=1}^{T} f(y_t|y_{t-1},y_{t-2},... ,y_{1-p};\Theta)
 \end{aligned}
 $$
 
 Define $x_t'=\begin{bmatrix}1 & y_{t-1} & \dots & y_{t-p}\end{bmatrix}$
-the collection of regressors, and
+the collection of all regressors, and
 $B'=\begin{bmatrix}\alpha & \Phi_1 & \dots & \Phi_p\end{bmatrix}$ the
-collection of parameters. The log-likelihood function can be written as
+collection of all parameters. The log-likelihood function can be written
+as
 
 $$
 \begin{aligned}
@@ -132,29 +133,31 @@ Maximizing the log-likelihood function gives the ML estimator:
 $$
 \begin{aligned}
 \hat B'_{n \times (np+1)} &= 
-\left[\sum_{t=1}^{T} y_tx_t'\right]\left[\sum_{t=1}^{T} x_tx_t'\right]^{-1} \\
-\hat\Omega_{n \times n} &= \frac{1}{T} \sum_{t=1}^{T}\hat u_t \hat u_t'
+\left[\sum_{t=1}^{T} y_tx_t'\right]\left[\sum_{t=1}^{T} x_t x_t'\right]^{-1} \\
+\hat\Omega_{n \times n} &= \frac{1}{T} \sum_{t=1}^{T}\hat e_t \hat e_t'
 \end{aligned}
 $$
 
-The likelihood ratio test is motivated by the fact that different
-specifications give different likelihood values. By comparing the
-likelihood difference, we can test one VAR specification versus the
-alternative. The null hypothesis ($H_0$) could be a specification with a
-particular lag length, or a particularization with certain exogeneity
-restrictions.
+where $e_t=[u_t\ v_t]'$.
 
-Then we estimate the covariance matrix under the null hypothesis ($H_0$)
-and the alternative ($H_1$):
+The likelihood ratio (LR) test is motivated by the fact that different
+specifications give different likelihood evaluates. By comparing the
+likelihood difference, we can test the significance of one specification
+versus the alternative.
+
+The null hypothesis ($H_0$) could be a specification with a particular
+lag length, or a particularization with certain exogeneity restrictions.
+We compute the covariance matrix under the null hypothesis ($H_0$) and
+the alternative ($H_1$) respectively:
 
 $$
 \begin{aligned}
-\hat\Omega_0 &= \frac{1}{T} \sum_t \hat\epsilon_t(H_0) \hat\epsilon_t(H_0)' \\
-\hat\Omega_1 &= \frac{1}{T} \sum_t \hat\epsilon_t(H_1) \hat\epsilon_t(H_1)' \\
+\hat\Omega_0 &= \frac{1}{T} \sum_t \hat e_t(H_0) \hat e_t(H_0)' \\
+\hat\Omega_1 &= \frac{1}{T} \sum_t \hat e_t(H_1) \hat e_t(H_1)' \\
 \end{aligned}
 $$
 
-The corresponding likelihood ratios are
+The corresponding log-likelihoods are
 
 $$
 \begin{aligned}
@@ -163,7 +166,7 @@ $$
 \end{aligned}
 $$
 
-The LR statistics
+The difference between the log-likelihoods
 
 $$
 2(\ell_1^* - \ell_0^*) = T(\log |\hat\Omega_0| - \log |\hat\Omega_1|)
@@ -171,32 +174,30 @@ $$
 
 has a $\chi^2$ distribution with degree of freedom $n^2(p_1 - p_0)$.
 
-## Multivariate
-
-In a multivariate setting,
+Now consider Granger causality test in a VAR setting
 
 $$
-\begin{bmatrix}x_t \\ y_t\end{bmatrix} = 
-\begin{bmatrix}c_1 \\ c_2\end{bmatrix} +
-\begin{bmatrix}A_1(L) & A_2(L) \\ B_1(L) & B_2(L)\end{bmatrix}
-\begin{bmatrix}x_t \\ y_t\end{bmatrix} +
-\begin{bmatrix}u_{1,t} \\ u_{2,t}\end{bmatrix} 
+\begin{bmatrix}y_t \\ x_t\end{bmatrix} = 
+\begin{bmatrix}\alpha_1 \\ \alpha_2\end{bmatrix} +
+\begin{bmatrix}\phi_{11}(L) & \phi_{12}(L) \\ \phi_{21}(L) & \phi_{22}(L)\end{bmatrix}
+\begin{bmatrix}y_t \\ x_t\end{bmatrix} +
+\begin{bmatrix}u_{t} \\ v_{t}\end{bmatrix} 
 $$
 
-Testing $x$ fails to Granger-cause $y$ is equivalent to test $A_2=0$.
-The restricted regression under $H_0$ is
+Testing $x$ fails to Granger-cause $y$ is equivalent to test
+$\phi_{12}=0$. Therefore, the restricted regression under $H_0$ is
 
 $$
-x_t = c_1 + A_1(L) x_t + u_{1,t}^{R}
+y_t = \alpha_1 + \phi_{11}(L) y_t + u_t^{R}
 $$
 
 The unrestricted regression is
 
 $$
-x_t = c_1 + A_1(L) x_t + A_2(L) y_t + u_{1,t}^{U}
+y_t = \alpha_1 + \phi_{11}(L) y_t + \phi_{12}(L) x_t + u_{t}^{U}
 $$
 
-Estimate the variance-covariance matrix
+Estimate the variance-covariance matrices
 
 $$
 \begin{aligned}
@@ -208,5 +209,10 @@ $$
 Form the LR test statistics
 
 $$
-\text{LR} = T(\log |\hat\Omega^U| - \log |\hat\Omega^R|) \sim \chi^2.
+\text{LR} = T(\log |\hat\Omega^U| - \log |\hat\Omega^R|) \sim \chi^2
 $$
+
+If the LR statistics is significant, it would mean $x$ is informative
+about $y$ ($x$ Granger-causes $y$). Otherwise, if it makes no difference
+including $x$ as regressors, it would mean $x$ fails to Granger-cause
+$y$.
