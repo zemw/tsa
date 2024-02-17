@@ -83,7 +83,7 @@ $$
 where the inverse is defined as
 
 $$
-[I_n - \Phi_1 L -\Phi_2 L^2 - \cdots][I_n +\Psi_1\epsilon_{t-1} + \Psi_2\epsilon_{t-2} + \cdots] = I_n.
+[I_n - \Phi_1 L -\Phi_2 L^2 - \cdots][I_n +\Psi_1 L + \Psi_2 L^2 + \cdots] = I_n.
 $$
 
 Computationally, we can expand the product of the lag polynomials
