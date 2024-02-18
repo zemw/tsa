@@ -124,6 +124,36 @@ $$
 Any VMA($q$) process is covariance-stationary.
 :::
 
+::: {.callout-tip icon="false"}
+## Example
+
+Consider a two-variable VAR(1) process
+
+$$
+\begin{bmatrix}y_{1t}\\y_{2t}\end{bmatrix}=
+\begin{bmatrix}0.7 & 0.1 \\0.3 & 0.9\end{bmatrix}
+\begin{bmatrix}y_{1,t-1}\\y_{2,t-2}\end{bmatrix}+
+\begin{bmatrix}u_{1t}\\u_{2t}\end{bmatrix}
+$$
+
+We compute the determinant of the matrix
+
+$$
+\text{det}\left| \begin{bmatrix}1 & 0 \\ 0 & 1\end{bmatrix}-
+\begin{bmatrix}0.7z & 0.1z \\0.3z & 0.9z\end{bmatrix}
+\right|=0
+$$
+
+$$
+\begin{aligned}
+(1-0.7z)(1-0.9z)-0.1z\cdot0.3z=0
+\end{aligned}
+$$
+
+which solves to $z_1=1$, $z_2=\frac{5}{3}$. So the VAR process is not
+stationary.
+:::
+
 If the whole VAR system is stationary it follows that every single
 component is stationary, but not vice versa (requires proof). Similar to
 the univariate case, with stationarity, standard OLS and statistical
