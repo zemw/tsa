@@ -1,4 +1,4 @@
-# Cointegration
+# Cointegration {#sec-coint}
 
 We have shown that regressing on non-stationary time series might lead
 to spurious regressions that produce nonsensible large $t$-values. The
