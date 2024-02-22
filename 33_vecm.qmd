@@ -1,0 +1,197 @@
+# VECM*
+
+## Cointegrated Systems
+
+::: {#def-coint2}
+An $n \times 1$ vector $y_t$ is said to be **cointegrated** if each of its
+elements individually is $I(1)$ and there exists a non-zero vector
+$a$ such that $a'y_t$ is stationary. $a$ is called a cointegrating vector.
+:::
+
+If there are $h<n$ linearly independent cointegrating vectors $(a_1, a_2, \dots,a_h)$,
+than any linear combination $k_1a_2 + k_2a_2+\dots+k_ha_h$ is also a cointegrating vector.
+Thus, we say $(a_1, a_2, \dots,a_h)$ form a basis a basis for **the space of cointegrating vectors**.
+
+Cointegrated systems can be represented by an **Error Correlation Model (ECM)**:
+
+$$
+\Delta y_t = \Pi y_{t-1} + \Gamma_1\Delta y_{t-1} + \Gamma_2\Delta y_{t-2} + \dots + 
+\Gamma_{p-1}\Delta y_{t-p+1} + \mu+\epsilon_t
+$$
+
+::: {#thm-ecm}
+## Engle-Granger Representation Theorem
+Any set of $I(1)$ variables are cointegrated if and only if there exists an
+error correlation (ECM) representation for them. 
+:::
+
+Therefore, it is inappropriate to model a cointegrated system with differenced VAR. 
+Because the term $\Pi y_{t-1}$ is missing out, which means a misspecification. 
+
+The cointegration term can be further factored out 
+$\Pi=\underset{n \times h}{\alpha}\times\underset{h \times n}{\beta'}$, 
+in which $\beta$ consists of the cointegrating vectors and $\alpha$
+hosts the adjustment coefficients. In a bivariate example, it looks like
+
+$$
+\begin{bmatrix}\Delta y_{1t} \\ \Delta y_{2t}\end{bmatrix} = 
+\begin{bmatrix}\alpha_1 \\ \alpha_2\end{bmatrix}
+\begin{bmatrix}\beta_1 & \beta_2\end{bmatrix}
+\begin{bmatrix}y_{1t-1} \\ y_{2t-1}\end{bmatrix} +
+\sum_{j=1}^{p-1} 
+\begin{bmatrix}
+\gamma_{j,11} & \gamma_{j,12} \\ 
+\gamma_{j,21} & \gamma_{j,22}
+\end{bmatrix}
+\begin{bmatrix}\Delta y_{1t-j} \\ \Delta y_{2t-j}\end{bmatrix} +
+\begin{bmatrix}\epsilon_{1t} \\ \epsilon_{2t}\end{bmatrix}
+$$
+
+The economic interpretation is that $\beta_1 y_{1t} + \beta_2 y_{2t}$
+represents some *long-run equilibrium* relationship of the two variables.
+Parameters $\alpha_1,\alpha_2$ describe the speed of adjustment, that is
+how each variable reacts to the deviations from the equilibrium path. 
+Small values of $\alpha_i$ would imply a relatively unresponsive reaction, 
+which means it takes a long time to return to the equilibrium.
+
+Note that $\Pi = \alpha\beta'$ cannot be a full rank matrix. If 
+there are $n$ independent cointegrating vectors, it follows that any linear
+combination of the components of $y_t$ is stationary, which effectively means
+$y_t$ is stationary. $\Pi$ cannot be zero either. If this is the case,
+the system is fully characterized by differenced VAR, there is no cointegration. 
+Therefore, for a cointegrated system, it necessitates $0<h<n$. 
+
+A three variable example would be like:
+
+$$
+\begin{bmatrix}\Delta y_{1t} \\ \Delta y_{2t} \\ \Delta y_{3t}\end{bmatrix} = 
+\begin{bmatrix}
+\alpha_{11} & \alpha_{12}\\
+\alpha_{21} & \alpha_{22}\\
+\alpha_{31} & \alpha_{32}\\
+\end{bmatrix}
+\begin{bmatrix}
+\beta_{11} & \beta_{12} & \beta_{13}\\
+\beta_{21} & \beta_{22} & \beta_{23}\\
+\end{bmatrix}
+\begin{bmatrix}y_{1t-1} \\ y_{2t-1} \\ y_{3t-1}\end{bmatrix} +
+\cdots
+$$
+
+In general, if $y_t$ has $n$ non-stationary components, there could be at most $n-1$ cointegrating
+vectors. The number of cointegrating vectors is also called the **cointegrating rank**.
+
+Note that a single equation ECM is equivalent to an ARDL model:
+
+$$
+\begin{aligned}
+&\Delta y_t = \alpha(y_{t-1} - \delta-\beta x_{t-1}) + \gamma\Delta x_t + u_t \\
+\Leftrightarrow &\ y_t = (\alpha+1)y_{t-1} + \gamma x_t - (\alpha\beta+\gamma)x_{t-1}
+-\alpha\delta + u_t \\
+\Leftrightarrow &\ y_t = b_1y_{t-1} + b_2x_t + b_3x_{t-1} + c + u_t
+\end{aligned}
+$$
+
+Given a (possibly) cointegrated system, we would like to know if any cointegrating
+relationships exist and how many cointegrating vectors are there. 
+Johansen (1991) provides a likelihood-based method to test and estimate a
+cointegrated system. But before we introduce the Johansen method, we need 
+the prerequisite knowledge of canonical correlation. 
+
+## Canonical Correlation
+
+Principle component analysis (PCA) finds a linear combination of 
+$[x_1\ x_2\ \dots x_n]$ that produces the largest variance. 
+What if we want to extend the analysis to the correlations between two datasets:
+$\underset{T \times n}{X} = [x_1\ x_2\ \dots x_n]$ and 
+$\underset{T \times m}{Y} = [y_1\ y_2\ \dots y_m]$? The cross-dataset covariance matrix is
+
+$$
+\underset{n\times m}{\Sigma_{XY}} = 
+\begin{bmatrix}
+\text{cov}(x_1,y_1) & \text{cov}(x_1,y_2) & \dots & \text{cov}(x_1,y_m) \\
+\text{cov}(x_2,y_1) & \text{cov}(x_2,y_2) & \dots & \text{cov}(x_2,y_m) \\
+\vdots & \vdots & \ddots & \vdots \\
+\text{cov}(x_n,y_1) & \text{cov}(x_n,y_2) & \dots & \text{cov}(x_n,y_m) \\
+\end{bmatrix}
+$$
+
+Canonical correlation analysis (CCA) seeks two vectors $a_1 \in \mathbb R^n$
+and $b_1 \in \mathbb R^m$ such that $a'X$ and $b'Y$ maximize the correlation 
+$\rho =\text{corr}(a_1'X, b_1'Y)$. The random transformed random variable 
+$U_1 = a_1'X$ and $V_1 = b_1'Y$ are the first pair of canonical variables. 
+The correlation $\gamma_1=\text{corr}(a_1'X, b_1'Y)$ is called the first canonical 
+correlation between $X$ and $Y$.
+The second pair of canonical variables $a_2,b_2$ are orthogonal to the first pair and
+maximize the same correlation. The resulting correlation $\gamma_2$ is called the 
+second canonical correlation, and so on.
+
+How to compute the canonical correlations? Suppose we want to choose $a$ and $b$ to maximize
+
+$$
+\rho = \frac{a'\Sigma_{XY}b}{\sqrt{a'\Sigma_{XX}a}\sqrt{b'\Sigma_{YY}b}}
+$$
+
+We may impose the constraint such that $a'\Sigma_{XX}a$ and $b'\Sigma_{YY}b$ 
+normalize to $1$. Let $c = \Sigma_{XX}^{1/2} a$ and $d = \Sigma_{YY}^{1/2} b$
+so that $c'c=d'd=1$. The problem is equivalent to maximize
+
+$$
+\rho = c'\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1/2}d
+$$
+
+Form the Lagrangian
+
+$$
+\mathcal{L} = c'\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1/2}d 
+- \lambda_1(c'c-1) -\lambda_2(d'd -1)
+$$
+
+The first-order conditions are
+
+$$
+\begin{aligned}
+&\frac{\partial\mathcal{L}}{\partial c} = \Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1/2}d -2\lambda_1 c = 0 \\
+&\frac{\partial\mathcal{L}}{\partial d} = \Sigma_{YY}^{-1/2}\Sigma_{YX}\Sigma_{XX}^{-1/2}c -2\lambda_2 d = 0 \\
+\end{aligned}
+$$
+
+Substitute $d=(2\lambda_2)^{-1}\Sigma_{YY}^{-1/2}\Sigma_{YX}\Sigma_{XX}^{-1/2}c$:
+
+$$
+\begin{aligned}
+&\Sigma_{YY}^{-1/2}\Sigma_{YX}\Sigma_{XX}^{-1/2}c - 4\lambda_1\lambda_2
+\left(\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1/2}\right)^{-1}c = 0 \\[1em]
+\Longleftrightarrow\ 
+&\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1/2} c = 
+4\lambda_1\lambda_2c = \gamma c
+\end{aligned}
+$$
+
+Therefore, $c$ is an eigenvector of $\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1/2}$.
+
+Reciprocally, $d$ is an eigenvector of $\Sigma_{YY}^{-1/2}\Sigma_{YX}\Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1/2}$.
+
+The associated eigenvalue $\gamma$ is the canonical correlation, because
+
+$$
+\begin{aligned}
+\rho^2 &= c'\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1/2}dd'\Sigma_{YY}^{-1/2}\Sigma_{YX}\Sigma_{XX}^{-1/2}c \\
+&= c'\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1/2} c \\
+&= c'\gamma c = \gamma
+\end{aligned}
+$$
+
+Substituting back $a$ and $b$, we have
+
+- $a$ is an eigenvector of $\Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}$
+- $b$ is an eigenvector of $\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1}\Sigma_{XY}$
+
+So we can find the canonical variables by solving our the eigenvectors of the above matrices.
+
+
+
+
+
+
+
