@@ -1,37 +1,43 @@
-# VECM*
+# VECM\*
 
 ## Cointegrated Systems
 
 ::: {#def-coint2}
-An $n \times 1$ vector $y_t$ is said to be **cointegrated** if each of its
-elements individually is $I(1)$ and there exists a non-zero vector
-$a$ such that $a'y_t$ is stationary. $a$ is called a cointegrating vector.
+An $n \times 1$ vector $y_t$ is said to be **cointegrated** if each of
+its elements individually is $I(1)$ and there exists a non-zero vector
+$a\in\mathbb R^n$ such that $a'y_t$ is stationary. $a$ is called a
+**cointegrating vector**.
 :::
 
-If there are $h<n$ linearly independent cointegrating vectors $(a_1, a_2, \dots,a_h)$,
-than any linear combination $k_1a_2 + k_2a_2+\dots+k_ha_h$ is also a cointegrating vector.
-Thus, we say $(a_1, a_2, \dots,a_h)$ form a basis a basis for **the space of cointegrating vectors**.
+If there are $h<n$ linearly independent cointegrating vectors
+$(a_1, a_2, \dots,a_h)$, then any linear combination
+$k_1a_2 + k_2a_2+\dots+k_ha_h$ is also a cointegrating vector. Thus, we
+say $(a_1, a_2, \dots,a_h)$ form a basis a basis for **the space of
+cointegrating vectors**.
 
-Cointegrated systems can be represented by an **Error Correlation Model (ECM)**:
+Cointegrated systems can be represented by an **Error Correlation Model
+(ECM)**:
 
 $$
 \Delta y_t = \Pi y_{t-1} + \Gamma_1\Delta y_{t-1} + \Gamma_2\Delta y_{t-2} + \dots + 
 \Gamma_{p-1}\Delta y_{t-p+1} + \mu+\epsilon_t
-$$
+$$ {#eq-ecm}
 
 ::: {#thm-ecm}
 ## Engle-Granger Representation Theorem
-Any set of $I(1)$ variables are cointegrated if and only if there exists an
-error correlation (ECM) representation for them. 
+
+Any set of $I(1)$ variables are cointegrated if and only if there exists
+an error correlation (ECM) representation for them.
 :::
 
-Therefore, it is inappropriate to model a cointegrated system with differenced VAR. 
-Because the term $\Pi y_{t-1}$ is missing out, which means a misspecification. 
+Therefore, it is inappropriate to model a cointegrated system with
+differenced VAR. Because the term $\Pi y_{t-1}$ is missing out, which
+means a misspecification.
 
-The cointegration term can be further factored out 
-$\Pi=\underset{n \times h}{\alpha}\times\underset{h \times n}{\beta'}$, 
-in which $\beta$ consists of the cointegrating vectors and $\alpha$
-hosts the adjustment coefficients. In a bivariate example, it looks like
+The cointegration term can be further factored as
+$\Pi=\underset{n \times h}{A}\times\underset{h \times n}{B'}$, in which
+$B$ contains the cointegrating vectors and $A$ hosts the adjustment
+coefficients. In a bivariate example, it looks like
 
 $$
 \begin{bmatrix}\Delta y_{1t} \\ \Delta y_{2t}\end{bmatrix} = 
@@ -48,18 +54,20 @@ $$
 $$
 
 The economic interpretation is that $\beta_1 y_{1t} + \beta_2 y_{2t}$
-represents some *long-run equilibrium* relationship of the two variables.
-Parameters $\alpha_1,\alpha_2$ describe the speed of adjustment, that is
-how each variable reacts to the deviations from the equilibrium path. 
-Small values of $\alpha_i$ would imply a relatively unresponsive reaction, 
-which means it takes a long time to return to the equilibrium.
+represents some *long-run equilibrium* relationship of the two
+variables. Parameters $\alpha_1,\alpha_2$ describe the speed of
+adjustment, that is how each variable reacts to the deviations from the
+equilibrium path. Small values of $\alpha_i$ would imply a relatively
+unresponsive reaction, which means it takes a long time to return to the
+equilibrium.
 
-Note that $\Pi = \alpha\beta'$ cannot be a full rank matrix. If 
-there are $n$ independent cointegrating vectors, it follows that any linear
-combination of the components of $y_t$ is stationary, which effectively means
-$y_t$ is stationary. $\Pi$ cannot be zero either. If this is the case,
-the system is fully characterized by differenced VAR, there is no cointegration. 
-Therefore, for a cointegrated system, it necessitates $0<h<n$. 
+Note that $\Pi = AB'$ cannot be a full rank matrix. If there are $n$
+independent cointegrating vectors, it follows that any linear
+combination of the components of $y_t$ is stationary, which effectively
+means $y_t$ is stationary. $\Pi$ cannot be zero either. If this is the
+case, the system is fully characterized by differenced VAR, there is no
+cointegration. Therefore, for a cointegrated system, it necessitates
+$0<h<n$.
 
 A three variable example would be like:
 
@@ -78,8 +86,9 @@ $$
 \cdots
 $$
 
-In general, if $y_t$ has $n$ non-stationary components, there could be at most $n-1$ cointegrating
-vectors. The number of cointegrating vectors is also called the **cointegrating rank**.
+In general, if $y_t$ has $n$ non-stationary components, there could be
+at most $n-1$ cointegrating vectors. The number of cointegrating vectors
+is also called the **cointegrating rank**.
 
 Note that a single equation ECM is equivalent to an ARDL model:
 
@@ -92,19 +101,20 @@ $$
 \end{aligned}
 $$
 
-Given a (possibly) cointegrated system, we would like to know if any cointegrating
-relationships exist and how many cointegrating vectors are there. 
-Johansen (1991) provides a likelihood-based method to test and estimate a
-cointegrated system. But before we introduce the Johansen method, we need 
-the prerequisite knowledge of canonical correlation. 
+Given a (possibly) cointegrated system, we would like to know if any
+cointegrating relations exist and how many cointegrating vectors there
+are. Johansen (1991) provides a likelihood-based method to test and
+estimate a cointegrated system. But before we introduce the Johansen's
+method, we need the prerequisite knowledge of canonical correlations.
 
 ## Canonical Correlation
 
-Principle component analysis (PCA) finds a linear combination of 
-$[x_1\ x_2\ \dots x_n]$ that produces the largest variance. 
-What if we want to extend the analysis to the correlations between two datasets:
-$\underset{T \times n}{X} = [x_1\ x_2\ \dots x_n]$ and 
-$\underset{T \times m}{Y} = [y_1\ y_2\ \dots y_m]$? The cross-dataset covariance matrix is
+Principle component analysis (PCA) finds a linear combination of
+$[x_1\ x_2\ \dots x_n]$ that produces the largest variance. What if we
+want to extend the analysis to the correlations between two datasets:
+$\underset{T \times n}{X} = [x_1\ x_2\ \dots x_n]$ and
+$\underset{T \times m}{Y} = [y_1\ y_2\ \dots y_m]$? The cross-dataset
+covariance matrix is
 
 $$
 \underset{n\times m}{\Sigma_{XY}} = 
@@ -116,82 +126,299 @@ $$
 \end{bmatrix}
 $$
 
-Canonical correlation analysis (CCA) seeks two vectors $a_1 \in \mathbb R^n$
-and $b_1 \in \mathbb R^m$ such that $a'X$ and $b'Y$ maximize the correlation 
-$\rho =\text{corr}(a_1'X, b_1'Y)$. The random transformed random variable 
-$U_1 = a_1'X$ and $V_1 = b_1'Y$ are the first pair of canonical variables. 
-The correlation $\gamma_1=\text{corr}(a_1'X, b_1'Y)$ is called the first canonical 
-correlation between $X$ and $Y$.
-The second pair of canonical variables $a_2,b_2$ are orthogonal to the first pair and
-maximize the same correlation. The resulting correlation $\gamma_2$ is called the 
-second canonical correlation, and so on.
+Canonical correlation analysis (CCA) seeks two vectors
+$a \in \mathbb R^n$ and $b \in \mathbb R^m$ such that $a'X$ and $b'Y$
+maximize the correlation $\rho =\text{corr}(a'X, b'Y)$. The random
+transformed random variable $U = a'X$ and $V = b'Y$ are the first pair
+of canonical variables. The second pair of canonical variables are
+orthogonal to the first pair and maximize the same correlation, and so
+on.
 
-How to compute the canonical correlations? Suppose we want to choose $a$ and $b$ to maximize
+Suppose we want to choose $a$ and $b$ to maximize
 
 $$
 \rho = \frac{a'\Sigma_{XY}b}{\sqrt{a'\Sigma_{XX}a}\sqrt{b'\Sigma_{YY}b}}
 $$
 
-We may impose the constraint such that $a'\Sigma_{XX}a$ and $b'\Sigma_{YY}b$ 
-normalize to $1$. Let $c = \Sigma_{XX}^{1/2} a$ and $d = \Sigma_{YY}^{1/2} b$
-so that $c'c=d'd=1$. The problem is equivalent to maximize
+We may impose the constraint such that $a'\Sigma_{XX}a$ and
+$b'\Sigma_{YY}b$ normalize to $1$. Form the Lagrangian
 
 $$
-\rho = c'\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1/2}d
-$$
-
-Form the Lagrangian
-
-$$
-\mathcal{L} = c'\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1/2}d 
-- \lambda_1(c'c-1) -\lambda_2(d'd -1)
+\mathcal{L} = a'\Sigma_{XY}b - \frac{\mu}{2}(a'\Sigma_{XX}a - 1) -\frac{\nu}{2}(b'\Sigma_{YY}b -1)
 $$
 
 The first-order conditions are
 
 $$
 \begin{aligned}
-&\frac{\partial\mathcal{L}}{\partial c} = \Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1/2}d -2\lambda_1 c = 0 \\
-&\frac{\partial\mathcal{L}}{\partial d} = \Sigma_{YY}^{-1/2}\Sigma_{YX}\Sigma_{XX}^{-1/2}c -2\lambda_2 d = 0 \\
+&\frac{\partial\mathcal{L}}{\partial a} = \Sigma_{XY}b -\mu\ \Sigma_{XX}a = 0 \\
+&\frac{\partial\mathcal{L}}{\partial b} = \Sigma_{YX}a -\nu\ \Sigma_{YY}b = 0 \\
 \end{aligned}
 $$
 
-Substitute $d=(2\lambda_2)^{-1}\Sigma_{YY}^{-1/2}\Sigma_{YX}\Sigma_{XX}^{-1/2}c$:
+which implies
 
 $$
 \begin{aligned}
-&\Sigma_{YY}^{-1/2}\Sigma_{YX}\Sigma_{XX}^{-1/2}c - 4\lambda_1\lambda_2
-\left(\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1/2}\right)^{-1}c = 0 \\[1em]
-\Longleftrightarrow\ 
-&\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1/2} c = 
-4\lambda_1\lambda_2c = \gamma c
+\Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX} a &= \mu\nu a =\lambda a \\[1em]
+\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1}\Sigma_{XY} b &= \mu\nu b =\lambda b
 \end{aligned}
 $$
 
-Therefore, $c$ is an eigenvector of $\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1/2}$.
+Therefore, $a$ is the eigenvector of
+$\Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}$. The associated
+eigenvalue $\lambda$ is equivalent to the maximized correlation squared
+$\hat\rho^2$. To see this, just multiply the first-order condition by
+$a'$:
 
-Reciprocally, $d$ is an eigenvector of $\Sigma_{YY}^{-1/2}\Sigma_{YX}\Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1/2}$.
+$$
+a'\Sigma_{XY}b = \mu\cdot a'\Sigma_{XX}a=\mu=\rho^*
+$$
 
-The associated eigenvalue $\gamma$ is the canonical correlation, because
+Symmetrically, $b$ is the eigenvector of
+$\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1}\Sigma_{XY}$.
+
+So the canonical correlation can be computed as follows:
+
+1.  Compute the eigenvalues and eigenvectors of
+    $$\Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}$$
+
+2.  Sort the eigenvalues as
+    $\lambda_1 \geq \lambda_2 \geq\dots\geq \lambda_n$ and
+    $a_1,a_2,\dots,a_n$ are the corresponding eigenvectors such that
+    $a'\Sigma_{XX}a=1$.
+
+3.  Compute the eigenvalues and eigenvectors of
+    $$\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1}\Sigma_{XY}$$
+
+4.  Sort the eigenvalues as
+    $\lambda_1 \geq \lambda_2 \geq\dots\geq \lambda_m$ and
+    $b_1,b_2,\dots,b_m$ are the corresponding eigenvectors such that
+    $b'\Sigma_{XX}b=1$.
+
+5.  $(a_k,b_k)$ is the $k$-th pair of canonical variables, where
+    $k\leq\min\{m,n\}$; and $\gamma_k$ is the $k$-th largest canonical
+    correlation.
+
+Note that, if $\underset{n \times k}{A} = [a_1\ a_2\ \dots a_k]$,
+$\underset{m \times k}{B} = [b_1\ b_2\ \dots b_k]$, we would have
+$A'\Sigma_{XY}B = \Lambda$ where
+
+$$
+\Lambda = \begin{bmatrix}
+\rho_1 & &  \\
+& \rho_2 &  \\
+& & \ddots &  \\
+& & & \rho_k
+\end{bmatrix}
+$$
+
+is a diagonal matrix. Therefore, canonical variables transform the
+covariance matrix between $X$ and $Y$ into a diagonal matrix, where
+entries on the diagonal best summarize the correlations between the two
+datasets.
+
+## Johansen's Procedure
+
+1.  Estimate by OLS two regressions $$
+    \begin{aligned}
+    \Delta y_t &= \hat\Psi_0 + \hat\Psi_1\Delta y_{t-1} + \dots +\hat\Psi_{p-1}\Delta y_{t-p+1} +\hat u_t \\
+    y_{t-1} &= \hat\Theta_0 + \hat\Theta_1\Delta y_{t-1} + \dots +\hat\Theta_{p-1}\Delta y_{t-p+1} +\hat v_t \\
+    \end{aligned}
+    $$ Save $\hat u_t$ and $\hat v_t$.
+
+2.  Compute the canonical correlations between $\hat u_t$ and
+    $\hat v_t$. Find the eigenvalues of
+    $\Sigma_{vv}^{-1}\Sigma_{vu}\Sigma_{uu}^{-1}\Sigma_{uv}$. Sort them
+    from the largest to the smallest:
+    $\hat\lambda_1 \geq \hat\lambda_2 \geq \dots\geq \hat\lambda_n$.
+    Then the maximum log-likelihood function subject to the constraint
+    that there are $h$ cointegrating relations is given by $$
+    \ell^*=-\frac{Tn}{2}\log(2\pi)-\frac{Tn}{2}-\frac{T}{2}\log|\hat\Sigma_{uu}|
+    -\frac{T}{2}\sum_{i=1}^{h}\log(1-\hat\lambda_i)
+    $$ The test for there being $h$ cointegrating relations is
+    equivalent to testing $$
+    -\frac{T}{2}\sum_{i=h+1}^{n}\log(1-\hat\lambda_i) = 0.
+    $$
+
+3.  Calculate the MLE of the parameters. The cointegrating matrix is
+    given by
+    $$\hat B = \begin{bmatrix}\hat b_1 & \hat b_2 & \dots & \hat b_h\end{bmatrix}$$
+    where $\hat b_i$ are the eigenvectors used to normalize $v_t$. The
+    adjustment matrix and other parameters are given by $$
+    \begin{aligned}
+    \hat A &= \hat\Sigma_{uv}\hat B\\
+    \hat\Pi &= \hat A\hat B' \\
+    \hat\Gamma_i &= \hat\Psi_i - \hat\Pi\hat\Theta_i\\
+    \mu &= \hat\Psi_0 - \hat\Pi\hat\Theta_0.
+    \end{aligned}
+    $$
+
+To understand this procedure, note that if we treat $\Pi$ as given, the
+MLE for @eq-ecm is equivalent to estimating the coefficients by OLS:
+
+$$
+\Delta y_t - \Pi y_{t-1} = \hat\Gamma_1\Delta y_{t-1} + \hat\Gamma_2\Delta y_{t-2} + 
+\dots + \hat\Gamma_{p-1}\Delta y_{t-p+1} + \hat\mu+ \hat\epsilon_t
+$$
+
+The log-likelihood function becomes
+
+$$
+\ell(\Pi, \Omega) = -\frac{T}{2}\log |2\pi\Omega| - \frac{1}{2}\sum_{t=1}^{T}
+(\hat\epsilon_t'\Omega^{-1}\hat\epsilon_t).
+$$
+
+Step 1 does this in two separate regressions, in which
 
 $$
 \begin{aligned}
-\rho^2 &= c'\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1/2}dd'\Sigma_{YY}^{-1/2}\Sigma_{YX}\Sigma_{XX}^{-1/2}c \\
-&= c'\Sigma_{XX}^{-1/2}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1/2} c \\
-&= c'\gamma c = \gamma
+\hat\Gamma_i &= \hat\Psi_i - \Pi\hat\Theta_i \\
+\hat\epsilon_t &= \hat u_t - \Pi\hat v_t \\
 \end{aligned}
 $$
 
-Substituting back $a$ and $b$, we have
+Thus, the log-likelihood can be rewritten as
 
-- $a$ is an eigenvector of $\Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}$
-- $b$ is an eigenvector of $\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1}\Sigma_{XY}$
+$$
+\ell(\Pi, \Omega) = -\frac{T}{2}\log |2\pi\Omega| - \frac{1}{2}\sum_{t=1}^{T}
+[(\hat u_t - \Pi\hat v_t)'\Omega^{-1} (\hat u_t - \Pi \hat v_t)]
+$$
 
-So we can find the canonical variables by solving our the eigenvectors of the above matrices.
+Further concentrating $\Omega$:
 
+$$
+\hat\Omega = \frac{1}{T}\sum_{t=1}^{T}[(\hat u_t - \Pi\hat v_t)(\hat u_t - \Pi \hat v_t)']
+$$
 
+Substituting this into the $\ell$ function
 
+$$
+\ell(\Pi) = -\frac{Tn}{2}\log (2\pi) - \frac{Tn}{2}- \frac{T}{2}\log
+\left|\frac{1}{T}\sum_{t=1}^{T}[(\hat u_t - \Pi\hat v_t)(\hat u_t - \Pi \hat v_t)']\right|
+$$
 
+Thus, maximizing $\ell$ is equivalent to minimizing
 
+$$
+\left|\frac{1}{T}\sum_{t=1}^{T}[(\hat u_t - \Pi\hat v_t)(\hat u_t - \Pi \hat v_t)']\right|
+$$
 
+by choosing $\Pi$. If $u_t$ is a single variable, the optimal $\hat\Pi$
+that minimizes $|T^{-1}\sum_t (u_t-\Pi v_t)^2|$ would be simply the OLS
+estimator. Similarly, for the vector case, we have
 
+$$
+\hat\Pi = \left(\frac{1}{T}\sum_t u_t v_t'\right)\left(\frac{1}{T}\sum_t v_t v_t'\right)^{-1}
+$$
+
+Suppose we have the canonical decomposition $A'\Sigma_{uv}B = \Lambda$
+where $\Lambda$ is a diagonal matrix of canonical correlations, and
+$A'\Sigma_{uu}A=I$, $B'\Sigma_{vv}B=I$. The estimator can be reduced to
+
+$$
+\begin{aligned}
+\hat\Pi &= (A'^{-1}\Lambda B^{-1})(B'^{-1}B^{-1})^{-1} = A'^{-1}\Lambda B' \\[1em]
+&= A'^{-1}\begin{bmatrix}r_1  \\ & r_2 \\ & & \ddots \\ & & & r_n\end{bmatrix} B'
+\end{aligned}
+$$
+
+The minimized 'squared residuals' is
+
+$$
+\begin{aligned}
+\left|\frac{1}{T}\sum_{t=1}^{T}[(\hat u_t - \Pi\hat v_t)(\hat u_t - \Pi \hat v_t)']\right|
+&= \left| A'^{-1} \frac{1}{T}\sum_{t=1}^{T}(A'u_t - \Lambda B'v_t)(A'u_t - \Lambda B'v_t)' A^{-1} \right| \\[1em]
+&= |A|^{-2} |I-\Lambda\Lambda'| \\[1em]
+&= |A|^{-2} \begin{vmatrix}1-r_1^2 \\ & 1-r_2^2 \\ & & \ddots \\ & & & 1-r_n^2\end{vmatrix} \\[1em]
+&= |A|^{-2} \prod_{i=1}^{n} (1-\lambda_i).
+\end{aligned}
+$$
+
+This explains the likelihood function in Step 2. The MLE for $\hat\Pi$
+above is subject to no constraint. However, if there is any
+cointegrating relations, $\Pi$ cannot be full rank. If we restrict the
+rank of $\Pi$ to $h$, the minimized squared residuals is achieved by
+picking the $h$ largest $\lambda$s.
+
+## Hypothesis Testing
+
+### Test 1: At most h cointegrations {.unnumbered}
+
+Hypothesis:
+
+$$
+\begin{aligned}
+&H_0: \text{there are no more than }h\text{ cointegrating relations}\\
+&H_1: \text{there are more than }h\text{ cointegrating relations}\\
+\end{aligned}
+$$
+
+Test statistics:
+
+$$
+\lambda_{\text{trace}} = 2(\ell_1^* - \ell_0^*) = -T\sum_{i=h+1}^{n}\log(1-\hat\lambda_i)
+$$
+
+If $H_0$ is true, $\lambda_{\text{trace}}$ should be close to zero. The
+critical values are provided by the table below. *Case 1* means there is
+no constant or deterministic trend; *Case 2* contains constants in
+cointegrating vectors but no deterministic trend; *Case 3* contains
+deterministic trend.
+
+| $n-h$      | $T$ | 0.1   | 0.05  | 0.025 | 0.001 |
+|------------|-----|-------|-------|-------|-------|
+| **Case 1** |     |       |       |       |       |
+| 1          | 400 | 2.86  | 3.84  | 4.93  | 6.51  |
+| 2          | 400 | 10.47 | 12.53 | 14.43 | 16.31 |
+| ...        |     |       |       |       |       |
+| **Case 2** |     |       |       |       |       |
+| 1          | 400 | 6.69  | 8.08  | 9.66  | 11.58 |
+| 2          | 400 | 15.58 | 17.84 | 19.61 | 21.96 |
+| ...        |     |       |       |       |       |
+| **Case 3** |     |       |       |       |       |
+| 1          | 400 | 2.82  | 3.96  | 5.33  | 6.94  |
+| 2          | 400 | 13.34 | 15.20 | 17.30 | 19.31 |
+| ...        |     |       |       |       |       |
+
+: Critical values of Johansen's likelihood ratio test of the null
+hypothesis of $h$ integrating relations against the alternative of no
+restrictions
+
+### Test 2: h cointegrations vs h+1 {.unnumbered}
+
+Hypothesis:
+
+$$
+\begin{aligned}
+&H_0: \text{there are }h\text{ cointegrating relations}\\
+&H_1: \text{there are }h+1\text{ cointegrating relations}\\
+\end{aligned}
+$$
+
+Test statistics:
+
+$$
+\lambda_{\text{max}} = 2(\ell_1^* -\ell_0^*)=-T\log(1-\hat\lambda_{h+1})
+$$
+
+The critical values are given as below.
+
+| $n-h$      | $T$ | 0.1   | 0.05  | 0.025 | 0.001 |
+|------------|-----|-------|-------|-------|-------|
+| **Case 1** |     |       |       |       |       |
+| 1          | 400 | 2.86  | 3.84  | 4.96  | 6.51  |
+| 2          | 400 | 9.52  | 11.44 | 13.27 | 15.69 |
+| ...        |     |       |       |       |       |
+| **Case 2** |     |       |       |       |       |
+| 1          | 400 | 6.69  | 8.08  | 9.66  | 11.58 |
+| 2          | 400 | 12.78 | 14.60 | 16.40 | 18.78 |
+| ...        |     |       |       |       |       |
+| **Case 3** |     |       |       |       |       |
+| 1          | 400 | 2.82  | 3.96  | 5.33  | 6.94  |
+| 2          | 400 | 12.10 | 14.04 | 15.81 | 17.94 |
+| ...        |     |       |       |       |       |
+
+: Critical values of Johansen's likelihood ratio test of the null
+hypothesis of $h$ integrating relations against the alternative of $h+1$
+relations
