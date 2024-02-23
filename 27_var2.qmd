@@ -4,7 +4,7 @@ Consider a more general VAR specification with $n$ endogenous variables
 and $m$ exogenous variables:
 
 $$
-y_t = A_1 y_{t−1} + A_2 y_{t−2} + \cdots + A_p y_{t−p} + C x_t + u_t
+y_t = A_1 y_{t-1} + A_2 y_{t-2} + \cdots + A_p y_{t-p} + C x_t + u_t
 $$ {#eq-var1}
 
 where $t = 1, 2, ..., T$. $y_t$ is a $n\times 1$ vector of endogenous
@@ -31,7 +31,7 @@ For computation, it is more convenient to rewrite the VAR system in
 transpose:
 
 $$
-y_t' = y_{t−1}' A_1' + y_{t−2}' A_2' + \cdots + y_{t−p}' A_p' + x_t' C' + u_t'
+y_t' = y_{t-1}' A_1' + y_{t-2}' A_2' + \cdots + y_{t-p}' A_p' + x_t' C' + u_t'
 $$
 
 We can stack observations to represent the whole data set:
@@ -134,7 +134,7 @@ $\bar\Omega = \Omega\otimes I_T$. An OLS estimate of the vectorised
 $\beta$ can be obtained as:
 
 $$
-\hat\beta = (\bar{X}' \bar{X})^{−1} \bar{X}'y
+\hat\beta = (\bar{X}' \bar{X})^{-1} \bar{X}'y
 $$
 
 It should be noted that @eq-var2 and @eq-var3 are just alternative but
