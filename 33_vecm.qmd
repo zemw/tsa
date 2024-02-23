@@ -15,8 +15,8 @@ $k_1a_2 + k_2a_2+\dots+k_ha_h$ is also a cointegrating vector. Thus, we
 say $(a_1, a_2, \dots,a_h)$ form a basis a basis for **the space of
 cointegrating vectors**.
 
-Cointegrated systems can be represented by an **Error Correlation Model
-(ECM)**:
+Cointegrated systems can be represented by a **Vector Error Correlation
+Model (VECM)**:
 
 $$
 \Delta y_t = \Pi y_{t-1} + \Gamma_1\Delta y_{t-1} + \Gamma_2\Delta y_{t-2} + \dots + 
