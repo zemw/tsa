@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time Series Analysis for Economists - Epilogue</title>
+<title>Time Series Analysis for Economists - 28&nbsp; Granger Causality</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./ref.html" rel="next">
-<link href="./33_vecm.html" rel="prev">
+<link href="./29_svar.html" rel="next">
+<link href="./27_var2.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -61,6 +61,7 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -70,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Epilogue</h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Granger Causality</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -283,7 +284,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./28_gc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Granger Causality</span></a>
+  <a href="./28_gc.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Granger Causality</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -315,7 +316,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./sum.html" class="sidebar-item-text sidebar-link active">Epilogue</a>
+  <a href="./sum.html" class="sidebar-item-text sidebar-link">Epilogue</a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -328,14 +329,23 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#definition" id="toc-definition" class="nav-link active" data-scroll-target="#definition"><span class="toc-section-number">28.1</span>  Definition</a></li>
+  <li><a href="#granger-causality-test" id="toc-granger-causality-test" class="nav-link" data-scroll-target="#granger-causality-test"><span class="toc-section-number">28.2</span>  Granger Causality Test</a></li>
+  <li><a href="#granger-causality-in-var" id="toc-granger-causality-in-var" class="nav-link" data-scroll-target="#granger-causality-in-var"><span class="toc-section-number">28.3</span>  Granger Causality in VAR</a></li>
+  <li><a href="#likelihood-ratio-test" id="toc-likelihood-ratio-test" class="nav-link" data-scroll-target="#likelihood-ratio-test"><span class="toc-section-number">28.4</span>  Likelihood Ratio Test</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Epilogue</h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Granger Causality</span></h1>
 </div>
 
 
@@ -350,9 +360,151 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>In summary, this book has no content whatsoever.</p>
+<section id="definition" class="level2" data-number="28.1">
+<h2 data-number="28.1" class="anchored" data-anchor-id="definition"><span class="header-section-number">28.1</span> Definition</h2>
+<p>Granger causality conceptualizes the usefulness of some variables in forecasting other variables.</p>
+<div id="def-gc" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 28.1 (Granger Causality) </strong></span><span class="math inline">\(x\)</span> fails to Granger-cause <span class="math inline">\(y\)</span> if for all <span class="math inline">\(s &gt;0\)</span>, the MSE of a forecast <span class="math inline">\(\hat y_{t+s}\)</span> based on <span class="math inline">\((y_t,y_{t-1},...x_t,x_{t-1},...)\)</span> is the same as the MSE of the forecast based on <span class="math inline">\((y_t,y_{t-1},...)\)</span>:</p>
+<p><span class="math display">\[
+\text{MSE}[\hat y_{t+s}|y_t,y_{t-1},...] =
+\text{MSE}[\hat y_{t+s}|y_t,y_{t-1},...x_t,x_{t-1},...].
+\]</span></p>
+<p>Equivalently, we say <span class="math inline">\(x\)</span> is exogenous to <span class="math inline">\(y\)</span>, or <span class="math inline">\(x\)</span> is not linearly informative about <span class="math inline">\(y\)</span>.</p>
+</div>
+<p>It must be noted that Granger causality has nothing to do with the causality defined by counterfactuals. The word “causality” is unfortunately misleading. It would be better named as “Granger predictability”.</p>
+</section>
+<section id="granger-causality-test" class="level2" data-number="28.2">
+<h2 data-number="28.2" class="anchored" data-anchor-id="granger-causality-test"><span class="header-section-number">28.2</span> Granger Causality Test</h2>
+<p>Consider the Granger causality test in a single equation setup:</p>
+<p><span class="math display">\[
+y_t = \alpha + \phi_1 y_{t-1}+\cdots+\phi_p y_{t-p} +
+\beta_1 x_{t-1} + \cdots +\beta_q x_{t-q} + u_t
+\]</span></p>
+<p>Testing whether <span class="math inline">\(x\)</span> Granger-causes <span class="math inline">\(y\)</span> is equivalent to test</p>
+<p><span class="math display">\[
+H_0: \beta_1 = \beta_2=\cdots=\beta_q=0
+\]</span></p>
+<p>The test can be done by comparing the residual sum of squares (RSS) with and without <span class="math inline">\(x\)</span> as the regressors. Assuming <span class="math inline">\(H_0\)</span> holds, we would have the restricted model:</p>
+<p><span class="math display">\[
+y_t = \alpha + \phi_1 y_{t-1} + \cdots + \phi_p y_{t-p} + u_t^R
+\]</span></p>
+<p>Compute RSS for the restricted model:</p>
+<p><span class="math display">\[
+\text{RSS}_0 = \sum_{t=1}^{T} (\hat u_t^{R})^2
+\]</span></p>
+<p>Also compute the RSS for the unrestricted model, i.e.&nbsp;including all <span class="math inline">\(x\)</span> as the regressors:</p>
+<p><span class="math display">\[
+\text{RSS}_1 = \sum_{t=1}^{T} \hat u_t^2
+\]</span></p>
+<p>The joint significance can be tested by the <span class="math inline">\(F\)</span> ratio:</p>
+<p><span class="math display">\[
+S = \frac{(\text{RSS}_0 - \text{RSS}_1)/q}{\text{RSS}_1/(T-2q-1)} \sim F(q, T-2q-1).
+\]</span></p>
+</section>
+<section id="granger-causality-in-var" class="level2" data-number="28.3">
+<h2 data-number="28.3" class="anchored" data-anchor-id="granger-causality-in-var"><span class="header-section-number">28.3</span> Granger Causality in VAR</h2>
+<p>In a VAR setting, <span class="math inline">\(x\)</span> does not Granger-cause <span class="math inline">\(y\)</span> if the coefficient matrix are lower triangular for all <span class="math inline">\(j\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\begin{bmatrix}y_t \\ x_t\end{bmatrix} &amp;=
+\begin{bmatrix}\alpha_1 \\ \alpha_2\end{bmatrix} +
+\begin{bmatrix}\phi_{1,11} &amp; 0 \\ \phi_{1,21} &amp; \phi_{1,22} \end{bmatrix}
+\begin{bmatrix}y_{t-1} \\ x_{t-1}\end{bmatrix} +
+\begin{bmatrix}\phi_{2,11} &amp; 0 \\ \phi_{2,21} &amp; \phi_{2,22}\end{bmatrix}
+\begin{bmatrix}y_{t-2} \\ x_{t-2}\end{bmatrix} + \cdots \\[1em]
+&amp;=
+\begin{bmatrix}\alpha_1 \\ \alpha_2\end{bmatrix} +
+\begin{bmatrix}\phi_{11}(L) &amp; 0 \\ \phi_{21}(L) &amp; \phi_{22}(L)\end{bmatrix}
+\begin{bmatrix}y_{t} \\ x_{t} \end{bmatrix} +
+\begin{bmatrix}u_{t} \\ v_{t} \end{bmatrix}
+\end{aligned}
+\]</span></p>
+<p>It is equivalent to the MA representation:</p>
+<p><span class="math display">\[
+\begin{bmatrix}y_t \\ x_t\end{bmatrix} =
+\begin{bmatrix}\mu_1 \\ \mu_2\end{bmatrix} +
+\begin{bmatrix}\theta_{11}(L) &amp; 0 \\ \theta_{21}(L) &amp; \theta_{22}(L)\end{bmatrix}
+\begin{bmatrix}u_t \\ v_t\end{bmatrix}
+\]</span></p>
+<p>To test Granger causality in a VAR setting, we need to introduce the likelihood ratio (LR) test.</p>
+</section>
+<section id="likelihood-ratio-test" class="level2" data-number="28.4">
+<h2 data-number="28.4" class="anchored" data-anchor-id="likelihood-ratio-test"><span class="header-section-number">28.4</span> Likelihood Ratio Test</h2>
+<p>Let’s quickly derive the maximum likelihood estimator (MLE) for the VAR. The joint probability density function is</p>
+<p><span class="math display">\[
+\begin{aligned}
+f(y_T,y_{T-1},\dots,y_1 | y_0,\dots,y_{1-p};\Theta)
+&amp;= f(y_T|y_{T-1}\dots)f(y_{T-1}|y_{T-2}\dots)\cdots f(y_1|y_0\dots) \\[1em]
+&amp;= \prod_{t=1}^{T} f(y_t|y_{t-1},y_{t-2},... ,y_{1-p};\Theta)
+\end{aligned}
+\]</span></p>
+<p>Define <span class="math inline">\(x_t'=\begin{bmatrix}1 &amp; y_{t-1} &amp; \dots &amp; y_{t-p}\end{bmatrix}\)</span> the collection of all regressors, and <span class="math inline">\(B'=\begin{bmatrix}\alpha &amp; \Phi_1 &amp; \dots &amp; \Phi_p\end{bmatrix}\)</span> the collection of all parameters. The log-likelihood function can be written as</p>
+<p><span class="math display">\[
+\begin{aligned}
+\ell(\theta) &amp;= \sum_{t=1}^T \log f(y_t|y_{t-1},y_{t-2},... ,y_{1-p};\theta) \\
+&amp;= -\frac{T}{2}\log |2\pi\Omega^{-1}| - \frac{1}{2}\sum_{t=1}^{T}[(y_t - B'x_t)'\Omega^{-1}(y_t-B'x_t)]
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(\Omega\)</span> is the variance-covariance matrix of the residuals. Maximizing the log-likelihood function gives the ML estimator:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat B'_{n \times (np+1)} &amp;=
+\left[\sum_{t=1}^{T} y_tx_t'\right]\left[\sum_{t=1}^{T} x_t x_t'\right]^{-1} \\
+\hat\Omega_{n \times n} &amp;= \frac{1}{T} \sum_{t=1}^{T}\hat e_t \hat e_t'
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(e_t=[u_t\ v_t]'\)</span>.</p>
+<p>The likelihood ratio (LR) test is motivated by the fact that different specifications give different likelihood evaluates. By comparing the likelihood difference, we can test the significance of one specification versus the alternative.</p>
+<p>The null hypothesis (<span class="math inline">\(H_0\)</span>) could be a specification with a particular lag length, or a particularization with certain exogeneity restrictions. We compute the covariance matrix under the null hypothesis (<span class="math inline">\(H_0\)</span>) and the alternative (<span class="math inline">\(H_1\)</span>) respectively:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat\Omega_0 &amp;= \frac{1}{T} \sum_t \hat e_t(H_0) \hat e_t(H_0)' \\
+\hat\Omega_1 &amp;= \frac{1}{T} \sum_t \hat e_t(H_1) \hat e_t(H_1)' \\
+\end{aligned}
+\]</span></p>
+<p>The corresponding log-likelihoods are</p>
+<p><span class="math display">\[
+\begin{aligned}
+\ell_0^* &amp;= -\frac{T}{2} \log |2\pi\hat\Omega_0^{-1}| - \frac{Tn}{2} \\
+\ell_1^* &amp;= -\frac{T}{2} \log |2\pi\hat\Omega_1^{-1}| - \frac{Tn}{2} \\
+\end{aligned}
+\]</span></p>
+<p>The difference between the log-likelihoods</p>
+<p><span class="math display">\[
+2(\ell_1^* - \ell_0^*) = T(\log |\hat\Omega_0| - \log |\hat\Omega_1|)
+\]</span></p>
+<p>has a <span class="math inline">\(\chi^2\)</span> distribution with degree of freedom <span class="math inline">\(n^2(p_1 - p_0)\)</span>.</p>
+<p>Now consider Granger causality test in a VAR setting</p>
+<p><span class="math display">\[
+\begin{bmatrix}y_t \\ x_t\end{bmatrix} =
+\begin{bmatrix}\alpha_1 \\ \alpha_2\end{bmatrix} +
+\begin{bmatrix}\phi_{11}(L) &amp; \phi_{12}(L) \\ \phi_{21}(L) &amp; \phi_{22}(L)\end{bmatrix}
+\begin{bmatrix}y_t \\ x_t\end{bmatrix} +
+\begin{bmatrix}u_{t} \\ v_{t}\end{bmatrix}
+\]</span></p>
+<p>Testing <span class="math inline">\(x\)</span> fails to Granger-cause <span class="math inline">\(y\)</span> is equivalent to test <span class="math inline">\(\phi_{12}=0\)</span>. Therefore, the restricted regression under <span class="math inline">\(H_0\)</span> is</p>
+<p><span class="math display">\[
+y_t = \alpha_1 + \phi_{11}(L) y_t + u_t^{R}
+\]</span></p>
+<p>The unrestricted regression is</p>
+<p><span class="math display">\[
+y_t = \alpha_1 + \phi_{11}(L) y_t + \phi_{12}(L) x_t + u_{t}^{U}
+\]</span></p>
+<p>Estimate the variance-covariance matrices</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat\Omega^U &amp;= \frac{1}{T}\sum_t u_t^U {u_t^U}' \\
+\hat\Omega^R &amp;= \frac{1}{T}\sum_t u_t^R {u_t^R}' \\
+\end{aligned}
+\]</span></p>
+<p>Form the LR test statistics</p>
+<p><span class="math display">\[
+\text{LR} = T(\log |\hat\Omega^U| - \log |\hat\Omega^R|) \sim \chi^2
+\]</span></p>
+<p>If the LR statistics is significant, it would mean <span class="math inline">\(x\)</span> is informative about <span class="math inline">\(y\)</span> (<span class="math inline">\(x\)</span> Granger-causes <span class="math inline">\(y\)</span>). Otherwise, if it makes no difference including <span class="math inline">\(x\)</span> as regressors, it would mean <span class="math inline">\(x\)</span> fails to Granger-cause <span class="math inline">\(y\)</span>.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -490,13 +642,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./33_vecm.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">VECM*</span></span>
+      <a href="./27_var2.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Estimating VAR</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./ref.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./29_svar.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Structural VAR</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

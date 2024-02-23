@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time Series Analysis for Economists - Epilogue</title>
+<title>Time Series Analysis for Economists - 31&nbsp; Factor Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./ref.html" rel="next">
-<link href="./33_vecm.html" rel="prev">
+<link href="./32_uvar.html" rel="next">
+<link href="./30_irf.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -61,6 +61,7 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -70,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Epilogue</h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Factor Models</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -298,7 +299,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./31_dfm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Factor Models</span></a>
+  <a href="./31_dfm.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Factor Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -315,7 +316,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./sum.html" class="sidebar-item-text sidebar-link active">Epilogue</a>
+  <a href="./sum.html" class="sidebar-item-text sidebar-link">Epilogue</a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -328,14 +329,21 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#principle-component-analysis" id="toc-principle-component-analysis" class="nav-link active" data-scroll-target="#principle-component-analysis"><span class="toc-section-number">31.1</span>  Principle Component Analysis</a></li>
+  <li><a href="#factor-augmented-var" id="toc-factor-augmented-var" class="nav-link" data-scroll-target="#factor-augmented-var"><span class="toc-section-number">31.2</span>  Factor-augmented VAR</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Epilogue</h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Factor Models</span></h1>
 </div>
 
 
@@ -350,9 +358,173 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>In summary, this book has no content whatsoever.</p>
+<p>VARs are not parsimonious models. A VAR with <span class="math inline">\(n\)</span> endogenous variables and <span class="math inline">\(p\)</span> lags would have <span class="math inline">\(n^2p\)</span> parameters to be estimated. With more variables included in the model, the degree of freedom is quickly exhausted. On the other hand, in many applications, we would want to include more variables into the model. The economy is complex and the endogenous variables are huge. Also, including more variables would mitigate the omitted variable problem that would lead to more credible identification. To tackle the “big data” challenge, we would need some dimension reduction technology.</p>
+<section id="principle-component-analysis" class="level2" data-number="31.1">
+<h2 data-number="31.1" class="anchored" data-anchor-id="principle-component-analysis"><span class="header-section-number">31.1</span> Principle Component Analysis</h2>
+<p>Question: how to summarize the movements of a large number of time series with fewer time series?</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="31_dfm_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">50 economic time series in monthly percentage changes</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The native approach is to take the average after some standardization. A better approach is to find a linear combination of them such that:</p>
+<ol type="1">
+<li>The 1st linear combination captures most of the variances among the series;</li>
+<li>The 2nd linear combination, while being orthogonal to the 1st one, captures most of the remaining variations;</li>
+<li>…</li>
+</ol>
+<p>To formulate the question mathematically, let <span class="math inline">\(X = [x_1\ x_2\ \dots\ x_p]'\)</span> represent <span class="math inline">\(p\)</span> time series. In the form of data matrix</p>
+<p><span class="math display">\[
+X = \begin{bmatrix}
+x_{11} &amp; x_{21} &amp; \dots &amp; x_{p1} \\
+x_{12} &amp; x_{22} &amp; \dots &amp; x_{p2} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+x_{1T} &amp; x_{2T} &amp; \dots &amp; x_{pT} \\
+\end{bmatrix}_{T \times p}
+\]</span></p>
+<p>We want to find a linear combination of <span class="math inline">\(X\)</span>:</p>
+<p><span class="math display">\[
+a'X = a_1x_1 + a_2x_2 + \dots + a_px_p
+\]</span></p>
+<p>such that <span class="math inline">\(a'X\)</span> captures the greatest variance. If <span class="math inline">\(X\)</span> is a 2-dimensional vector <span class="math inline">\(X=[x_1\ x_2]'\)</span>. We want to find a vector <span class="math inline">\([a_1\ a_2]\)</span> such that projecting the data onto this direction gives the largest variance.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fig/pca.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p></p><figcaption class="figure-caption">PCA of a multivariate Gaussian distribution</figcaption><p></p>
+</figure>
+</div>
+<p>Expressed as an optimization problem, we want to solve</p>
+<p><span class="math display">\[
+\max_a \mathbb{E}(a'XX'a)
+\]</span></p>
+<p>where we normalize <span class="math inline">\(a\)</span> to a unit vector <span class="math inline">\(a'a=1\)</span>. Define the Lagrangian</p>
+<p><span class="math display">\[
+\mathcal{L} = a'\Sigma a - \lambda_1 (a'a-1)
+\]</span></p>
+<p>where <span class="math inline">\(\Sigma=\mathbb{E}(XX')\)</span>. The first-order condition gives</p>
+<p><span class="math display">\[
+\frac{\partial\mathcal{L}}{\partial a} = 2\Sigma a - 2\lambda_1 a =0
+\implies \Sigma a = \lambda_1 a
+\]</span></p>
+<p>This means, <span class="math inline">\(a\)</span> is an eigenvector of <span class="math inline">\(\Sigma\)</span>. The linear combination has variance</p>
+<p><span class="math display">\[
+a'\Sigma a = a'\lambda_1 a= \lambda_1 a'a = \lambda_1
+\]</span></p>
+<p>which is the eigenvalue. So, if we choose <span class="math inline">\(a\)</span> to be the eigenvector associated with the largest eigenvalue of the covariance matrix <span class="math inline">\(\Sigma\)</span> and project the data onto it, the projected variance will be maximized. The eigenvector points to the direction that the components of <span class="math inline">\(X\)</span> co-variate the most. It is called the <strong>first</strong> <strong>principle component</strong>.</p>
+<p>If we want a second principle component that points to the direction that the data co-variate second to the most, by similar reasoning, we pick the second largest eigenvalue <span class="math inline">\(\lambda_2\)</span>:</p>
+<p><span class="math display">\[
+\Sigma b = \lambda_2 b
+\]</span></p>
+<p>Then <span class="math inline">\(b\)</span> is the <strong>second principle component</strong>. Since <span class="math inline">\(\Sigma\)</span> is symmetric, we know that the eigenvectors are orthogonal, <span class="math inline">\(b\perp a\)</span>.</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\lambda_1 a'b = (\lambda_1a)'b = (\Sigma a)'b = a'\Sigma'b = a'\Sigma b = a'\lambda_2b=\lambda_2 a'b \\[1em]
+&amp;\implies (\lambda_1 -\lambda_2) a'b=0
+\end{aligned}
+\]</span></p>
+<p>Since <span class="math inline">\(\lambda_1\neq\lambda_2\)</span>, we have <span class="math inline">\(a'b=0\)</span>.</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+PCA Procedure
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Standardize the dataset <span class="math inline">\(\underset{T \times n}{X}\)</span> by mean and variance;</li>
+<li>Calculate the covariance matrix <span class="math inline">\(\underset{n \times n}{\Sigma}\)</span> for the dataset;</li>
+<li>Calculate the eigenvalues and eigenvectors for the covariance matrix;</li>
+<li>Sort eigenvalues and their corresponding eigenvectors;</li>
+<li>Pick the first <span class="math inline">\(k\)</span> eigenvalues and form a matrix of eigenvectors <span class="math inline">\(\underset{n\times k}{A}=[a_1\ a_2\dots a_k]\)</span>;</li>
+<li>Transform the original matrix <span class="math inline">\(\underset{T\times k}{Y}=\underset{T\times n}{X}\times \underset{n\times k}{A}\)</span>.</li>
+</ol>
+</div>
+</div>
+<p>The transformed matrix <span class="math inline">\(Y\)</span> is the reduced-dimension dataset <span class="math inline">\(k &lt;&lt; n\)</span> that captures as much variance as possible of the original dataset. One of the drawbacks of PCA is that the principle components do not have an economic meaning. We do not know how to interpret the principle components except that they represents the co-movements among the original variables. If we want a clear meaning of the principle components, it is suggested we group the original dataset by categories and extract principle components for each category. For example, if we put all price indexes in a group and the principle components of that group would likely be interpreted as the most representative price movement.</p>
+</section>
+<section id="factor-augmented-var" class="level2" data-number="31.2">
+<h2 data-number="31.2" class="anchored" data-anchor-id="factor-augmented-var"><span class="header-section-number">31.2</span> Factor-augmented VAR</h2>
+<p>Standard VAR assumes the “shocks” are identified by the VAR residuals after imposing some restriction. However, due to the “curse of dimensionality”, standard VAR can only include a limited number of variables. Three problems would arise because of that:</p>
+<ol type="1">
+<li>Small number of variables is unlikely to span the space of structural shocks. For example, in the application of identifying monetary policy shocks, if the information set used by the central bank is not fully captured by the VAR, the residuals would not span the space of structural shocks.</li>
+<li>It is questionable that specific observable measures correspond precisely to the theoretical constructs. For example, the concept of “economic activity” may not be precisely represented by GDP.</li>
+<li>Standard VAR can only generate a limited number of impulse responses that we care about. In many applications, we would care about a wide range of impulse responses from various aspects of the economy.</li>
+</ol>
+<p>One solution is to augment a standard VAR with a few principle components (factors) estimated from big dataset. A factor-augmented VAR (FAVAR) is specified as follows:</p>
+<p><span class="math display">\[
+\begin{aligned}
+X_t &amp;= \Lambda^f f_t + \Lambda^y y_t + u_t \\[1em]
+\begin{bmatrix}f_t \\ y_t\end{bmatrix} &amp;= \Phi(L)
+\begin{bmatrix}f_{t-1} \\ y_{t-1}\end{bmatrix} + v_t
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(X_t\)</span> is an <span class="math inline">\(n \times 1\)</span> vector representing the information set, which is assumed to be spanned by <span class="math inline">\(k \times 1\)</span> factors and <span class="math inline">\(m \times 1\)</span> observable measures. <span class="math inline">\(\Lambda^f\)</span> is called the factor loading matrix. We assume the factors and observables follow a vector autoregressive process.</p>
+<p>We follow a two-step procedure to estimate the FAVAR:</p>
+<ol type="1">
+<li>Estimate the factors by principle components of <span class="math inline">\(X_t\)</span>, denoted by <span class="math inline">\(\hat C_t\)</span>. <span class="math inline">\(\hat F_t\)</span> is the part of <span class="math inline">\(\hat C_t\)</span> not spanned by <span class="math inline">\(y_t\)</span>.</li>
+<li>Estimate the FAVAR with the factors <span class="math inline">\(\hat F_t\)</span>. Apply identification similar to standard VARs.</li>
+</ol>
+<p>We use the example of Bernanke et al.&nbsp;(2005) as an illustration, in which the authors use an FAVAR to identify the impact of US monetary policy shocks. They treat only the Fed’s policy instrument <span class="math inline">\(r_t\)</span> as observed, all other variables including output and inflation, as unobserved (captured by <span class="math inline">\(f_t\)</span>). They adopt a “slow-r-fast” identification scheme:</p>
+<table class="table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Slow-moving variables <span class="math inline">\(x_t^S\)</span></th>
+<th>Policy instrument <span class="math inline">\(r_t\)</span></th>
+<th>Fast-moving variables <span class="math inline">\(x_t^F\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>Output</p>
+<p>Employment</p>
+<p>Inflation</p>
+<p>……</p></td>
+<td>Fed fund rate</td>
+<td><p>Asset price</p>
+<p>Financial shocks</p>
+<p>News shocks</p>
+<p>……</p></td>
+</tr>
+</tbody>
+</table>
+<p>The FAVAR is specified as</p>
+<p><span class="math display">\[
+\begin{aligned}
+\begin{bmatrix}x_t^S \\ x_t^F\end{bmatrix} &amp;=
+\begin{bmatrix}\Lambda_{SS} &amp; 0 &amp; 0 \\ \Lambda_{FS} &amp; \Lambda_{FR} &amp; \Lambda_{FF} \end{bmatrix}
+\begin{bmatrix}f_t^S \\ r_t \\ f_t^F\end{bmatrix} + u_t \\
+\Phi(L)&amp;\begin{bmatrix}f_t^S \\ r_t \\ f_t^F\end{bmatrix} =
+\begin{bmatrix}\eta_t^S \\ \eta_t^R \\ \eta_t^F\end{bmatrix}
+\end{aligned}
+\]</span></p>
+<p>with recursive identification</p>
+<p><span class="math display">\[
+\begin{bmatrix}\eta_t^S \\ \eta_t^R \\ \eta_t^F\end{bmatrix} =
+\begin{bmatrix}
+H_{SS} &amp; 0 &amp; 0 \\
+H_{RS} &amp; 1 &amp; 0 \\
+H_{FS} &amp; H_{FR} &amp; H_{FF}
+\end{bmatrix}
+\begin{bmatrix}\epsilon_t^S \\ \epsilon_t^R \\ \epsilon_t^F\end{bmatrix}.
+\]</span></p>
+<p>The IRFs for every variable in <span class="math inline">\(X_t\)</span> can be constructed with the factor loading matrix. FEVDs follow immediately from the coefficients of the MA representation of the VAR system and the variance of the structural shocks.</p>
+<p>Bernanke et al.&nbsp;(2005) finds adding the unobserved factors change the result dramatically. The IRF from a standard VAR exhibits the so-called “price puzzle”, that is inflation does not drop immediately after a tightening monetary policy shock. The FAVAR reduces the price puzzle significantly, which indicates the FAVAR indeed incorporates useful information that is missing in standard VARs.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -490,13 +662,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./33_vecm.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">VECM*</span></span>
+      <a href="./30_irf.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">IRF and FEVD</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./ref.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./32_uvar.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Unit Roots in VAR</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

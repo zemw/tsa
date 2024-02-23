@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time Series Analysis for Economists - Epilogue</title>
+<title>Time Series Analysis for Economists - 29&nbsp; Structural VAR</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./ref.html" rel="next">
-<link href="./33_vecm.html" rel="prev">
+<link href="./30_irf.html" rel="next">
+<link href="./28_gc.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -61,6 +61,7 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -70,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Epilogue</h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Structural VAR</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -288,7 +289,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./29_svar.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Structural VAR</span></a>
+  <a href="./29_svar.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Structural VAR</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -315,7 +316,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./sum.html" class="sidebar-item-text sidebar-link active">Epilogue</a>
+  <a href="./sum.html" class="sidebar-item-text sidebar-link">Epilogue</a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -328,14 +329,26 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-structural-framework" id="toc-the-structural-framework" class="nav-link active" data-scroll-target="#the-structural-framework"><span class="toc-section-number">29.1</span>  The Structural Framework</a></li>
+  <li><a href="#invertibility" id="toc-invertibility" class="nav-link" data-scroll-target="#invertibility"><span class="toc-section-number">29.2</span>  Invertibility</a></li>
+  <li><a href="#identification" id="toc-identification" class="nav-link" data-scroll-target="#identification"><span class="toc-section-number">29.3</span>  Identification</a>
+  <ul class="collapse">
+  <li><a href="#recursive-restriction" id="toc-recursive-restriction" class="nav-link" data-scroll-target="#recursive-restriction"><span class="toc-section-number">29.3.1</span>  Recursive restriction</a></li>
+  <li><a href="#non-recursive-restriction" id="toc-non-recursive-restriction" class="nav-link" data-scroll-target="#non-recursive-restriction"><span class="toc-section-number">29.3.2</span>  Non-recursive restriction</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Epilogue</h1>
+<h1 class="title"><span id="sec-svar" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Structural VAR</span></span></h1>
 </div>
 
 
@@ -350,9 +363,133 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>In summary, this book has no content whatsoever.</p>
+<section id="the-structural-framework" class="level2" data-number="29.1">
+<h2 data-number="29.1" class="anchored" data-anchor-id="the-structural-framework"><span class="header-section-number">29.1</span> The Structural Framework</h2>
+<p>Now we reconsider the problem of estimating structural shocks. We have introduced the structural shock framework in <a href="15_ssf.html"><span>Chapter&nbsp;15</span></a> the underlying econometric framework of understanding our economy. To briefly recap, we envision our economy as an MA process in which multiple structural shocks are the fundamental driving forces:</p>
+<p><span id="eq-sma"><span class="math display">\[
+y_t =  \Theta(L) \epsilon_t
+\tag{29.1}\]</span></span></p>
+<p>Structural shocks must be distinguished from residuals in a regression. Residuals are prediction errors based on past observations. Residuals can be cross-sectionally or serially correlated. Structural shocks are attached with specific economic meaning. They are also assumed to be unforeseeable and uncorrelated. We do not usually observe structural shocks but they are the conceptualized driving forces in the background.</p>
+<p>If <span class="math inline">\(\Theta(L)\)</span> is invertible, we would have</p>
+<p><span class="math display">\[
+\Theta^{-1}(L) y_t = \epsilon_t
+\]</span></p>
+<p>which is an infinite order AR process. This motivates us to estimate structural shocks via vector autoregressive processes. Suppose we have a VAR process:</p>
+<p><span id="eq-var"><span class="math display">\[
+A(L) y_t = u_t
+\tag{29.2}\]</span></span></p>
+<p>where <span class="math inline">\(u_t = y_t - \text{Proj}(y_t | y_{t-1},y_{t-2},\dots)\)</span> are the projection residuals. The question is, to what extend, or under what conditions, can we identify the structural shocks from this VAR specification?</p>
+<p>The answer is easier than you might have thought. We only need to identify</p>
+<p><span id="eq-resid"><span class="math display">\[
+u_t = \Theta_0 \epsilon_t
+\tag{29.3}\]</span></span></p>
+<p>where <span class="math inline">\(\Theta_0\)</span> is the first coefficient matrix in the lag polynomial. That is, the condition for identification is that we can find a linear transformation to decompose <span class="math inline">\(u_t\)</span> into <span class="math inline">\(\epsilon_t\)</span>.</p>
+</section>
+<section id="invertibility" class="level2" data-number="29.2">
+<h2 data-number="29.2" class="anchored" data-anchor-id="invertibility"><span class="header-section-number">29.2</span> Invertibility</h2>
+<p>The structural MA process is said to be <strong>invertible</strong> if <span class="math inline">\(\epsilon_t\)</span> can be linearly determined from current and lagged values of <span class="math inline">\(y_t\)</span>:</p>
+<p><span class="math display">\[
+\epsilon_t = \text{Proj}(\epsilon_t| y_t, y_{t-1},\dots).
+\]</span></p>
+<p>This means there is no “omitted variable” in the observable space, in the sense that the space spanned by <span class="math inline">\(\{\epsilon_t, \epsilon_{t-1},...\}\)</span> is fully covered by <span class="math inline">\(\{y_t, y_{t-1},…\}\)</span>.</p>
+<p><span class="math display">\[
+\text{span}\{\epsilon_t,\epsilon_{t-1},...\} =
+\text{span}\{y_t, y_{t-1},...\} =
+\text{span}\{u_t, u_{t-1},...\}
+\]</span></p>
+<p>This is a strong assumption. Under invertibility, the knowledge of the past true shocks would not even improve the the VAR forecast. But it does not require our VAR system being exhaustive, including everything observable variables in our economy. In a particular application, we would only be interested in a few structural shocks. The invertibility condition requires the observables fully cover the space spanned by the structural shocks of particular interests.</p>
+<p>With the above condition satisfied, we can show that the identification problem is reduced to identify <span class="math inline">\(\Theta_0\)</span>. Given <a href="#eq-sma">Equation&nbsp;<span>29.1</span></a> and <a href="#eq-var">Equation&nbsp;<span>29.2</span></a>, we have</p>
+<p><span class="math display">\[
+u_t = A(L)y_t = A(L)\Theta(L)\epsilon_t \overset{?}= \Theta_0 \epsilon_t
+\]</span></p>
+<p>By definition,</p>
+<p><span class="math display">\[
+\begin{aligned}
+u_t &amp;= y_t - \text{Proj}[y_t | y_{t-1},y_{t-2},...] \\[1em]
+&amp;=\Theta(L)\epsilon_t - \text{Proj}[\Theta(L)\epsilon_t | y_{t-1},y_{t-2},...]\\[1em]
+&amp;=\Theta_0\epsilon_t + \Theta_1\epsilon_{t-1} +\cdots+
+\text{Proj}[\Theta_0\epsilon_t + \Theta_1\epsilon_{t-1} + \cdots | y_{t-1},y_{t-2},...] \\
+&amp;= \Theta_0\epsilon_t - \Theta_0\underbrace{\text{Proj}[\epsilon_t|y_{t-1},...]}_{=0\ \text{by definition}} + \sum_{j=1}^{\infty}\Theta_j\{\epsilon_{t-j} - \underbrace{\text{Proj}[\epsilon_{t-j}|y_{t-1},...]}_{=\epsilon_{t-j}\ \text{by invertibility}}\} \\
+&amp;= \Theta_0\epsilon_t.
+\end{aligned}
+\]</span></p>
+<div id="prp-svar" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 29.1 (Assumptions of Structural VAR) </strong></span>&nbsp;</p>
+<ol type="1">
+<li>All variables are stationary;</li>
+<li>The space spanned by the innovations and the structural shocks coincide such that <span class="math inline">\(u_t = \Theta_0\epsilon_t\)</span>;</li>
+<li>The structural process <span class="math inline">\(y_t = \Theta(L)\epsilon_t\)</span> is invertible.</li>
+</ol>
+<p>Under the assumptions, identifying <span class="math inline">\(\Theta_0\)</span> is equivalent to identify the structural shocks <span class="math inline">\(\epsilon_t = \Theta_0^{-1} u_t\)</span>.</p>
+</div>
+<p>In essence, structural identification is equivalent to sorting out the contemporaneously correlated residuals into uncorrelated shocks that can be attached to certain economic meanings. As we will see, the decomposition is largely subjective, according to researchers’ understanding of how structural shocks are correlated contemporaneously.</p>
+<p>If the invertibility assumption fails, that means there exists no mapping from VAR residuals to the structural shocks. Non-invertibility arises when the observed variables fail to span the space of the state variables (structural shocks). If this is the case, we can include more variables to expand the space; or we may choose to simply ignore it if we believe the wedge between the spaces spanned by VAR residuals and structural shocks are small.</p>
+</section>
+<section id="identification" class="level2" data-number="29.3">
+<h2 data-number="29.3" class="anchored" data-anchor-id="identification"><span class="header-section-number">29.3</span> Identification</h2>
+<p>With invertibility, the essential task of SVAR is to decompose <a href="#eq-resid">Equation&nbsp;<span>29.3</span></a> to recover the structural shocks. The key is to estimate <span class="math inline">\(\Theta_0\)</span>. Consider the second-order moments of <a href="#eq-resid">Equation&nbsp;<span>29.3</span></a>:</p>
+<p><span class="math display">\[
+\Theta_0\mathbb{E}(\epsilon_t\epsilon_t')\Theta_0' = \mathbb{E}(u_tu_t')
+\]</span></p>
+<p>Estimating the VAR system <a href="#eq-var">Equation&nbsp;<span>29.2</span></a> by OLS gives <span class="math inline">\(\hat\Omega = \mathbb{\hat E}(u_tu_t')\)</span>. By definition, elements of <span class="math inline">\(\epsilon_t\)</span> are orthogonal to each other, so <span class="math inline">\(D=\mathbb E (\epsilon_t\epsilon_t')\)</span> is diagonal. Estimated <span class="math inline">\(\hat\Omega\)</span> gives <span class="math inline">\(n(n+1)/2\)</span> distinct values. Identification of <span class="math inline">\(D\)</span> requires <span class="math inline">\(n\)</span> values. So no more than <span class="math inline">\(n(n-1)/2\)</span> parameters in <span class="math inline">\(\Theta_0\)</span> can be identified. That means, we cannot identify the full <span class="math inline">\(n\times n\)</span> matrix <span class="math inline">\(\Theta_0\)</span> without restrictions.</p>
+<section id="recursive-restriction" class="level3" data-number="29.3.1">
+<h3 data-number="29.3.1" class="anchored" data-anchor-id="recursive-restriction"><span class="header-section-number">29.3.1</span> Recursive restriction</h3>
+<p>One common way to impose restrictions on <span class="math inline">\(\Theta_0\)</span> is to require it being lower triangular. Thus eliminating <span class="math inline">\(n(n-1)/2\)</span> entries. We also assume the structural shocks have the same magnitude as the residuals, so the diagonal entries are <span class="math inline">\(1\)</span>s. For example, in the three variable Keynesian system, we may assume</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+u_t^\pi \\ u_t^y \\ u_t^m
+\end{bmatrix} =
+\begin{bmatrix}
+1 &amp; 0 &amp; 0 \\
+* &amp; 1 &amp; 0 \\
+* &amp; * &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+\epsilon_t^{S} \\ \epsilon_t^{IS} \\ \epsilon_t^{MP}
+\end{bmatrix}
+\]</span></p>
+<p>The recursive structure is equivalent to imposing restrictions on the contemporaneous relationships between variable, or imposing different reaction speed to the structural shocks. In the above example, we assume the observed monetary policy (interest rate) responds to IS shock, supply shock and monetary policy shock contemporaneously; but inflation and output respond to monetary policy shock with a lag (sluggish response). Output responds to IS shock and supply shock contemporaneously, but inflation responds to IS shock with a lag. Of course, one can question the validity of these assumptions, or even the validity of the conceptualization of the three structural shocks. But this is a structural question, not an econometric one. Economists have always been debating what are the proper structures to describe the economy.</p>
+<p>In the recursive identification scheme, the ordering of the variables is the vital decision to make. Typically, the slow-moving variables are ordered first, and the fast-moving variables last, provided the <span class="math inline">\(\Theta_0\)</span> is upper triangular. In the literature involving monetary policy, a “slow-r-fast” scheme is widely adopted. That is, low-moving variables such as real output and price levels are ordered before interest rates; and fast-moving variables such as financial market indexes are ordered after interest rates. Because financial market absorbs information in real time, even ahead of the monetary policy decision. But it take time for real variables to materialize the impact of monetary policy changes.</p>
+</section>
+<section id="non-recursive-restriction" class="level3" data-number="29.3.2">
+<h3 data-number="29.3.2" class="anchored" data-anchor-id="non-recursive-restriction"><span class="header-section-number">29.3.2</span> Non-recursive restriction</h3>
+<p>We may also impose non-recursive structure based on theories or intuitions. Consider a model constituted of the demand and supply of an agriculture product, and the weather condition that affects the supply of the product. We assume weather does not depend on market behaviors. In addition, the supply but not the demand is influenced by the weather. This results in an identification matrix as follows</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+u_t^d \\ u_t^s \\ u_t^w
+\end{bmatrix} =
+\begin{bmatrix}
+1 &amp; -\beta &amp; 0 \\
+1 &amp; -\gamma &amp; -\delta \\
+0 &amp; 0 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+\epsilon_t^{d} \\ \epsilon_t^{s} \\ \epsilon_t^{w}
+\end{bmatrix}
+\]</span></p>
+<p>Note that there are only three parameters to be estimated in the matrix. So <span class="math inline">\(\Theta_0\)</span> in this case can also be identified.</p>
+<p>Structural VAR literature has invented lots of identification schemes, such as long-run restrictions, sign restrictions, and so on. These are left for the readers to explore themselves.</p>
+<div class="callout-important callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Reduced-form VARs only require errors be free of serial correlation, but allow cross-sectional correlations. The errors do not have structural interpretation.</li>
+<li>Structural identification means to decompose reduced-form residuals into uncorrelated structural shocks, so that we can attach structural meaning to the identified shocks.</li>
+<li>Under the assumption of invertibility, structural identification boils down to restricting the contemporaneous correlations between the endogenous variables. There are various identification schemes including Cholesky decomposition, sign restrictions, long-run restrictions, and so on.</li>
+</ol>
+</div>
+</div>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -490,13 +627,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./33_vecm.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">VECM*</span></span>
+      <a href="./28_gc.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Granger Causality</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./ref.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./30_irf.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">IRF and FEVD</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

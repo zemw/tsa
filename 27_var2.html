@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time Series Analysis for Economists - Epilogue</title>
+<title>Time Series Analysis for Economists - 27&nbsp; Estimating VAR</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./ref.html" rel="next">
-<link href="./33_vecm.html" rel="prev">
+<link href="./28_gc.html" rel="next">
+<link href="./26_var.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -61,6 +61,7 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -70,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Epilogue</h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Estimating VAR</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -278,7 +279,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./27_var2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Estimating VAR</span></a>
+  <a href="./27_var2.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Estimating VAR</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -315,7 +316,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./sum.html" class="sidebar-item-text sidebar-link active">Epilogue</a>
+  <a href="./sum.html" class="sidebar-item-text sidebar-link">Epilogue</a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -328,14 +329,21 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#stacked-form" id="toc-stacked-form" class="nav-link active" data-scroll-target="#stacked-form"><span class="toc-section-number">27.1</span>  Stacked Form</a></li>
+  <li><a href="#vectorized-form" id="toc-vectorized-form" class="nav-link" data-scroll-target="#vectorized-form"><span class="toc-section-number">27.2</span>  Vectorized Form</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Epilogue</h1>
+<h1 class="title"><span id="sec-var2" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Estimating VAR</span></span></h1>
 </div>
 
 
@@ -350,9 +358,101 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>In summary, this book has no content whatsoever.</p>
+<p>Consider a more general VAR specification with <span class="math inline">\(n\)</span> endogenous variables and <span class="math inline">\(m\)</span> exogenous variables:</p>
+<p><span id="eq-var1"><span class="math display">\[
+y_t = A_1 y_{t-1} + A_2 y_{t-2} + \cdots + A_p y_{t-p} + C x_t + u_t
+\tag{27.1}\]</span></span></p>
+<p>where <span class="math inline">\(t = 1, 2, ..., T\)</span>. <span class="math inline">\(y_t\)</span> is a <span class="math inline">\(n\times 1\)</span> vector of endogenous data, <span class="math inline">\(A_1, A_2,..., A_p\)</span> are <span class="math inline">\(p\)</span> matrices of dimension <span class="math inline">\(n\times n\)</span>; <span class="math inline">\(C\)</span> is an <span class="math inline">\(n\times m\)</span> matrix, and <span class="math inline">\(x_t\)</span> is an <span class="math inline">\(m\times 1\)</span> vector of exogenous regressors which can be e.g.&nbsp;constant terms, time trends, or exogenous data series. <span class="math inline">\(u_t\)</span> is the vector of residuals.</p>
+<p>We assume: (1) all variables are stationary; (2) the <span class="math inline">\(p\)</span> lags are sufficient to summarize all the dynamic correlations among elements of <span class="math inline">\(y_t\)</span>; and (3) <span class="math inline">\(u_t\)</span> is uncorrelated with <span class="math inline">\(y_{t-1},...,y_{t-p}\)</span> and is free of serial correlation. Thus, <span class="math inline">\(\mathbb E(u_tu_t') = \Omega\)</span>, while <span class="math inline">\(\mathbb E(u_t u_s') = 0\)</span> for <span class="math inline">\(t \neq s\)</span>. <span class="math inline">\(\Omega\)</span> is an <span class="math inline">\(n\times n\)</span> symmetric positive deﬁnite variance-covariance matrix, with variance terms on the diagonal and covariance terms off diagonal.</p>
+<p><span class="math inline">\(T\)</span> is the size of the sample. There are <span class="math inline">\(k = np + m\)</span> coeﬃcients to estimate for each equation, and a total of <span class="math inline">\(q = nk = n(np + m)\)</span> coefficients to estimate for the full model.</p>
+<section id="stacked-form" class="level2" data-number="27.1">
+<h2 data-number="27.1" class="anchored" data-anchor-id="stacked-form"><span class="header-section-number">27.1</span> Stacked Form</h2>
+<p>For computation, it is more convenient to rewrite the VAR system in transpose:</p>
+<p><span class="math display">\[
+y_t' = y_{t-1}' A_1' + y_{t-2}' A_2' + \cdots + y_{t-p}' A_p' + x_t' C' + u_t'
+\]</span></p>
+<p>We can stack observations to represent the whole data set:</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+y_1' \\ y_2' \\ \vdots \\ y_T'
+\end{bmatrix}_{T\times n} = \sum_{j=1}^{p}
+\begin{bmatrix}
+y_{1-j}' \\ y_{2-j}' \\ \vdots \\ y_{T-j}'
+\end{bmatrix}_{T\times n} \underset{n\times n}{A_j'} +
+\begin{bmatrix}
+x_1' \\ x_2' \\ \vdots \\ x_T'
+\end{bmatrix}_{T\times m} \underset{m\times n}{C'} +
+\begin{bmatrix}
+u_1' \\ u_2' \\ \vdots \\ u_T'
+\end{bmatrix}_{T\times n}
+\]</span></p>
+<p>Gathering the regressors into a single matrix, one obtains:</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+y_1' \\ y_2' \\ \vdots \\ y_T'
+\end{bmatrix}_{T\times n} =
+\underbrace{\begin{bmatrix}
+y_0' &amp; y_{-1}' &amp; \dots &amp; y_{1-p}' &amp; x_1' \\
+y_1' &amp; y_0' &amp; \dots &amp; y_{2-p}' &amp; x_2' \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots \\
+y_{T-1}' &amp; y_{T-2}' &amp; \dots &amp; y_{T-p}' &amp; x_T'
+\end{bmatrix}}_{T\times(np+m)}
+\underbrace{\begin{bmatrix}
+A_1' \\ A_2' \\ \vdots \\ A_p' \\ C'
+\end{bmatrix}}_{(np+m)\times n} +
+\begin{bmatrix}
+u_1' \\ u_2' \\ \vdots \\ u_T'
+\end{bmatrix}_{T\times n}
+\]</span></p>
+<p>Or, more compactly:</p>
+<p><span id="eq-var2"><span class="math display">\[
+\underset{T\times n}{Y} = \underset{T\times k}{X}\ \underset{k\times n}{B} +
+\underset{T\times n}{U}.
+\tag{27.2}\]</span></span></p>
+<p>Once the model is stacked this way, obtaining OLS estimates of the VAR is straightforward. An estimate <span class="math inline">\(\hat B\)</span> is obtained from:</p>
+<p><span class="math display">\[
+\hat B = (X'X)^{-1} X'Y
+\]</span></p>
+<p>This is equivalent to applying OLS on each column variable:</p>
+<p><span class="math display">\[
+\begin{bmatrix}\hat B^{(1)} &amp; \hat B^{(2)} &amp; \dots &amp; \hat B^{(n)}\end{bmatrix} =
+(X'X)^{-1}X' \begin{bmatrix}Y^{(1)} &amp; Y^{(2)} &amp; \dots &amp; Y^{(n)}\end{bmatrix}
+\]</span></p>
+<p>where <span class="math inline">\(Y^{(i)}\)</span> denotes <span class="math inline">\(i\)</span>-th column of matrix <span class="math inline">\(Y\)</span>. An estimate of the covariance matrix <span class="math inline">\(\Omega\)</span> can be obtained from:</p>
+<p><span class="math display">\[
+\hat\Omega= \frac{1}{T-k-1}\hat{U}'\hat{U}
+\]</span></p>
+<p>Under the assumptions (1)-(3), the parameters are consistently estimated by OLS regressions. Standard asymptotic results apply.</p>
+</section>
+<section id="vectorized-form" class="level2" data-number="27.2">
+<h2 data-number="27.2" class="anchored" data-anchor-id="vectorized-form"><span class="header-section-number">27.2</span> Vectorized Form</h2>
+<p>Alternatively, one can vectorize the VAR system as:</p>
+<p><span class="math display">\[
+\begin{bmatrix}
+Y^{(1)} \\ Y^{(2)} \\ \vdots \\ Y^{(n)}
+\end{bmatrix}_{nT\times 1} =
+\begin{bmatrix}
+X &amp; &amp; &amp; \\ &amp; X &amp; &amp; \\ &amp; &amp; \ddots &amp; \\ &amp; &amp; &amp; X
+\end{bmatrix}_{nT \times nk}
+\begin{bmatrix}
+B^{(1)} \\ B^{(2)} \\ \vdots \\ B^{(n)}
+\end{bmatrix}_{nk \times 1} +
+\begin{bmatrix}
+U^{(1)} \\ U^{(2)} \\ \vdots \\ U^{(n)}
+\end{bmatrix}_{nT\times 1}
+\]</span></p>
+<p>where <span class="math inline">\(Y^{(i)}\)</span> denotes <span class="math inline">\(i\)</span>-th column of matrix <span class="math inline">\(Y\)</span>. The vectorized system can be compactly written as</p>
+<p><span id="eq-var3"><span class="math display">\[
+y = \bar{X}\beta + u
+\tag{27.3}\]</span></span></p>
+<p>where <span class="math inline">\(y = vec(Y)\)</span>, <span class="math inline">\(\bar{X} = I_n \otimes X\)</span>, <span class="math inline">\(\beta = vec(B)\)</span>, <span class="math inline">\(u = vec(U)\)</span>. Also, one has <span class="math inline">\(\mathbb E(uu') = \bar\Omega\)</span>, where <span class="math inline">\(\bar\Omega = \Omega\otimes I_T\)</span>. An OLS estimate of the vectorised <span class="math inline">\(\beta\)</span> can be obtained as:</p>
+<p><span class="math display">\[
+\hat\beta = (\bar{X}' \bar{X})^{-1} \bar{X}'y
+\]</span></p>
+<p>It should be noted that <a href="#eq-var2">Equation&nbsp;<span>27.2</span></a> and <a href="#eq-var3">Equation&nbsp;<span>27.3</span></a> are just alternative but equivalent representations of the same VAR model <a href="#eq-var1">Equation&nbsp;<span>27.1</span></a>. We opt to use one representation or the other according to which one is most convenient for our purposes. <a href="#eq-var2">Equation&nbsp;<span>27.2</span></a> is typically faster to compute (because smaller matrices produce more accurate estimates), while statistical inference works more naturally with the vectorized form.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -490,13 +590,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./33_vecm.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">VECM*</span></span>
+      <a href="./26_var.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Vector Processes</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./ref.html" class="pagination-link">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./28_gc.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Granger Causality</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

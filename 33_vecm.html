@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Time Series Analysis for Economists - 33&nbsp; VECM*</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./sum.html" rel="next">
+<link href="./32_uvar.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">VECM*</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Time Series Analysis for Economists</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">The Basics</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_base.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Time Series Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_dec.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Decomposition</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_acf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ACF and PACF</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_st.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stationarity</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">ARIMA Model</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_spec.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model vs Spec</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_ar.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">AR Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_ma.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">MA Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_arma.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">ARMA Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09_wold.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Wold Theorem</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Time Series Regression</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_ols.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Preliminaries</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_ols2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">OLS for Time Series</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_mle.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">MLE for ARMA Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13_fc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Forecasting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14_dce.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Dynamic Causal Effect</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15_ssf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">The Structural Shock Framework</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16_adl.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Estimating Dynamic Multipliers</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17_iv.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Instrument Variables</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Nonstationary Time Series</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18_sp.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Spurious Regression</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19_ts.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Trend Stationary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20_uni.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Unit Root Process</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./21_ito.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Brownian Motion</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./22_uni2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Unit Root Process (contd)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./23_ut.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Unit Root Test</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./24_co.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Cointegration</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Vector Autoregression</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./25_sys.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">System of Equations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./26_var.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Vector Processes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./27_var2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Estimating VAR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./28_gc.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Granger Causality</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./29_svar.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Structural VAR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./30_irf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">IRF and FEVD</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./31_dfm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Factor Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./32_uvar.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Unit Roots in VAR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./33_vecm.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">VECM*</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sum.html" class="sidebar-item-text sidebar-link">Epilogue</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ref.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#cointegrated-systems" id="toc-cointegrated-systems" class="nav-link active" data-scroll-target="#cointegrated-systems"><span class="toc-section-number">33.1</span>  Cointegrated Systems</a></li>
+  <li><a href="#canonical-correlation" id="toc-canonical-correlation" class="nav-link" data-scroll-target="#canonical-correlation"><span class="toc-section-number">33.2</span>  Canonical Correlation</a></li>
+  <li><a href="#johansens-procedure" id="toc-johansens-procedure" class="nav-link" data-scroll-target="#johansens-procedure"><span class="toc-section-number">33.3</span>  Johansen’s Procedure</a></li>
+  <li><a href="#hypothesis-testing" id="toc-hypothesis-testing" class="nav-link" data-scroll-target="#hypothesis-testing"><span class="toc-section-number">33.4</span>  Hypothesis Testing</a>
+  <ul class="collapse">
+  <li><a href="#test-1-at-most-h-cointegrations" id="toc-test-1-at-most-h-cointegrations" class="nav-link" data-scroll-target="#test-1-at-most-h-cointegrations">Test 1: At most h cointegrations</a></li>
+  <li><a href="#test-2-h-cointegrations-vs-h1" id="toc-test-2-h-cointegrations-vs-h1" class="nav-link" data-scroll-target="#test-2-h-cointegrations-vs-h1">Test 2: h cointegrations vs h+1</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">VECM*</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="cointegrated-systems" class="level2" data-number="33.1">
+<h2 data-number="33.1" class="anchored" data-anchor-id="cointegrated-systems"><span class="header-section-number">33.1</span> Cointegrated Systems</h2>
+<div id="def-coint2" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 33.1 </strong></span>An <span class="math inline">\(n \times 1\)</span> vector <span class="math inline">\(y_t\)</span> is said to be <strong>cointegrated</strong> if each of its elements individually is <span class="math inline">\(I(1)\)</span> and there exists a non-zero vector <span class="math inline">\(a\in\mathbb R^n\)</span> such that <span class="math inline">\(a'y_t\)</span> is stationary. <span class="math inline">\(a\)</span> is called a <strong>cointegrating vector</strong>.</p>
+</div>
+<p>If there are <span class="math inline">\(h&lt;n\)</span> linearly independent cointegrating vectors <span class="math inline">\((a_1, a_2, \dots,a_h)\)</span>, then any linear combination <span class="math inline">\(k_1a_2 + k_2a_2+\dots+k_ha_h\)</span> is also a cointegrating vector. Thus, we say <span class="math inline">\((a_1, a_2, \dots,a_h)\)</span> form a basis a basis for <strong>the space of cointegrating vectors</strong>.</p>
+<p>Cointegrated systems can be represented by a <strong>Vector Error Correlation Model (VECM)</strong>:</p>
+<p><span id="eq-ecm"><span class="math display">\[
+\Delta y_t = \Pi y_{t-1} + \Gamma_1\Delta y_{t-1} + \Gamma_2\Delta y_{t-2} + \dots +
+\Gamma_{p-1}\Delta y_{t-p+1} + \mu+\epsilon_t
+\tag{33.1}\]</span></span></p>
+<div id="thm-ecm" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 33.1 (Engle-Granger Representation Theorem) </strong></span>Any set of <span class="math inline">\(I(1)\)</span> variables are cointegrated if and only if there exists an error correlation (ECM) representation for them.</p>
+</div>
+<p>Therefore, it is inappropriate to model a cointegrated system with differenced VAR. Because the term <span class="math inline">\(\Pi y_{t-1}\)</span> is missing out, which means a misspecification.</p>
+<p>The cointegration term can be further factored as <span class="math inline">\(\Pi=\underset{n \times h}{A}\times\underset{h \times n}{B'}\)</span>, in which <span class="math inline">\(B\)</span> contains the cointegrating vectors and <span class="math inline">\(A\)</span> hosts the adjustment coefficients. In a bivariate example, it looks like</p>
+<p><span class="math display">\[
+\begin{bmatrix}\Delta y_{1t} \\ \Delta y_{2t}\end{bmatrix} =
+\begin{bmatrix}\alpha_1 \\ \alpha_2\end{bmatrix}
+\begin{bmatrix}\beta_1 &amp; \beta_2\end{bmatrix}
+\begin{bmatrix}y_{1t-1} \\ y_{2t-1}\end{bmatrix} +
+\sum_{j=1}^{p-1}
+\begin{bmatrix}
+\gamma_{j,11} &amp; \gamma_{j,12} \\
+\gamma_{j,21} &amp; \gamma_{j,22}
+\end{bmatrix}
+\begin{bmatrix}\Delta y_{1t-j} \\ \Delta y_{2t-j}\end{bmatrix} +
+\begin{bmatrix}\epsilon_{1t} \\ \epsilon_{2t}\end{bmatrix}
+\]</span></p>
+<p>The economic interpretation is that <span class="math inline">\(\beta_1 y_{1t} + \beta_2 y_{2t}\)</span> represents some <em>long-run equilibrium</em> relationship of the two variables. Parameters <span class="math inline">\(\alpha_1,\alpha_2\)</span> describe the speed of adjustment, that is how each variable reacts to the deviations from the equilibrium path. Small values of <span class="math inline">\(\alpha_i\)</span> would imply a relatively unresponsive reaction, which means it takes a long time to return to the equilibrium.</p>
+<p>Note that <span class="math inline">\(\Pi = AB'\)</span> cannot be a full rank matrix. If there are <span class="math inline">\(n\)</span> independent cointegrating vectors, it follows that any linear combination of the components of <span class="math inline">\(y_t\)</span> is stationary, which effectively means <span class="math inline">\(y_t\)</span> is stationary. <span class="math inline">\(\Pi\)</span> cannot be zero either. If this is the case, the system is fully characterized by differenced VAR, there is no cointegration. Therefore, for a cointegrated system, it necessitates <span class="math inline">\(0&lt;h&lt;n\)</span>.</p>
+<p>A three variable example would be like:</p>
+<p><span class="math display">\[
+\begin{bmatrix}\Delta y_{1t} \\ \Delta y_{2t} \\ \Delta y_{3t}\end{bmatrix} =
+\begin{bmatrix}
+\alpha_{11} &amp; \alpha_{12}\\
+\alpha_{21} &amp; \alpha_{22}\\
+\alpha_{31} &amp; \alpha_{32}\\
+\end{bmatrix}
+\begin{bmatrix}
+\beta_{11} &amp; \beta_{12} &amp; \beta_{13}\\
+\beta_{21} &amp; \beta_{22} &amp; \beta_{23}\\
+\end{bmatrix}
+\begin{bmatrix}y_{1t-1} \\ y_{2t-1} \\ y_{3t-1}\end{bmatrix} +
+\cdots
+\]</span></p>
+<p>In general, if <span class="math inline">\(y_t\)</span> has <span class="math inline">\(n\)</span> non-stationary components, there could be at most <span class="math inline">\(n-1\)</span> cointegrating vectors. The number of cointegrating vectors is also called the <strong>cointegrating rank</strong>.</p>
+<p>Note that a single equation ECM is equivalent to an ARDL model:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\Delta y_t = \alpha(y_{t-1} - \delta-\beta x_{t-1}) + \gamma\Delta x_t + u_t \\
+\Leftrightarrow &amp;\ y_t = (\alpha+1)y_{t-1} + \gamma x_t - (\alpha\beta+\gamma)x_{t-1}
+-\alpha\delta + u_t \\
+\Leftrightarrow &amp;\ y_t = b_1y_{t-1} + b_2x_t + b_3x_{t-1} + c + u_t
+\end{aligned}
+\]</span></p>
+<p>Given a (possibly) cointegrated system, we would like to know if any cointegrating relations exist and how many cointegrating vectors there are. Johansen (1991) provides a likelihood-based method to test and estimate a cointegrated system. But before we introduce the Johansen’s method, we need the prerequisite knowledge of canonical correlations.</p>
+</section>
+<section id="canonical-correlation" class="level2" data-number="33.2">
+<h2 data-number="33.2" class="anchored" data-anchor-id="canonical-correlation"><span class="header-section-number">33.2</span> Canonical Correlation</h2>
+<p>Principle component analysis (PCA) finds a linear combination of <span class="math inline">\([x_1\ x_2\ \dots x_n]\)</span> that produces the largest variance. What if we want to extend the analysis to the correlations between two datasets: <span class="math inline">\(\underset{T \times n}{X} = [x_1\ x_2\ \dots x_n]\)</span> and <span class="math inline">\(\underset{T \times m}{Y} = [y_1\ y_2\ \dots y_m]\)</span>? The cross-dataset covariance matrix is</p>
+<p><span class="math display">\[
+\underset{n\times m}{\Sigma_{XY}} =
+\begin{bmatrix}
+\text{cov}(x_1,y_1) &amp; \text{cov}(x_1,y_2) &amp; \dots &amp; \text{cov}(x_1,y_m) \\
+\text{cov}(x_2,y_1) &amp; \text{cov}(x_2,y_2) &amp; \dots &amp; \text{cov}(x_2,y_m) \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\text{cov}(x_n,y_1) &amp; \text{cov}(x_n,y_2) &amp; \dots &amp; \text{cov}(x_n,y_m) \\
+\end{bmatrix}
+\]</span></p>
+<p>Canonical correlation analysis (CCA) seeks two vectors <span class="math inline">\(a \in \mathbb R^n\)</span> and <span class="math inline">\(b \in \mathbb R^m\)</span> such that <span class="math inline">\(a'X\)</span> and <span class="math inline">\(b'Y\)</span> maximize the correlation <span class="math inline">\(\rho =\text{corr}(a'X, b'Y)\)</span>. The random transformed random variable <span class="math inline">\(U = a'X\)</span> and <span class="math inline">\(V = b'Y\)</span> are the first pair of canonical variables. The second pair of canonical variables are orthogonal to the first pair and maximize the same correlation, and so on.</p>
+<p>Suppose we want to choose <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> to maximize</p>
+<p><span class="math display">\[
+\rho = \frac{a'\Sigma_{XY}b}{\sqrt{a'\Sigma_{XX}a}\sqrt{b'\Sigma_{YY}b}}
+\]</span></p>
+<p>We may impose the constraint such that <span class="math inline">\(a'\Sigma_{XX}a\)</span> and <span class="math inline">\(b'\Sigma_{YY}b\)</span> normalize to <span class="math inline">\(1\)</span>. Form the Lagrangian</p>
+<p><span class="math display">\[
+\mathcal{L} = a'\Sigma_{XY}b - \frac{\mu}{2}(a'\Sigma_{XX}a - 1) -\frac{\nu}{2}(b'\Sigma_{YY}b -1)
+\]</span></p>
+<p>The first-order conditions are</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\frac{\partial\mathcal{L}}{\partial a} = \Sigma_{XY}b -\mu\ \Sigma_{XX}a = 0 \\
+&amp;\frac{\partial\mathcal{L}}{\partial b} = \Sigma_{YX}a -\nu\ \Sigma_{YY}b = 0 \\
+\end{aligned}
+\]</span></p>
+<p>which implies</p>
+<p><span class="math display">\[
+\begin{aligned}
+\Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX} a &amp;= \mu\nu a =\lambda a \\[1em]
+\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1}\Sigma_{XY} b &amp;= \mu\nu b =\lambda b
+\end{aligned}
+\]</span></p>
+<p>Therefore, <span class="math inline">\(a\)</span> is the eigenvector of <span class="math inline">\(\Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}\)</span>. The associated eigenvalue <span class="math inline">\(\lambda\)</span> is equivalent to the maximized correlation squared <span class="math inline">\(\hat\rho^2\)</span>. To see this, just multiply the first-order condition by <span class="math inline">\(a'\)</span>:</p>
+<p><span class="math display">\[
+a'\Sigma_{XY}b = \mu\cdot a'\Sigma_{XX}a=\mu=\rho^*
+\]</span></p>
+<p>Symmetrically, <span class="math inline">\(b\)</span> is the eigenvector of <span class="math inline">\(\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1}\Sigma_{XY}\)</span>.</p>
+<p>So the canonical correlation can be computed as follows:</p>
+<ol type="1">
+<li><p>Compute the eigenvalues and eigenvectors of <span class="math display">\[\Sigma_{XX}^{-1}\Sigma_{XY}\Sigma_{YY}^{-1}\Sigma_{YX}\]</span></p></li>
+<li><p>Sort the eigenvalues as <span class="math inline">\(\lambda_1 \geq \lambda_2 \geq\dots\geq \lambda_n\)</span> and <span class="math inline">\(a_1,a_2,\dots,a_n\)</span> are the corresponding eigenvectors such that <span class="math inline">\(a'\Sigma_{XX}a=1\)</span>.</p></li>
+<li><p>Compute the eigenvalues and eigenvectors of <span class="math display">\[\Sigma_{YY}^{-1}\Sigma_{YX}\Sigma_{XX}^{-1}\Sigma_{XY}\]</span></p></li>
+<li><p>Sort the eigenvalues as <span class="math inline">\(\lambda_1 \geq \lambda_2 \geq\dots\geq \lambda_m\)</span> and <span class="math inline">\(b_1,b_2,\dots,b_m\)</span> are the corresponding eigenvectors such that <span class="math inline">\(b'\Sigma_{XX}b=1\)</span>.</p></li>
+<li><p><span class="math inline">\((a_k,b_k)\)</span> is the <span class="math inline">\(k\)</span>-th pair of canonical variables, where <span class="math inline">\(k\leq\min\{m,n\}\)</span>; and <span class="math inline">\(\gamma_k\)</span> is the <span class="math inline">\(k\)</span>-th largest canonical correlation.</p></li>
+</ol>
+<p>Note that, if <span class="math inline">\(\underset{n \times k}{A} = [a_1\ a_2\ \dots a_k]\)</span>, <span class="math inline">\(\underset{m \times k}{B} = [b_1\ b_2\ \dots b_k]\)</span>, we would have <span class="math inline">\(A'\Sigma_{XY}B = \Lambda\)</span> where</p>
+<p><span class="math display">\[
+\Lambda = \begin{bmatrix}
+\rho_1 &amp; &amp;  \\
+&amp; \rho_2 &amp;  \\
+&amp; &amp; \ddots &amp;  \\
+&amp; &amp; &amp; \rho_k
+\end{bmatrix}
+\]</span></p>
+<p>is a diagonal matrix. Therefore, canonical variables transform the covariance matrix between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> into a diagonal matrix, where entries on the diagonal best summarize the correlations between the two datasets.</p>
+</section>
+<section id="johansens-procedure" class="level2" data-number="33.3">
+<h2 data-number="33.3" class="anchored" data-anchor-id="johansens-procedure"><span class="header-section-number">33.3</span> Johansen’s Procedure</h2>
+<ol type="1">
+<li><p>Estimate by OLS two regressions <span class="math display">\[
+\begin{aligned}
+\Delta y_t &amp;= \hat\Psi_0 + \hat\Psi_1\Delta y_{t-1} + \dots +\hat\Psi_{p-1}\Delta y_{t-p+1} +\hat u_t \\
+y_{t-1} &amp;= \hat\Theta_0 + \hat\Theta_1\Delta y_{t-1} + \dots +\hat\Theta_{p-1}\Delta y_{t-p+1} +\hat v_t \\
+\end{aligned}
+\]</span> Save <span class="math inline">\(\hat u_t\)</span> and <span class="math inline">\(\hat v_t\)</span>.</p></li>
+<li><p>Compute the canonical correlations between <span class="math inline">\(\hat u_t\)</span> and <span class="math inline">\(\hat v_t\)</span>. Find the eigenvalues of <span class="math inline">\(\Sigma_{vv}^{-1}\Sigma_{vu}\Sigma_{uu}^{-1}\Sigma_{uv}\)</span>. Sort them from the largest to the smallest: <span class="math inline">\(\hat\lambda_1 \geq \hat\lambda_2 \geq \dots\geq \hat\lambda_n\)</span>. Then the maximum log-likelihood function subject to the constraint that there are <span class="math inline">\(h\)</span> cointegrating relations is given by <span class="math display">\[
+\ell^*=-\frac{Tn}{2}\log(2\pi)-\frac{Tn}{2}-\frac{T}{2}\log|\hat\Sigma_{uu}|
+-\frac{T}{2}\sum_{i=1}^{h}\log(1-\hat\lambda_i)
+\]</span> The test for there being <span class="math inline">\(h\)</span> cointegrating relations is equivalent to testing <span class="math display">\[
+-\frac{T}{2}\sum_{i=h+1}^{n}\log(1-\hat\lambda_i) = 0.
+\]</span></p></li>
+<li><p>Calculate the MLE of the parameters. The cointegrating matrix is given by <span class="math display">\[\hat B = \begin{bmatrix}\hat b_1 &amp; \hat b_2 &amp; \dots &amp; \hat b_h\end{bmatrix}\]</span> where <span class="math inline">\(\hat b_i\)</span> are the eigenvectors used to normalize <span class="math inline">\(v_t\)</span>. The adjustment matrix and other parameters are given by <span class="math display">\[
+\begin{aligned}
+\hat A &amp;= \hat\Sigma_{uv}\hat B\\
+\hat\Pi &amp;= \hat A\hat B' \\
+\hat\Gamma_i &amp;= \hat\Psi_i - \hat\Pi\hat\Theta_i\\
+\mu &amp;= \hat\Psi_0 - \hat\Pi\hat\Theta_0.
+\end{aligned}
+\]</span></p></li>
+</ol>
+<p>To understand this procedure, note that if we treat <span class="math inline">\(\Pi\)</span> as given, the MLE for <a href="#eq-ecm">Equation&nbsp;<span>33.1</span></a> is equivalent to estimating the coefficients by OLS:</p>
+<p><span class="math display">\[
+\Delta y_t - \Pi y_{t-1} = \hat\Gamma_1\Delta y_{t-1} + \hat\Gamma_2\Delta y_{t-2} +
+\dots + \hat\Gamma_{p-1}\Delta y_{t-p+1} + \hat\mu+ \hat\epsilon_t
+\]</span></p>
+<p>The log-likelihood function becomes</p>
+<p><span class="math display">\[
+\ell(\Pi, \Omega) = -\frac{T}{2}\log |2\pi\Omega| - \frac{1}{2}\sum_{t=1}^{T}
+(\hat\epsilon_t'\Omega^{-1}\hat\epsilon_t).
+\]</span></p>
+<p>Step 1 does this in two separate regressions, in which</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat\Gamma_i &amp;= \hat\Psi_i - \Pi\hat\Theta_i \\
+\hat\epsilon_t &amp;= \hat u_t - \Pi\hat v_t \\
+\end{aligned}
+\]</span></p>
+<p>Thus, the log-likelihood can be rewritten as</p>
+<p><span class="math display">\[
+\ell(\Pi, \Omega) = -\frac{T}{2}\log |2\pi\Omega| - \frac{1}{2}\sum_{t=1}^{T}
+[(\hat u_t - \Pi\hat v_t)'\Omega^{-1} (\hat u_t - \Pi \hat v_t)]
+\]</span></p>
+<p>Further concentrating <span class="math inline">\(\Omega\)</span>:</p>
+<p><span class="math display">\[
+\hat\Omega = \frac{1}{T}\sum_{t=1}^{T}[(\hat u_t - \Pi\hat v_t)(\hat u_t - \Pi \hat v_t)']
+\]</span></p>
+<p>Substituting this into the <span class="math inline">\(\ell\)</span> function</p>
+<p><span class="math display">\[
+\ell(\Pi) = -\frac{Tn}{2}\log (2\pi) - \frac{Tn}{2}- \frac{T}{2}\log
+\left|\frac{1}{T}\sum_{t=1}^{T}[(\hat u_t - \Pi\hat v_t)(\hat u_t - \Pi \hat v_t)']\right|
+\]</span></p>
+<p>Thus, maximizing <span class="math inline">\(\ell\)</span> is equivalent to minimizing</p>
+<p><span class="math display">\[
+\left|\frac{1}{T}\sum_{t=1}^{T}[(\hat u_t - \Pi\hat v_t)(\hat u_t - \Pi \hat v_t)']\right|
+\]</span></p>
+<p>by choosing <span class="math inline">\(\Pi\)</span>. If <span class="math inline">\(u_t\)</span> is a single variable, the optimal <span class="math inline">\(\hat\Pi\)</span> that minimizes <span class="math inline">\(|T^{-1}\sum_t (u_t-\Pi v_t)^2|\)</span> would be simply the OLS estimator. Similarly, for the vector case, we have</p>
+<p><span class="math display">\[
+\hat\Pi = \left(\frac{1}{T}\sum_t u_t v_t'\right)\left(\frac{1}{T}\sum_t v_t v_t'\right)^{-1}
+\]</span></p>
+<p>Suppose we have the canonical decomposition <span class="math inline">\(A'\Sigma_{uv}B = \Lambda\)</span> where <span class="math inline">\(\Lambda\)</span> is a diagonal matrix of canonical correlations, and <span class="math inline">\(A'\Sigma_{uu}A=I\)</span>, <span class="math inline">\(B'\Sigma_{vv}B=I\)</span>. The estimator can be reduced to</p>
+<p><span class="math display">\[
+\begin{aligned}
+\hat\Pi &amp;= (A'^{-1}\Lambda B^{-1})(B'^{-1}B^{-1})^{-1} = A'^{-1}\Lambda B' \\[1em]
+&amp;= A'^{-1}\begin{bmatrix}r_1  \\ &amp; r_2 \\ &amp; &amp; \ddots \\ &amp; &amp; &amp; r_n\end{bmatrix} B'
+\end{aligned}
+\]</span></p>
+<p>The minimized ‘squared residuals’ is</p>
+<p><span class="math display">\[
+\begin{aligned}
+\left|\frac{1}{T}\sum_{t=1}^{T}[(\hat u_t - \Pi\hat v_t)(\hat u_t - \Pi \hat v_t)']\right|
+&amp;= \left| A'^{-1} \frac{1}{T}\sum_{t=1}^{T}(A'u_t - \Lambda B'v_t)(A'u_t - \Lambda B'v_t)' A^{-1} \right| \\[1em]
+&amp;= |A|^{-2} |I-\Lambda\Lambda'| \\[1em]
+&amp;= |A|^{-2} \begin{vmatrix}1-r_1^2 \\ &amp; 1-r_2^2 \\ &amp; &amp; \ddots \\ &amp; &amp; &amp; 1-r_n^2\end{vmatrix} \\[1em]
+&amp;= |A|^{-2} \prod_{i=1}^{n} (1-\lambda_i).
+\end{aligned}
+\]</span></p>
+<p>This explains the likelihood function in Step 2. The MLE for <span class="math inline">\(\hat\Pi\)</span> above is subject to no constraint. However, if there is any cointegrating relations, <span class="math inline">\(\Pi\)</span> cannot be full rank. If we restrict the rank of <span class="math inline">\(\Pi\)</span> to <span class="math inline">\(h\)</span>, the minimized squared residuals is achieved by picking the <span class="math inline">\(h\)</span> largest <span class="math inline">\(\lambda\)</span>s.</p>
+</section>
+<section id="hypothesis-testing" class="level2" data-number="33.4">
+<h2 data-number="33.4" class="anchored" data-anchor-id="hypothesis-testing"><span class="header-section-number">33.4</span> Hypothesis Testing</h2>
+<section id="test-1-at-most-h-cointegrations" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="test-1-at-most-h-cointegrations">Test 1: At most h cointegrations</h3>
+<p>Hypothesis:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;H_0: \text{there are no more than }h\text{ cointegrating relations}\\
+&amp;H_1: \text{there are more than }h\text{ cointegrating relations}\\
+\end{aligned}
+\]</span></p>
+<p>Test statistics:</p>
+<p><span class="math display">\[
+\lambda_{\text{trace}} = 2(\ell_1^* - \ell_0^*) = -T\sum_{i=h+1}^{n}\log(1-\hat\lambda_i)
+\]</span></p>
+<p>If <span class="math inline">\(H_0\)</span> is true, <span class="math inline">\(\lambda_{\text{trace}}\)</span> should be close to zero. The critical values are provided by the table below. <em>Case 1</em> means there is no constant or deterministic trend; <em>Case 2</em> contains constants in cointegrating vectors but no deterministic trend; <em>Case 3</em> contains deterministic trend.</p>
+<table class="table">
+<caption>Critical values of Johansen’s likelihood ratio test of the null hypothesis of <span class="math inline">\(h\)</span> integrating relations against the alternative of no restrictions</caption>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(n-h\)</span></th>
+<th><span class="math inline">\(T\)</span></th>
+<th>0.1</th>
+<th>0.05</th>
+<th>0.025</th>
+<th>0.001</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Case 1</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>400</td>
+<td>2.86</td>
+<td>3.84</td>
+<td>4.93</td>
+<td>6.51</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>400</td>
+<td>10.47</td>
+<td>12.53</td>
+<td>14.43</td>
+<td>16.31</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Case 2</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>400</td>
+<td>6.69</td>
+<td>8.08</td>
+<td>9.66</td>
+<td>11.58</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>400</td>
+<td>15.58</td>
+<td>17.84</td>
+<td>19.61</td>
+<td>21.96</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Case 3</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>400</td>
+<td>2.82</td>
+<td>3.96</td>
+<td>5.33</td>
+<td>6.94</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>400</td>
+<td>13.34</td>
+<td>15.20</td>
+<td>17.30</td>
+<td>19.31</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="test-2-h-cointegrations-vs-h1" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="test-2-h-cointegrations-vs-h1">Test 2: h cointegrations vs h+1</h3>
+<p>Hypothesis:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;H_0: \text{there are }h\text{ cointegrating relations}\\
+&amp;H_1: \text{there are }h+1\text{ cointegrating relations}\\
+\end{aligned}
+\]</span></p>
+<p>Test statistics:</p>
+<p><span class="math display">\[
+\lambda_{\text{max}} = 2(\ell_1^* -\ell_0^*)=-T\log(1-\hat\lambda_{h+1})
+\]</span></p>
+<p>The critical values are given as below.</p>
+<table class="table">
+<caption>Critical values of Johansen’s likelihood ratio test of the null hypothesis of <span class="math inline">\(h\)</span> integrating relations against the alternative of <span class="math inline">\(h+1\)</span> relations</caption>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(n-h\)</span></th>
+<th><span class="math inline">\(T\)</span></th>
+<th>0.1</th>
+<th>0.05</th>
+<th>0.025</th>
+<th>0.001</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Case 1</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>400</td>
+<td>2.86</td>
+<td>3.84</td>
+<td>4.96</td>
+<td>6.51</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>400</td>
+<td>9.52</td>
+<td>11.44</td>
+<td>13.27</td>
+<td>15.69</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Case 2</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>400</td>
+<td>6.69</td>
+<td>8.08</td>
+<td>9.66</td>
+<td>11.58</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>400</td>
+<td>12.78</td>
+<td>14.60</td>
+<td>16.40</td>
+<td>18.78</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Case 3</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>400</td>
+<td>2.82</td>
+<td>3.96</td>
+<td>5.33</td>
+<td>6.94</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>400</td>
+<td>12.10</td>
+<td>14.04</td>
+<td>15.81</td>
+<td>17.94</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./32_uvar.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Unit Roots in VAR</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./sum.html" class="pagination-link">
+        <span class="nav-page-text">Epilogue</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
