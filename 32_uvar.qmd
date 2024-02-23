@@ -18,10 +18,10 @@ Rewrite the equation as follows:
 
 $$
 \begin{array}{rrrrr}
-& y_t = &\Phi_1y_{t-1} + \dots + &\Phi_{p-2}y_{t-p+2} + &\Phi_{p-1}y_{t-p+1} + &\Phi_{p}y_{t-p} \\ 
-& =&\Phi_1y_{t-1} + \dots + &\Phi_{p-2}y_{t-p+2} - &(\Phi_{p-1}+\Phi_p)y_{t-p+1} - &\Phi_{p}\Delta y_{t-p+1} \\ 
-& =&\Phi_1y_{t-1} + \dots - &(\Phi_{p-2}+\Phi_{p-1}+\Phi_p)y_{t-p+2} - &(\Phi_{p-1}+\Phi_p)\Delta y_{t-p+2} - &\Phi_{p}\Delta y_{t-p+1} \\ 
-& \vdots \\
+y_t = &\Phi_1y_{t-1} + \dots + &\Phi_{p-2}y_{t-p+2} + &\Phi_{p-1}y_{t-p+1} + &\Phi_{p}y_{t-p} \\ 
+= &\Phi_1y_{t-1} + \dots + &\Phi_{p-2}y_{t-p+2} - &(\Phi_{p-1}+\Phi_p)y_{t-p+1} - &\Phi_{p}\Delta y_{t-p+1} \\ 
+= &\Phi_1y_{t-1} + \dots - &(\Phi_{p-2}+\Phi_{p-1}+\Phi_p)y_{t-p+2} - &(\Phi_{p-1}+\Phi_p)\Delta y_{t-p+2} - &\Phi_{p}\Delta y_{t-p+1} \\ 
+\vdots \\
 \end{array}
 $$
 
@@ -34,12 +34,12 @@ $$
 where
 
 $$
-\begin{array}{rrrrr}
-&\rho = &\Phi_1 + &\Phi_2 + &\dots + &\Phi_{p-1} + &\Phi_p \\
-&-\zeta_1 = & &\Phi_2 + &\dots + &\Phi_{p-1} + &\Phi_p \\
-&\vdots  \\
-&-\zeta_{p-2} = & & & &\Phi_{p-1} + &\Phi_p \\
-&-\zeta_{p-1} = & & & & &\Phi_p \\
+\begin{array}{rrrrrr}
+\rho = &\Phi_1 + &\Phi_2 + &\dots + &\Phi_{p-1} + &\Phi_p \\
+-\zeta_1 = & &\Phi_2 + &\dots + &\Phi_{p-1} + &\Phi_p \\
+\vdots  \\
+-\zeta_{p-2} = & & & &\Phi_{p-1} + &\Phi_p \\
+-\zeta_{p-1} = & & & & &\Phi_p \\
 \end{array}
 $$
 
