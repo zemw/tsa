@@ -144,10 +144,10 @@ the efficiency of the estimators.
 ## Example of Observable Exogenous Shocks
 
 Directly observable exogenous shocks are rare. Here we use an example
-from @SWTextbook, which explores the dynamic causal effect of cold
-weather on orange juice prices. Cold weather is bad for orange
-production. Orange trees cannot withstand freezing temperatures that
-last for more than a few hours. Florida accounts for more than 98
+from Stock and Watson's textbook, which explores the dynamic causal
+effect of cold weather on orange juice prices. Cold weather is bad for
+orange production. Orange trees cannot withstand freezing temperatures
+that last for more than a few hours. Florida accounts for more than 98
 percent of U.S. production of frozen concentrated orange juice.
 Therefore, the frozen weather in Florida would reduce the supply and
 orange juice and raise the price. The dataset includes the number of
