@@ -1,9 +1,21 @@
 # References {.unnumbered}
 
-::: {#refs}
-:::
+Hamilton, James D. 1994. Time Series Analysis. Princeton University Press.
 
----
-nocite: |
-  @*
----
+Enders, Walter. 2008. Applied Econometric Time Series. John Wiley & Sons.
+
+Verbeek, Marno. 2008. A Guide to Modern Econometrics. John Wiley & Sons.
+
+Hayashi, Fumio. 2011. Econometrics. Princeton University Press.
+
+Hansen, Bruce. 2022. Econometrics. Princeton University Press.
+
+Mikusheva, Anna, and Paul Schrimpf. 2007. Time Series Analysis. MIT OpenCourseWare.
+
+Hyndman, Rob J, and George Athanasopoulos. 2018. Forecasting: Principles and Practice (2nd Edition). OTexts.com/fpp2.
+
+Stock, James H, and Mark W Watson. 2020. Introduction to Econometrics. Pearson.
+
+Stock, James H, and Mark W Watson. 2016. “Dynamic Factor Models, Factor-Augmented Vector Autoregressions, and Structural Vector Autoregressions in Macroeconomics.” In Handbook of Macroeconomics, 2:415–525.
+
+Dieppe, Alistair, Romain Legrand, and Björn Van Roye. 2016. The Bayesian Estimation, Analysis and Regression (BEAR) Toolbox. Eupearn Central Bank.

@@ -3,8 +3,8 @@ project:
 
 book:
   title: "Time Series Analysis for Economists"
-  author: "Zem Wang"
-  date: "January 2024"
+  author: "Z.WANG"
+  date: "23 Feb 2024"
   chapters:
     - index.qmd
     - part: "The Basics"
@@ -52,8 +52,6 @@ book:
         - 33_vecm.qmd
     - sum.qmd
     - ref.qmd
-
-bibliography: ref.bib
 
 format:
   html:
