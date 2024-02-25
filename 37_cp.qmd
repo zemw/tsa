@@ -1,0 +1,22 @@
+# Conjugate Priors
+
+We have mentioned, many of the times, we do not have closed-form
+solution for the posterior. However, there is a class of models ---
+pairs of likelihoods and priors --- that an analytic posterior exists.
+These pairs of likelihoods and pairs are referred as **conjugate**.
+
+| Likelihood                | Prior                       | Posterior                                                                                                                                                                                  |
+|---------------------------|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Bernoulli                 | $\text{Beta}(\alpha,\beta)$ | $\text{Beta}(\alpha+\sum x_i,\beta+n-\sum x_i)$                                                                                                                                            |
+| Binomial                  | $\text{Beta}(\alpha,\beta)$ | $\text{Beta}(\alpha+\sum x_i,\beta+\sum n_i-\sum x_i)$                                                                                                                                     |
+| Multinomial               | $\text{Dirichlet}(\alpha)$  | $\text{Dirichlet}(\alpha+\sum x_i)$                                                                                                                                                        |
+| Normal (known $\sigma^2$) | $N(\mu_0, \sigma_0^2)$      | $N\left(\frac{1}{\frac{1}{\sigma_0^2}+\frac{n}{\sigma^2}}\left(\frac{\mu_0}{\sigma_0^2}+\frac{\sum x_i}{\sigma^2}\right),\left(\frac{1}{\sigma_0^2}+\frac{n}{\sigma^2}\right)^{-1}\right)$ |
+| Normal (known $\mu$)      | $IG(\alpha,\beta)$          | $IG \left(\frac{\alpha+n}{2}, \frac{\beta+\sum(x_i-\mu)^2}{2}\right)$                                                                                                                      |
+| Possion                   | $\Gamma(\alpha,\beta)$      | $\Gamma(\alpha+\sum x_i,\beta+n)$                                                                                                                                                          |
+
+: Some common conjugate pairs
+
+Using conjugate priors, we can plug-in the data into the formula and get
+the exact posterior distribution. But the limitation is obvious. We are
+confined to use a given set of distributions, whereas other
+distributions do not have conjugate properties.
