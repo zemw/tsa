@@ -55,6 +55,9 @@ book:
         - 34_bayes.qmd
         - 35_blm.qmd
         - 36_bvar.qmd
+        - 37_cp.qmd
+        - 38_gib.qmd
+        - 39_mh.qmd
     - sum.qmd
     - ref.qmd
 
