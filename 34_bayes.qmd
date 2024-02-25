@@ -1,4 +1,4 @@
-# Introduction to Bayes
+# Intro to Bayes
 
 We have completed our venture on classical time series topics covering
 univariate and multivariate, stationary and non-stationary models. This
@@ -11,7 +11,7 @@ example.
 
 ## The Sunrise Problem
 
-What is the probability that the sun will rise tomorrow?
+*Question: What is the probability that the sun will rise tomorrow?*
 
 We do not consider the physics here. Suppose we want to answer this
 question by purely statistics. What we need to do is to observe how many
@@ -107,26 +107,61 @@ which you always get probability $1$.
 
 This illustration literally shows every tenet of the Bayesian approach.
 We start with an **prior distribution** about an unknown parameter
-$\theta$. Because our ignorance before we see the data, we model it as a
-uniform distribution. Note how this contrasts with the frequentist
-approach, in which the parameter is a fixed unknown number.
+$\theta$. In the previous example, we model it as a uniform distribution
+because of our ignorance. But the prior can be any distribution
+reflecting our subjective belief about the parameter before we see the
+data. Note how this contrasts with the frequentist approach, in which
+the parameter is a fixed unknown number.
 
-When we have seen the data, we update the prior distribution with the
-data. This is achieved by the Bayesian formula:
+The principle of Bayesian analysis is then to combine the prior
+information with the information contained in the data to obtain an
+updated distribution accounting for both sources of information, known
+as the **posterior distribution**. This is done by using the Bayes rule:
 
 $$
-\underbrace{P(\theta|\text{data})}_{\text{posterior}} = \frac{\overbrace{P(\text{data}|\theta)}^{\text{likelihood}} \times 
-\overbrace{P(\theta)}^{\text{prior}}}
-{\underbrace{P(\text{data})}_{\text{a scalar not depend on }\theta}}
+\underbrace{p(\theta|X)}_{\text{posterior}} = \frac{\overbrace{p(X|\theta)}^{\text{likelihood}} \times 
+\overbrace{p(\theta)}^{\text{prior}}}
+{\underbrace{p(X)}_{\text{normalizing scalar}}}
 $$
 
-The updated distribution is called the **posterior distribution**. The
-probability function of the data conditioned on the parameter is called
-the **likelihood function**. The posterior distribution summarizes the
-(updated) uncertainty over the value of the parameters. The more data we
-collect, the less impact the prior exerts on the posterior distribution.
+The posterior distribution $p(\theta|X)$ is the central object for
+Bayesian inference as it combines all the information we have about
+$\theta$. Note that $p(\theta|X)$ is a function of $\theta$. Since the
+denominator $p(X)$ is independent of $\theta$, it only plays the role of
+a normalizing constant to ensure the posterior is a valid probability
+density function that integrates to $1$. It is therefore convenient to
+ignore it and rewrite the posterior as
 
-## Frequentist vs Bayesian 
+$$
+p(\theta|X) \propto p(X|\theta)p(\theta)
+$$
+
+One difficulty of Bayesian inference is that the denominator $p(X)$ is
+often impossible to compute, especially for high dimensional parameters:
+
+$$
+p(X) = \int_{\theta_1}\int_{\theta_2}\dots\int_{\theta_n} p(X,\theta_1,\theta_2,\dots,\theta_n)d\theta_1d\theta_2\dots d\theta_n
+$$
+
+But the relative frequencies of parameter values are easy to compute
+
+$$
+\frac{p(\theta_A|X)}{p(\theta_B|X)}=\frac{p(X|\theta_A)p(\theta_A)}{p(X|\theta_B)p(\theta_B)}
+$$
+
+This allows us to sample from the posterior distribution even the $pdf$
+of the distribution is unknown. We will return to this point when we
+discuss computational Bayesian methods.
+
+The relative weight of the prior versus the data in determining the
+posterior depends on (i) how strong the prior is, and (ii) how many data
+we have. If the prior is so strong (very small variance / uncertainty)
+that seeing the data will not change our beliefs, the posterior would be
+mostly determined by the prior. On the contrary, if the data is so
+abundant that the evidence overwhelms any prior belief, the impact of
+prior would be negligible.
+
+## Frequentist vs Bayesian
 
 Frequentists and Bayesians hold different philosophy about statistics.
 Frequentists view our sample as the result of one of an infinite number
@@ -152,7 +187,7 @@ summarized in the posterior probability and there is not need for
 explicit hypothesis testing.
 
 | Frequentist                                 | Bayesian                        |
-|---------------------------------------------|---------------------------------|
+|-----------------------------------------|-------------------------------|
 | Probability is the limit of frequency       | Probability is uncertainty      |
 | Parameters are fixed unknown numbers        | Parameters are random variables |
 | Data is a random sample from the population | Data is fixed/given             |
