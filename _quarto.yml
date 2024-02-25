@@ -4,7 +4,7 @@ project:
 book:
   title: "Time Series Analysis for Economists"
   author: "Z.WANG"
-  date: "23 Feb 2024"
+  date: "25 Feb 2024"
   chapters:
     - index.qmd
     - part: "The Basics"
