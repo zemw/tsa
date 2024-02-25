@@ -1,0 +1,120 @@
+# Metropolis--Hastings
+
+We have mentioned, despite the posterior density is hard to compute, it
+is easy to determine the relative frequencies of the parameter values:
+
+$$
+\frac{p(\theta_A|X)}{p(\theta_B|X)}=\frac{p(X|\theta_A)p(\theta_A)}{p(X|\theta_B)p(\theta_B)}
+$$ {#eq-relfreq}
+
+To generate a sample that approximate the posterior distribution, we
+require the values with higher probability density to be sampled
+proportionally more often.
+
+Imagine we are exploring an unknown map. We start somewhere, each step
+forward depends on the current location. We require some areas (with
+high density) be explored more than others. This means the exploration
+moves cannot be purely "random walk". We need some rules to dictate the
+"direction" of the next move. So that the exploration approximates the
+relative frequency suggested by @eq-relfreq.
+
+Note that this exploration (sampling) algorithm necessarily has
+dependencies. The next sample value depends on the current sample value.
+This is called dependent sampling as opposed to independent sampling.
+Dependent sampling naturally takes more samples to reach a reasonable
+approximation of the posterior than independent sampling. Because of the
+dependency, each move gives less information than independent sampling.
+
+We now introduce one of the most famous MCMC algorithm:
+
+::: {.callout-note icon="false"}
+## Random Walk Metropolis-Hastings
+
+Choose an arbitrary point $\theta_t$ to be the first sample value in the
+posterior space. Propose the next value according to a random walk:
+
+$$
+\theta_{t+1} = \theta_{t}+\epsilon_{t+1}
+$$
+
+If the proposed value has a higher density than the current value, we
+accept the proposal and move forward. Precisely, we accept the proposal
+with probability
+
+$$
+r=\begin{cases}
+1,&\text{ if }p(\theta_{t+1}|X)\geq p(\theta_t|X) \\
+\frac{p(\theta_{t+1}|X)}{p(\theta_{t}|X)}, &\text{ if }p(\theta_{t+1}|X)< p(\theta_t|X)
+\end{cases}
+$$
+
+$r$ is the probability that we accept $\theta_{t+1}$ as our next sample
+value.
+:::
+
+This Metropolis criteria is the only one that will work. It strikes the
+perfect balance between random exploring and paying attention to the
+posterior shape --- If we pay too little attention, we get uniform
+sampling; if we pay too much attention, we will get stuck on a mode
+forever. It can be proved the algorithm converges to the posterior
+distribution. That is, if the algorithm reaches the posterior density,
+it stays there.
+
+There are several remarks regarding the algorithm.
+
+**Step size**. The rate at which Metropolis converges to the posterior
+distribution is highly sensitive to the step size. If the step size is
+too small, we obtain a density that is highly dependent on the initial
+value. It takes a long time to find areas of high density. On the other
+hand, if the step size is too big, we would reject the majority of
+proposals, since most of the parameter space is low and flat, and we
+would get a highly autocorrelated chain with low number of effective
+samples. We would tune the step size so that rate of acceptance is
+optimized (0.44 for one-dimensional models, 0.23 for high-dimensional
+models).
+
+**Multiple chains**. It is never a good idea to run a single chain
+(exploring from one starting point forever). Different chains (starting
+from different initial values) are likely exploring different density
+areas of the posterior space. It takes longer time for a single chain to
+explore the entire space. If different chains converge to the same
+distribution, we are confident the whole posterior space is explored.
+
+**Convergence**. We can compare the within-chain variance and the
+between-chain variance to gauge the convergence.
+
+$$
+\begin{aligned}
+\text{within-chain variance: } & W=\frac{1}{m}\sum_{j=1}^m s_j^2 \\
+\text{between-chain variance: } & B=\frac{n}{m-1}\sum_{j=1}^m (\bar\theta_j-\bar\theta)^2 \\
+\end{aligned}
+$$
+
+where $s_j^2$ is the sample variance of chain $j$, $\theta$ represents
+the sample mean, $m$ is the number of chains. The convergence can be
+gauged by the $R$-ratio:
+
+$$
+\hat R=\sqrt{\frac{W+\frac{1}{n}(B-W)}{W}}
+$$
+
+Initially, $\hat R >> 1$. The better the convergence, the closer
+$\hat R$ is to $1$.
+
+**Warm-up**. The first part of the chain is selected in a haphazard
+fashion, and unlikely to be representative of the posterior. So we
+should not include the first few samples in our final posterior sample.
+Usually, it is recommended to discard the first half of the chains that
+appear to have converged as a default method.
+
+**Effective sample size**. Dependent sampling naturally converges slower
+than independent sampling. For independent sampling, CLT predicts
+$\sqrt{T}(\hat\theta - \theta)\to N(0, \sigma^2)$. We say the
+convergence speed is $T^{-1/2}$. The effective sample size,
+$n_{\text{eff}}$, for a dependent sampler is defined so that its
+convergence speed is $n_{\text{eff}}^{-1/2}$.
+
+**Thinning**. Once convergence is reached, we could make our samples
+look "more independent" if we keep only every tenth, or hundredth, of
+the samples. These will naturally be less correlated than the original
+samples. This process is known as "thinning".
