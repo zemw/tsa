@@ -1,0 +1,102 @@
+# Simple Regression
+
+Let's use the Bayesian principle to estimate a simple linear regression:
+
+$$
+y_t = x_t \beta + \epsilon_t
+$$ where $\epsilon_t\sim N(0,\sigma^2)$. For simplicity, we assume
+$\sigma^2$ is known. So the only unknown parameter is $\beta$. Assume it
+has a Gaussian prior
+
+$$
+\beta \sim N(\beta_0, V_\beta)
+$$
+
+Gaussian prior is a handy prior to express our belief about the mean and
+the degree of certainty of that belief (expressed by the variance).
+
+Traditional OLS works without specifying the distribution of
+$\epsilon_t$. However, for Bayesian inference to work, we always need to
+specify the full distribution of the model. With Gaussian errors, we
+have
+
+$$
+(\boldsymbol Y | \beta) \sim N(\boldsymbol X\beta, \sigma^2\boldsymbol I_T)
+$$
+
+Under the $i.i.d$ assumption, the joint likelihood function is
+
+$$
+\begin{aligned}
+p(\boldsymbol Y|\beta) &= \prod_{t=1}^{T} \frac{1}{\sqrt{2\pi\sigma^2}}
+e^{-\frac{1}{2\sigma^2}(y_t - x_t\beta)^2} \\[1em]
+&= (2\pi\sigma^2)^{-\frac{T}{2}}
+e^{-\frac{1}{2\sigma^2}\sum_t (y_t - x_t\beta)^2}
+\end{aligned}
+$$
+
+By the Bayes rule, the posterior distribution is
+
+$$
+\begin{aligned}
+p(\beta|\boldsymbol Y) & \propto p(\boldsymbol Y|\beta)p(\beta) \\[1em]
+&\propto e^{-\frac{1}{2\sigma^2}\sum_t (y_t - x_t\beta)^2}
+\cdot e^{-\frac{1}{2V_\beta}(\beta-\beta_0)^2} \\[1em]
+&\propto e^{-\frac{1}{2}\left(\frac{\sum x_t}{\sigma^2} + \frac{1}{V_\beta}\right)
+\beta^2+ \left(\frac{\sum x_ty_t}{\sigma^2} + \frac{\beta_0}{V_\beta}\right)\beta}
+\end{aligned}
+$$
+
+which is the kernel of a Gaussian distribution. Therefore,
+
+$$
+p(\beta|\boldsymbol Y) \sim N(\hat\beta, D_\beta) \propto 
+e^{-\frac{1}{2D_\beta}\beta^2 + \frac{\hat\beta}{D_\beta}\beta}
+$$
+
+where
+
+$$
+D_\beta = \left(\frac{\sum x_t}{\sigma^2} + \frac{1}{V_\beta}\right)^{-1},\
+\hat\beta = \left(\frac{\sum x_ty_t}{\sigma^2} + \frac{\beta_0}{V_\beta}\right)D_\beta.
+$$
+
+Note that if we have a very loose prior $V_\beta\to\infty$, or abundant
+data $N\to\infty$, we would have
+
+$$
+D_\beta = \frac{\sigma^2}{\sum x_t},\ \hat\beta = \frac{\sum x_ty_t}{\sum x_t}
+$$
+
+which is exactly the same as the OLS estimator.
+
+So with a Gaussian prior and a Gaussian likelihood, the posterior
+distribution is also Gaussian. It is this particular choice of the prior
+and the likelihood function that the posterior has a closed-form
+solution. Not many prior choice has this property. This is what we
+called a **conjugate prior**.
+
+For simplicity, we assume the variance $\sigma^2$ is known. In reality,
+if $\sigma^2$ is unknown, we also need to assign it a prior
+distribution. A common choice is an inverse-Gamma distribution:
+
+$$
+\sigma^2 \sim IG(\nu_0, S_0)
+$$
+
+whose density function is given by
+
+$$
+p(\sigma^2) = \frac{S_0^{\nu_0}}{\Gamma(\nu_0)}(\sigma^2)^{-(\nu_0+1)}e^{-\frac{S_0}{\sigma^2}}
+$$
+
+One reason of this choice is that an inverse-Gamma can never be
+negative. Another reason is that it is also a conjugate prior. It can be
+shown, with an inverse-Gamma as the prior for the variance and an
+Gaussian likelihood, the posterior for $\sigma^2$ is also an
+inverse-Gamma:
+
+$$
+(\sigma^2 | \boldsymbol Y,\beta) \sim IG\left(\nu_0 + \frac{T}{2},
+S_0 +\frac{1}{2}\sum_{t=0}^{T} (y_t-x_t\beta)^2\right).
+$$
