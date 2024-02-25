@@ -19,3 +19,5 @@ Stock, James H, and Mark W Watson. 2020. Introduction to Econometrics. Pearson.
 Stock, James H, and Mark W Watson. 2016. “Dynamic Factor Models, Factor-Augmented Vector Autoregressions, and Structural Vector Autoregressions in Macroeconomics.” In Handbook of Macroeconomics, 2:415–525.
 
 Dieppe, Alistair, Romain Legrand, and Björn Van Roye. 2016. The Bayesian Estimation, Analysis and Regression (BEAR) Toolbox. Eupearn Central Bank.
+
+Chan, Joshua CC. 2017. "Notes on Bayesian macroeconometrics." Unpublished Manuscript.
