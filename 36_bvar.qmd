@@ -1,9 +1,9 @@
 # Bayesian VAR
 
 Once we understand the Bayesian approach to estimate simple linear
-regression models, it is easy to extend to more complicated linear
+regression models, it is easy to extend it to more complicated linear
 models. There are many reasons why a Bayesian approach to VAR models is
-preferred over the frequentist approach. VAR models have a proliferation
+preferred over a frequentist approach. VAR models have a proliferation
 of parameters to estimate. But economic time series typically do not
 come with many observations. The "curse of dimensionality" is a serious
 problem for frequentists. The benefit of using a Bayesian approach is
@@ -11,12 +11,13 @@ that the priors can provide "shrinkage" over the parameters, that is
 strong priors for some parameters to reduce the burden of the data.
 
 The simplest form of prior distributions for VAR models is known as the
-Minnesota prior (Litterman 1986). In this framework, it is assumed that
-the VAR residual variance-covariance matrix $\Sigma$ is known. The only
-task is to estimate parameters $\beta$. The essence of the Minnesota
-prior is to shrink the parameters of longer lags to zero.
+**Minnesota prior** (Litterman 1986). In this framework, it is assumed
+that the VAR residual variance-covariance matrix $\Sigma$ is known. The
+only task is to estimate parameters $\beta$. The essence of the
+Minnesota prior is to shrink the parameters of longer lags to zero.
 
-It is easier to work with the vectorized form of VAR in @sec-var2:
+For Bayesian inference, it is easier to work with the vectorized form of
+a VAR in @sec-var2:
 
 $$
 y = \bar{X}\beta + u
@@ -61,12 +62,12 @@ $$
 \beta \sim N(\beta_0, \Omega_0)
 $$
 
-To identify $\beta_0$ and $\Omega_0$, Litterman (1986) proposed the
-following strategy. As most observed macroeconomic variables seem to be
-characterized by a unit root, out prior belief should be that each
-endogenous variable included in the model presents a unit root in its
-first own lags, and the coefficients equal to zero for further lags and
-cross-variable coefficients.
+The key is to specify $\beta_0$ and $\Omega_0$, Litterman (1986)
+proposed the following strategy. As most observed macroeconomic
+variables seem to be characterized by a unit root, our prior belief
+should be that each endogenous variable included in the model presents a
+unit root in its first own lags, and the coefficients equal to zero for
+further lags and cross-variable coefficients.
 
 $$
 \mathbb{E}[A_k^{(ij)}] = \begin{cases}
@@ -75,13 +76,15 @@ $$
 \end{cases}
 $$
 
-For the uncertainties associated with the prior $\Omega_0$, it is
-assumed that no covariance exists between terms in $\beta$ so that
-$\Omega_0$ is diagonal. Our prior becomes stronger (variance becomes
-smaller) for further lags that they are equal to zero (we are shrinking
-longer lags to zero). Also, cross-variable correlations are more likely
-to be zero (stronger prior coefficients relating variables to other
-variables).
+For stationary variables, the coefficient $1$ can be replaced by, say,
+$0.8$. Regarding the uncertainties of the prior, expressed in
+$\Omega_0$, it is assumed that no covariance exists between terms in
+$\beta$ so that $\Omega_0$ is diagonal. Furthermore, our prior shall
+become stronger (variance becomes smaller) for longer lags that they are
+closer to zero (i.e. shrinking longer lags to zero). Besides,
+correlations with lags on other variables are likely weaker than the
+correlations on their own lags (stronger shrinkage on coefficients
+relating to other variables).
 
 $$
 \text{Var}[A_k^{(ij)}]=\lambda_1\lambda_2^{\mathbb{1}(i\neq j)}\frac{1}{k^{\lambda_3}}\frac{\sigma_i^2}{\sigma_j^2}
@@ -110,7 +113,7 @@ Once the prior is determined, we can derive the posterior as follows
 
 $$
 \begin{aligned}
-p(\beta | y) &\propto p(y|\beta)p(\beta) \\
+p(\beta | y) &\propto p(y|\beta)p(\beta) \\[1em]
 &\propto\exp\left[-\frac{1}{2}(y-\bar{X}\beta)'\bar{\Sigma}^{-1}(y-\bar{X}\beta)\right]
 \times\exp\left[-\frac{1}{2}(\beta-\beta_0)'\Omega_0^{-1}(\beta-\beta_0)\right] 
 \end{aligned}
@@ -132,7 +135,7 @@ $$
 $$
 
 This is again the kernel of a multivariate Gaussian distribution.
-Therefore, the posterior distribution of $\beta$ is given by
+Therefore, the posterior distribution of $\beta$ is characterized by
 
 $$
 p(\beta|y) \sim N(\bar\beta, \bar\Omega).
@@ -141,6 +144,6 @@ $$
 Once an estimate for $\beta$ is obtained, one can compute the IRF or
 FEVD accordingly. Typically in a Bayesian procedure, with one draw of
 $\beta^{(1)}$ from the posterior distribution, we compute one round of
-$\text{IRF}^{(1)}$; with a second draw of $\beta^{(2)}$, we compute the
+$\text{IRF}^{(1)}$; with a second draw of $\beta^{(2)}$, we compute
 another round of $\text{IRF}^{(2)}$, and so on. With a collection of
 IRFs, we can get the median and the credible bands for the IRF.
