@@ -50,6 +50,11 @@ book:
         - 31_dfm.qmd
         - 32_uvar.qmd
         - 33_vecm.qmd
+    - part: "Bayesian Analysis"
+      chapters: 
+        - 34_bayes.qmd
+        - 35_blm.qmd
+        - 36_bvar.qmd
     - sum.qmd
     - ref.qmd
 
