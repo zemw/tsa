@@ -1,0 +1,146 @@
+# Bayesian VAR
+
+Once we understand the Bayesian approach to estimate simple linear
+regression models, it is easy to extend to more complicated linear
+models. There are many reasons why a Bayesian approach to VAR models is
+preferred over the frequentist approach. VAR models have a proliferation
+of parameters to estimate. But economic time series typically do not
+come with many observations. The "curse of dimensionality" is a serious
+problem for frequentists. The benefit of using a Bayesian approach is
+that the priors can provide "shrinkage" over the parameters, that is
+strong priors for some parameters to reduce the burden of the data.
+
+The simplest form of prior distributions for VAR models is known as the
+Minnesota prior (Litterman 1986). In this framework, it is assumed that
+the VAR residual variance-covariance matrix $\Sigma$ is known. The only
+task is to estimate parameters $\beta$. The essence of the Minnesota
+prior is to shrink the parameters of longer lags to zero.
+
+It is easier to work with the vectorized form of VAR in @sec-var2:
+
+$$
+y = \bar{X}\beta + u
+$$
+
+where $y = vec(Y)$, $\bar{X} = I_n \otimes X$, $\beta = vec(B)$,
+$u = vec(U)$, and $\bar\Sigma = \Sigma\otimes I_T$. For a VAR with $n$
+variables and $p$ lags, the vectorized form looks like
+
+$$
+\begin{bmatrix}
+y_{1,1}\\\vdots\\y_{1,T}\\\vdots\\
+y_{n,1}\\\vdots\\y_{n,T}
+\end{bmatrix} = 
+\begin{bmatrix}
+y_0' & \dots & y_{1-p}' & & 0 & \dots & 0 \\
+\vdots &\ddots &\vdots & &\vdots & &\vdots\\
+y_{T-1}'&\dots &y_{T-p}'& & 0 & \dots & 0 \\
+0 &\dots & 0 & \ddots & y_0' & \dots &y_{1-p}'\\
+\vdots& & \vdots & & \vdots & \ddots &\vdots \\
+0 &\dots & 0 & & y_{T-1}' & \dots & y_{T-p}'\\
+\end{bmatrix}
+\begin{bmatrix}
+A_1^{(1)} \\\vdots\\A_p^{(1)}\\\vdots\\ 
+A_1^{(n)} \\\vdots\\A_p^{(n)}
+\end{bmatrix} +
+\begin{bmatrix}
+u_{1,1}\\\vdots\\u_{1,T}\\\vdots\\
+u_{n,1}\\\vdots\\u_{n,T}
+\end{bmatrix}
+$$
+
+Assume multivariate Gaussian distribution for the residuals
+$u\sim N(0, \bar\Sigma)$, the likelihood for $y$ is given by
+
+$$
+p(y|\beta) = |2\pi\bar\Sigma|^{-1/2}\exp\left[-\frac{1}{2}(y-\bar{X}\beta)'
+\bar\Sigma^{-1}(y-\bar{X}\beta)\right]
+$$ Also assume that $\beta$ has a multivariate Gaussian prior
+
+$$
+\beta \sim N(\beta_0, \Omega_0)
+$$
+
+To identify $\beta_0$ and $\Omega_0$, Litterman (1986) proposed the
+following strategy. As most observed macroeconomic variables seem to be
+characterized by a unit root, out prior belief should be that each
+endogenous variable included in the model presents a unit root in its
+first own lags, and the coefficients equal to zero for further lags and
+cross-variable coefficients.
+
+$$
+\mathbb{E}[A_k^{(ij)}] = \begin{cases}
+1, &\text{if } i=j, k=1\\
+0, &\text{otherwise}
+\end{cases}
+$$
+
+For the uncertainties associated with the prior $\Omega_0$, it is
+assumed that no covariance exists between terms in $\beta$ so that
+$\Omega_0$ is diagonal. Our prior becomes stronger (variance becomes
+smaller) for further lags that they are equal to zero (we are shrinking
+longer lags to zero). Also, cross-variable correlations are more likely
+to be zero (stronger prior coefficients relating variables to other
+variables).
+
+$$
+\text{Var}[A_k^{(ij)}]=\lambda_1\lambda_2^{\mathbb{1}(i\neq j)}\frac{1}{k^{\lambda_3}}\frac{\sigma_i^2}{\sigma_j^2}
+$$
+
+where $\lambda_1$ controls the overall tightness, $\lambda_2$ controls
+the tightness on cross-variable coefficients, $\lambda_3$ controls the
+speed at which coefficients on longer lags shrink to zero. $\sigma_i^2$
+and $\sigma_j^2$ denote the OLS residual variance of the auto-regressive
+models estimated for variables $i$ and $j$.
+
+Finally, if any exogenous variables are included in the model, they
+should have priors centered at zero with large variance, as little is
+known about exogenous variables. A typical set of values for these
+hype-parameters found in the literature are: $\lambda_1=0.1$,
+$\lambda_2=0.5$, $\lambda_3=1\text{ or } 2$, $\lambda_4$ for exogenous
+variables should be greater than $100$.
+
+Since the Minnesota prior assumes $\Sigma$ is known, one has to obtain
+it beforehand. One method is to set the diagonal of $\Sigma$ equal to
+the residual variance of individual AR models run on each variable in
+the VAR. Alternatively, one can use the variance-covariance matrix of
+the VAR estimated by OLS.
+
+Once the prior is determined, we can derive the posterior as follows
+
+$$
+\begin{aligned}
+p(\beta | y) &\propto p(y|\beta)p(\beta) \\
+&\propto\exp\left[-\frac{1}{2}(y-\bar{X}\beta)'\bar{\Sigma}^{-1}(y-\bar{X}\beta)\right]
+\times\exp\left[-\frac{1}{2}(\beta-\beta_0)'\Omega_0^{-1}(\beta-\beta_0)\right] 
+\end{aligned}
+$$
+
+After some manipulation, it can be shown that
+
+$$
+p(\beta|y)\propto\exp\left[-\frac{1}{2}(\beta-\bar\beta)'\bar\Omega^{-1}(\beta-\bar\beta)\right] 
+$$
+
+where
+
+$$
+\begin{aligned}
+\bar\Omega &= [\Omega_0^{-1} + \Sigma^{-1}\otimes X'X]^{-1} \\[1em]
+\bar\beta &= \bar\Omega[\Omega_0^{-1}\beta_0 + (\Sigma^{-1}\otimes X')y]
+\end{aligned}
+$$
+
+This is again the kernel of a multivariate Gaussian distribution.
+Therefore, the posterior distribution of $\beta$ is given by
+
+$$
+p(\beta|y) \sim N(\bar\beta, \bar\Omega).
+$$
+
+Once an estimate for $\beta$ is obtained, one can compute the IRF or
+FEVD accordingly. Typically in a Bayesian procedure, with one draw of
+$\beta^{(1)}$ from the posterior distribution, we compute one round of
+$\text{IRF}^{(1)}$; with a second draw of $\beta^{(2)}$, we compute the
+another round of $\text{IRF}^{(2)}$, and so on. With a collection of
+IRFs, we can get the median and the credible bands for the IRF.
