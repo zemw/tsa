@@ -100,3 +100,22 @@ $$
 (\sigma^2 | \boldsymbol Y,\beta) \sim IG\left(\nu_0 + \frac{T}{2},
 S_0 +\frac{1}{2}\sum_{t=0}^{T} (y_t-x_t\beta)^2\right).
 $$
+
+Once the posterior distribution is obtained, the question becomes how to
+report and interpret the results. Similar to conventional OLS results,
+we would like to report the mean or median of the parameter, and the
+associated "credible interval". The credible interval is directly
+obtained from the distribution:
+
+$$
+P(\beta_L\leq\beta\leq\beta_U) = \alpha
+$$
+
+which indicate that $\beta$ falls between the range $[\beta_L, \beta_U]$
+with a probability $\alpha$. In a frequentist approach, a $p$-value is
+not the probability of the parameter, nor does confidence interval
+represent the distribution of the parameter. However, the credible
+interval obtained from a Bayesian posterior is the probability for
+particular values of the parameter. It is more straightforward to
+interpret. After all, parameters are themselves probabilistic in a
+Bayesian world.
