@@ -1,4 +1,4 @@
-# Simple Regression
+# Linear Model {#sec-blm}
 
 Let's use the Bayesian principle to estimate a simple linear regression:
 
