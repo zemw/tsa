@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Time Series Analysis for Economists - 30&nbsp; IRF and FEVD</title>
+<title>Time Series Analysis for Economists - 34&nbsp; Intro to Bayes</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,69 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -93,8 +30,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./31_dfm.html" rel="next">
-<link href="./29_svar.html" rel="prev">
+<link href="./35_blm.html" rel="next">
+<link href="./33_vecm.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -134,7 +71,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">IRF and FEVD</span></h1>
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Intro to Bayes</span></h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -357,7 +294,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./30_irf.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">IRF and FEVD</span></a>
+  <a href="./30_irf.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">IRF and FEVD</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -387,7 +324,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./34_bayes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Intro to Bayes</span></a>
+  <a href="./34_bayes.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Intro to Bayes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -431,11 +368,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#estimating-svar" id="toc-estimating-svar" class="nav-link active" data-scroll-target="#estimating-svar"><span class="toc-section-number">30.1</span>  Estimating SVAR</a></li>
-  <li><a href="#impulse-response-functions" id="toc-impulse-response-functions" class="nav-link" data-scroll-target="#impulse-response-functions"><span class="toc-section-number">30.2</span>  Impulse-Response Functions</a></li>
-  <li><a href="#irf-standard-errors" id="toc-irf-standard-errors" class="nav-link" data-scroll-target="#irf-standard-errors"><span class="toc-section-number">30.3</span>  IRF Standard Errors</a></li>
-  <li><a href="#fevd" id="toc-fevd" class="nav-link" data-scroll-target="#fevd"><span class="toc-section-number">30.4</span>  FEVD</a></li>
-  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"><span class="toc-section-number">30.5</span>  Example</a></li>
+  <li><a href="#the-sunrise-problem" id="toc-the-sunrise-problem" class="nav-link active" data-scroll-target="#the-sunrise-problem"><span class="toc-section-number">34.1</span>  The Sunrise Problem</a></li>
+  <li><a href="#the-bayesian-approach" id="toc-the-bayesian-approach" class="nav-link" data-scroll-target="#the-bayesian-approach"><span class="toc-section-number">34.2</span>  The Bayesian Approach</a></li>
+  <li><a href="#frequentist-vs-bayesian" id="toc-frequentist-vs-bayesian" class="nav-link" data-scroll-target="#frequentist-vs-bayesian"><span class="toc-section-number">34.3</span>  Frequentist vs Bayesian</a></li>
   </ul>
 </nav>
     </div>
@@ -444,7 +379,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">IRF and FEVD</span></h1>
+<h1 class="title d-none d-lg-block"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Intro to Bayes</span></h1>
 </div>
 
 
@@ -459,128 +394,120 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="estimating-svar" class="level2" data-number="30.1">
-<h2 data-number="30.1" class="anchored" data-anchor-id="estimating-svar"><span class="header-section-number">30.1</span> Estimating SVAR</h2>
-<p>Given the Structural VAR,</p>
+<p>We have completed our venture on classical time series topics covering univariate and multivariate, stationary and non-stationary models. This chapter taps into the Bayesian approach to time series analysis, which is not an essential component for classical treatment of the subject. But given its rising popularity and importance, it is an exciting topic that cannot be missed. Bayesian statistics is a whole new world for frequentist statisticians. We introduce the Bayesian approach with an example.</p>
+<section id="the-sunrise-problem" class="level2" data-number="34.1">
+<h2 data-number="34.1" class="anchored" data-anchor-id="the-sunrise-problem"><span class="header-section-number">34.1</span> The Sunrise Problem</h2>
+<p><em>Question: What is the probability that the sun will rise tomorrow?</em></p>
+<p>We do not consider the physics here. Suppose we want to answer this question by purely statistics. What we need to do is to observe how many days the sun had risen in the past, and make some inference about the future. If we had collect the data on the past <span class="math inline">\(n\)</span> days, we would have observed the sun had risen everyday for sure (the sun rises even in cloudy or rainy days). If we want to calculate the probability of a sunrise event, denoted by <span class="math inline">\(A\)</span>, the frequentist approach would give <span class="math inline">\(P(A) = \frac{n}{n} = 1\)</span>. The probability is always <span class="math inline">\(1\)</span> no matter how many observations we have. That’s a bit quirky, even though we haven’t looked at the confidence interval. The 100 percent probability does not sound correct, as nothing can be so certain.</p>
+<p>Let’s have a look at how Laplace in the 18th century solves this problem. Let <span class="math inline">\(x_t\)</span> be an random variable such that</p>
 <p><span class="math display">\[
-\Theta_0 y_t = \Phi_1 y_{t-1} + \Phi_2 y_{t-2} + \cdots + \Phi_p y_{t-p} + \epsilon_t
+x_t = \begin{cases}
+1, \quad\text{the sun rise in day } t \text{ with probability }\theta\\
+0, \quad\text{otherwise}
+\end{cases}
 \]</span></p>
-<p>We estimate the reduced-form VAR using the methods in <a href="27_var2.html"><span>Chapter&nbsp;27</span></a>:</p>
+<p>In other words, <span class="math inline">\(x_t\)</span> follows a Bernoulli distribution <span class="math inline">\(x_t\sim\text{Bern}(\theta)\)</span>. There is an unknown parameter <span class="math inline">\(\theta\)</span>, which is our goal to estimate. Before we have observed any data, we have no knowledge about this <span class="math inline">\(\theta\)</span>. We assume it is distributed uniformly, <span class="math inline">\(\theta\sim\text{Unif}(0,1)\)</span>. That is, it can be any value between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>.</p>
+<p>Suppose we have observed the data for <span class="math inline">\(n\)</span> days: <span class="math inline">\(x_1,x_2,\dots,x_n\)</span>. Assume these events are <span class="math inline">\(i.i.d\)</span>. Define <span class="math inline">\(S_n\)</span> as the total number of sunrises that had happened:</p>
 <p><span class="math display">\[
-y_t = A_1 y_{t-1} + A_2 y_{t-2} + \cdots + A_p y_{t-p} + u_t
+S_n = x_1 + x_2 + \dots + x_n
 \]</span></p>
-<p>where <span class="math inline">\(A_j = \Theta_0^{-1}\Phi_j\)</span> and <span class="math inline">\(u_t = \Theta_0^{-1}\epsilon_t\)</span>. <span class="math inline">\(\Theta_0\)</span> can be estimated using the identification scheme discussed in <a href="29_svar.html"><span>Chapter&nbsp;29</span></a>, so that the structural parameters can be recovered accordingly.</p>
-<p>However, the coefficients of a VAR are difficult to interpret. For empirical analysis, we are particularly interested in estimating the impact of a structural shock on other economic variables (e.g.&nbsp;the impact of monetary policy shock on inflation). We cannot read off this information from the estimated VAR coefficients.</p>
-<p>In this section, we introduce two reporting techniques: <strong>impulse-response functions (IRF)</strong> and <strong>forecast error variance decomposition (FEVD)</strong>.</p>
-</section>
-<section id="impulse-response-functions" class="level2" data-number="30.2">
-<h2 data-number="30.2" class="anchored" data-anchor-id="impulse-response-functions"><span class="header-section-number">30.2</span> Impulse-Response Functions</h2>
-<p>With VAR parameters estimated, we can convert it to the MA form:</p>
+<p>We know <span class="math inline">\(S_n\)</span> follows a Binomial distribution <span class="math inline">\(S_n\sim\text{Bin}(n,\theta)\)</span>, with the probability mass function</p>
 <p><span class="math display">\[
-y_t = A^{-1}(L)u_t = u_t + \Psi_1 u_{t-1} + \Psi_2 u_{t-2} + \cdots
+P(S_n = k | \theta) = \binom{n}{k}\theta^k (1-\theta)^{n-k}
 \]</span></p>
-<p>or written in structural shocks:</p>
+<p>Our goal is to find: <span class="math inline">\(\theta | S_n=?\)</span> An estimation of the probability of a sunrise after observing the data.</p>
+<p>Recall that the Bayesian rule allows us to invert the conditional probability:</p>
 <p><span class="math display">\[
-y_t = \Theta_0^{-1}\epsilon_t + \Psi_1\Theta_0^{-1}\epsilon_{t-1} +
-\Psi_2\Theta_0^{-1}\epsilon_{t-2} + \cdots
+P(A|B) = \frac{P(B|A)P(A)}{P(B)}
 \]</span></p>
-<p>With this structural MA form, we can directly read off the impact of structural shock <span class="math inline">\(j\)</span> on observable variable <span class="math inline">\(k\)</span>:</p>
-<p><span class="math display">\[\frac{\partial y_{t+h}^k}{\partial\epsilon_t^j} = (\Psi_h\Theta_0^{-1})_{kj}\]</span></p>
-<p>A sequence of the marginal impacts over time <span class="math inline">\(\left\{\frac{\partial y_{t}^k}{\partial\epsilon_t^j}, \frac{\partial y_{t+1}^k}{\partial\epsilon_t^j}, \frac{\partial y_{t+2}^k}{\partial\epsilon_t^j}, \dots\right\}\)</span> constitute the dynamic response of variable <span class="math inline">\(k\)</span> in response to structural shock <span class="math inline">\(j\)</span>, also known as the impulse-response function.</p>
-<p>Note that <span class="math inline">\(\frac{\partial y_{t+h}^k}{\partial u_t^j}\)</span> cannot be interpreted as the response of <span class="math inline">\(y_{t+h}^k\)</span> after a shock on <span class="math inline">\(u_t^j\)</span>. Because <span class="math inline">\(u_t^j\)</span> could be a linear combination of multiple structural shocks, e.g.</p>
-<p><span class="math display">\[
-u_t^1 =a_1\epsilon_t^1 + a_2 \epsilon_t^2 + a_3 \epsilon_t^3
-\]</span></p>
-<p>Therefore, no structural meaning can be attached to <span class="math inline">\(\frac{\partial y_{t+h}^k}{\partial u_t^j}\)</span>. But <span class="math inline">\(\frac{\partial y_{t+h}^k}{\partial\epsilon_t^j}\)</span> is interpretable, as structural shocks <span class="math inline">\(\epsilon_t\)</span> are uncorrelated.</p>
-<p>If <span class="math inline">\(\Theta_0\)</span> has a recursive structure, <span class="math inline">\(\Theta_0\)</span> can be found simply by applying decomposition to the OLS-estimated <span class="math inline">\(\hat\Omega\)</span>:</p>
-<p><span class="math display">\[
-\hat\Omega=LDL'
-\]</span></p>
-<p>If <span class="math inline">\(\hat\Omega\)</span> is positive definite, such decomposition always exist, with <span class="math inline">\(D\)</span> diagonal and <span class="math inline">\(L\)</span> lower triangular with <span class="math inline">\(1\)</span>s on the diagonal.</p>
-<p>If we restrict <span class="math inline">\(D\)</span> to be an identity matrix, the decomposition becomes</p>
-<p><span class="math display">\[
-\hat\Omega = PP'
-\]</span></p>
-<p>where <span class="math inline">\(P = LD^{1/2}\)</span>. This is known as the <em>Cholesky decomposition</em>. By applying the Cholesky decomposition, we have</p>
-<p><span class="math display">\[
-\zeta_t = P^{-1}u_t = D^{-1/2}L^{-1}u_t = D^{-1/2}\epsilon_t
-\]</span></p>
-<p>in which <span class="math inline">\(1\)</span> unit shock to <span class="math inline">\(\zeta_t\)</span> is equivalent to <span class="math inline">\(1\)</span> standard deviation shock to <span class="math inline">\(\epsilon_t\)</span>. The IRFs estimated with Cholesky decomposition thus have the interpretation of response to standard-deviation shocks.</p>
-</section>
-<section id="irf-standard-errors" class="level2" data-number="30.3">
-<h2 data-number="30.3" class="anchored" data-anchor-id="irf-standard-errors"><span class="header-section-number">30.3</span> IRF Standard Errors</h2>
-<p>The IRF confidence intervals are usually constructed by bootstrapping.</p>
-<ol type="1">
-<li>Estimate the VAR by OLS. Save residuals <span class="math inline">\(\hat u_1, \hat u_2, \dots, \hat u_T\)</span>.</li>
-<li>Randomly pick <span class="math inline">\(u_1\)</span> from <span class="math inline">\(\{\hat u_1, \hat u_2, \dots, \hat u_T\}\)</span>, which will be used to construct an artificial sample. Generate <span class="math display">\[y_1^{(1)} = \hat c + \hat\Phi_1 y_0 + \hat\Phi_2 y_{-1}+\cdots + \hat\Phi_p y_{1-p} + u_1^{(1)}\]</span>where <span class="math inline">\(y_0, y_{-1},\dots y_{1-p}\)</span> are pre-sampled values that were actually observed. Take a second draw <span class="math inline">\(u_2\)</span>. Generate <span class="math display">\[y_2^{(1)} = \hat c + \hat\Phi_1 y_1 + \hat\Phi_2 y_{0}+\cdots + \hat\Phi_p y_{2-p} + u_2^{(1)}\]</span>Proceed until <span class="math inline">\(\{ y_1^{(1)}, y_2^{(1)},\dots,y_T^{(1)} \}\)</span> are generated. Run OLS on the simulated data, calculate the impulse-response function <span class="math inline">\(\{ \Psi_h^{(1)} \}\)</span>.</li>
-<li>Repeat the above step, generate <span class="math inline">\(\{ y_1^{(2)}, y_2^{(2)},\dots,y_T^{(2)} \}\)</span>. Estimate the IRF again <span class="math inline">\(\{ \Psi_h^{(2)} \}\)</span>. Repeat the process <span class="math inline">\(N\)</span> times and get <span class="math inline">\(N\)</span> IRFs. Sort them by <span class="math inline">\(\Psi^{(1)} \leq \Psi^{(2)} \cdots \leq \Psi^{(N)}\)</span>.</li>
-<li>The <span class="math inline">\(\alpha\)</span> confidence interval is constructed as <span class="math inline">\([\Psi_{[N\alpha/2]}, \Psi_{[N(1-\alpha/2)]}]\)</span>.</li>
-</ol>
-</section>
-<section id="fevd" class="level2" data-number="30.4">
-<h2 data-number="30.4" class="anchored" data-anchor-id="fevd"><span class="header-section-number">30.4</span> FEVD</h2>
-<p>We would also like to know the relative importance of each structural force, which can be gauged by computing the <strong>forecast error variance decomposition (FEVD)</strong>. Consider the forecast error</p>
-<p><span class="math display">\[
-y_{t+h} - \hat y_{t+h|t} = \Theta_0^{-1}\epsilon_{t+h} + \Psi_1\Theta_0^{-1}\epsilon_{t+h-1} +
-\cdots + \Psi_{h-1}\Theta_0^{-1}\epsilon_{t+1}
-\]</span></p>
-<p>The mean squared error (MSE) is</p>
+<p>Using this formula, we have</p>
 <p><span class="math display">\[
 \begin{aligned}
-\text{MSE}(\hat y_{t+h|t})
-&amp;= \mathbb{E}[(y_{t+h} - \hat y_{t+h|t})(y_{t+h} - \hat y_{t+h|t})'] \\[1em]
-&amp;= \Omega + \Psi_1\Omega\Psi_1' + \Psi_2\Omega\Psi_2' + \cdots + \Psi_{h-1}\Omega\Psi_{h-1}'
+P(\theta|S_n=k) &amp;=\frac{P(S_n=k|\theta) P(\theta)}{P(S_n=k)}=
+\frac{P(S_n=k|\theta) P(\theta)}{\int_0^1 P(S_n=k|\theta) P(\theta)d\theta}\\[1em]
+&amp;= \frac{\binom{n}{k}\theta^k (1-\theta)^{n-k}\cdot\mathbb{I}(0\leq\theta\leq 1)}
+{\int_0^1\binom{n}{k}\theta^k (1-\theta)^{n-k}\cdot\mathbb{I}(0\leq\theta\leq 1)d\theta}\\[1em]
+&amp;= \begin{cases}\frac{\binom{n}{k}\theta^k (1-\theta)^{n-k}}
+{\int_0^1\binom{n}{k}\theta^k (1-\theta)^{n-k}d\theta}&amp;\quad\text{if}\ 0\leq\theta\leq 1\\
+0&amp;\quad\text{otherwise}
+\end{cases}
 \end{aligned}
 \]</span></p>
-<p>where</p>
+<p>If <span class="math inline">\(k=n\)</span>, we have</p>
+<p><span class="math display">\[
+P(\theta|S_n=n) = \frac{\theta^n}{\int_0^1\theta^n d\theta}=(n+1)\theta^n
+\]</span></p>
+<p>for <span class="math inline">\(0\leq\theta\leq 1\)</span>. Now we are ready to calculate the probability of the sun rising tomorrow after observing <span class="math inline">\(n\)</span> sunrises:</p>
 <p><span class="math display">\[
 \begin{aligned}
-\Omega &amp;= \mathbb{E}(\Theta_0^{-1}\epsilon_{t}\epsilon_{t}'{\Theta_0^{-1}}') \\
-&amp;= \begin{bmatrix}
-a_1 &amp; a_2 &amp; \dots &amp; a_n
-\end{bmatrix}
-\begin{bmatrix}
-\text{var}(\epsilon_{1,t}) &amp; &amp; &amp; \\
-&amp; \text{var}(\epsilon_{2,t}) &amp; &amp; \\
-&amp; &amp; \ddots &amp; \\
-&amp; &amp; &amp; \text{var}(\epsilon_{n,t}) \\
-\end{bmatrix}
-\begin{bmatrix}
-a_1' \\ a_2' \\ \vdots \\ a_n'
-\end{bmatrix} \\[1em]
-&amp;= a_1a_1'\text{var}(\epsilon_{1,t}) + a_2a_2'\text{var}(\epsilon_{2,t}) +
-\cdots + a_n a_n'\text{var}(\epsilon_{n,t})
+P(x_{n+1}=1|S_n=n) &amp;= \int_0^1 P(x_{n+1}=1|\theta)P(\theta|S_n=n)d\theta \\
+&amp;=\int_0^1 \theta\cdot(n+1)\theta^n d\theta \\
+&amp;= \frac{n+1}{n+2}
 \end{aligned}
 \]</span></p>
-<p>Therefore,</p>
-<p><span class="math display">\[
-\text{MSE}(\hat y_{t+h|t}) =\sum_{j=1}^n \{ \text{var}(\epsilon_{j,t})
-[a_ja_j' + \Psi_1a_ja_j'\Psi_1' + \cdots + \Psi_{h-1}a_ja_j'\Psi_{h-1}'] \}
-\]</span></p>
-<p>The contribution of the <span class="math inline">\(j\)</span>-th structural force to the MSE of the <span class="math inline">\(h\)</span>-period-ahead forecast is given by</p>
-<p><span class="math display">\[
-\text{var}(\epsilon_{j,t})
-[a_ja_j' + \Psi_1a_ja_j'\Psi_1' + \cdots + \Psi_{h-1}a_ja_j'\Psi_{h-1}'].
-\]</span></p>
+<p>As <span class="math inline">\(n\to\infty\)</span>, the probability approaches <span class="math inline">\(1\)</span>. Personally, I think this is much more reasonable answer than the frequentist approach, in which you always get probability <span class="math inline">\(1\)</span>.</p>
 </section>
-<section id="example" class="level2" data-number="30.5">
-<h2 data-number="30.5" class="anchored" data-anchor-id="example"><span class="header-section-number">30.5</span> Example</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vars)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">readRDS</span>(<span class="st">"data/md.Rds"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">cbind</span>(<span class="at">p =</span> data<span class="sc">$</span>CPI, <span class="at">y =</span> data<span class="sc">$</span>NGDP, <span class="at">r =</span> data<span class="sc">$</span>Repo7D) </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>var <span class="ot">=</span> <span class="fu">VAR</span>(<span class="fu">as.ts</span>(y), <span class="at">p =</span> <span class="dv">4</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">irf</span>(var, <span class="at">impulse =</span> <span class="st">"r"</span>, <span class="at">response =</span> <span class="st">"p"</span>, <span class="at">ortho =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="30_irf_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell" data-fig.asp="1.2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fevd</span>(var) <span class="sc">|&gt;</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="30_irf_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
+<section id="the-bayesian-approach" class="level2" data-number="34.2">
+<h2 data-number="34.2" class="anchored" data-anchor-id="the-bayesian-approach"><span class="header-section-number">34.2</span> The Bayesian Approach</h2>
+<p>This illustration literally shows every tenet of the Bayesian approach. We start with an <strong>prior distribution</strong> about an unknown parameter <span class="math inline">\(\theta\)</span>. In the previous example, we model it as a uniform distribution because of our ignorance. But the prior can be any distribution reflecting our subjective belief about the parameter before we see the data. Note how this contrasts with the frequentist approach, in which the parameter is a fixed unknown number.</p>
+<p>The principle of Bayesian analysis is then to combine the prior information with the information contained in the data to obtain an updated distribution accounting for both sources of information, known as the <strong>posterior distribution</strong>. This is done by using the Bayes rule:</p>
+<p><span class="math display">\[
+\underbrace{p(\theta|X)}_{\text{posterior}} = \frac{\overbrace{p(X|\theta)}^{\text{likelihood}} \times
+\overbrace{p(\theta)}^{\text{prior}}}
+{\underbrace{p(X)}_{\text{normalizing scalar}}}
+\]</span></p>
+<p>The posterior distribution <span class="math inline">\(p(\theta|X)\)</span> is the central object for Bayesian inference as it combines all the information we have about <span class="math inline">\(\theta\)</span>. Note that <span class="math inline">\(p(\theta|X)\)</span> is a function of <span class="math inline">\(\theta\)</span>. Since the denominator <span class="math inline">\(p(X)\)</span> is independent of <span class="math inline">\(\theta\)</span>, it only plays the role of a normalizing constant to ensure the posterior is a valid probability density function that integrates to <span class="math inline">\(1\)</span>. It is therefore convenient to ignore it and rewrite the posterior as</p>
+<p><span class="math display">\[
+p(\theta|X) \propto p(X|\theta)p(\theta)
+\]</span></p>
+<p>One difficulty of Bayesian inference is that the denominator <span class="math inline">\(p(X)\)</span> is often impossible to compute, especially for high dimensional parameters:</p>
+<p><span class="math display">\[
+p(X) = \int_{\theta_1}\int_{\theta_2}\dots\int_{\theta_n} p(X,\theta_1,\theta_2,\dots,\theta_n)d\theta_1d\theta_2\dots d\theta_n
+\]</span></p>
+<p>But the relative frequencies of parameter values are easy to compute</p>
+<p><span class="math display">\[
+\frac{p(\theta_A|X)}{p(\theta_B|X)}=\frac{p(X|\theta_A)p(\theta_A)}{p(X|\theta_B)p(\theta_B)}
+\]</span></p>
+<p>This allows us to sample from the posterior distribution even the <span class="math inline">\(pdf\)</span> of the distribution is unknown. We will return to this point when we discuss computational Bayesian methods.</p>
+<p>The relative weight of the prior versus the data in determining the posterior depends on (i) how strong the prior is, and (ii) how many data we have. If the prior is so strong (very small variance / uncertainty) that seeing the data will not change our beliefs, the posterior would be mostly determined by the prior. On the contrary, if the data is so abundant that the evidence overwhelms any prior belief, the impact of prior would be negligible.</p>
+</section>
+<section id="frequentist-vs-bayesian" class="level2" data-number="34.3">
+<h2 data-number="34.3" class="anchored" data-anchor-id="frequentist-vs-bayesian"><span class="header-section-number">34.3</span> Frequentist vs Bayesian</h2>
+<p>Frequentists and Bayesians hold different philosophy about statistics. Frequentists view our sample as the result of one of an infinite number of exactly repeated experiments. The data are <strong>randomly sampled</strong> from a fixed population distribution. The unknown parameters are properties of the population, and therefore are fixed. The purpose of statistics is to make inference about the population parameters (the ultimate truth) with limited samples. The uncertainty associated with this process arises from sampling. Because we do not have the entire population, each sample only tells partial truth about the population. Therefore our inference about the parameters can never be perfect due to sampling errors. Frequentists conduct hypothesis tests assuming a hypothesis (about the population parameter) is true and calculating the probability of obtaining the observed sample data.</p>
+<p>In Bayesians’ world view, probability is an expression of <strong>subjective beliefs</strong> (a measure of certainty in a belief), which can be updated in light of new data. Parameters are probabilistic rather than fixed, which reflects the uncertainties about the parameters. The essence of Bayesian inference is to update the probability of a ‘hypothesis’ given the data we have obtained. The Bayes’ rule is all we need. All information is summarized in the posterior probability and there is not need for explicit hypothesis testing.</p>
+<table class="table">
+<colgroup>
+<col style="width: 56%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Frequentist</th>
+<th>Bayesian</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Probability is the limit of frequency</td>
+<td>Probability is uncertainty</td>
+</tr>
+<tr class="even">
+<td>Parameters are fixed unknown numbers</td>
+<td>Parameters are random variables</td>
+</tr>
+<tr class="odd">
+<td>Data is a random sample from the population</td>
+<td>Data is fixed/given</td>
+</tr>
+<tr class="even">
+<td>LLN/CLT</td>
+<td>Bayes’ rule</td>
+</tr>
+</tbody>
+</table>
+<p>In time series analysis, there are good reasons to be Bayesian. Perhaps the frequentist perspective makes sense in a cross section, where it is intuitive to image taking different samples from the population. However, in time series we have only one realization. It is difficult to imagine where we would obtain another sample. It is more natural to take a Bayesian perspective. For example, we have some prior belief on how inflation and unemployment might be related (the Phillips curve), then we update our belief with data.</p>
+<p>Frequentists often criticize Bayesians’ priors as entirely subjective. Bayesians would respond that frequentists also have prior assumptions that they are not even aware of. Frequentist inference utilizes the LLN and CLT, which inevitably assumes the speed of convergence. In settings like VAR models, where there are a large number of parameters to estimate but only a limited amount of observations. Are the asymptotically properties really plausible? Bayesians believe it would be better to make our assumptions explicit.</p>
+<p>Apart from the philosophical difference, in practice Frequentists and Bayesians might well give similar results (though the results should be interpreted differently). After all, if the data is plenty, the influence of priors would diminish to zero.</p>
 
 
 </section>
@@ -721,13 +648,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./29_svar.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Structural VAR</span></span>
+      <a href="./33_vecm.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">VECM*</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./31_dfm.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Factor Models</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./35_blm.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Linear Model</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

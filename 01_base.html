@@ -314,11 +314,46 @@ ul.task-list li input[type="checkbox"] {
 </li>
       </ul>
   </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">Bayesian Analysis</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./sum.html" class="sidebar-item-text sidebar-link">Epilogue</a>
+  <a href="./34_bayes.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Intro to Bayes</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./35_blm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Linear Model</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./36_bvar.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Bayesian VAR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./37_cp.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Conjugate Priors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./38_gib.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Gibbs Sampling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./39_mh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Metropolis–Hastings</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./ref.html" class="sidebar-item-text sidebar-link">References</a>
@@ -329,7 +364,16 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#raw-data" id="toc-raw-data" class="nav-link active" data-scroll-target="#raw-data">Raw data</a></li>
+  <li><a href="#growth-rates" id="toc-growth-rates" class="nav-link" data-scroll-target="#growth-rates">Growth rates</a></li>
+  <li><a href="#seasonally-adjusted-data" id="toc-seasonally-adjusted-data" class="nav-link" data-scroll-target="#seasonally-adjusted-data">Seasonally-adjusted data</a></li>
+  <li><a href="#logarithms" id="toc-logarithms" class="nav-link" data-scroll-target="#logarithms">Logarithms</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -351,10 +395,18 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p><strong>Raw data</strong>: The raw values without any transformation. We are not so interested in the raw data, as it is hard to read information from it. Take the GDP plot as an example (<a href="#fig-gdpts">Figure&nbsp;<span>1.1</span></a>, upper-left subplot). There is an overall upward trend. But we are more interested in: how much does the economy grow this year? Is it better or worse than last year? The answers are not obvious from the raw data. Besides, there are obvious seasonal fluctuations. Usually the first quarter has the lowest value in a whole year, due to the Spring Festival, which significantly reduces the working days in the first quarter. The seasonal fluctuations prohibit us from sensibly comparing two consecutive values.</p>
-<p><strong>Growth rate</strong>: The headline GDP growth is usually derived by comparing the current quarter with the same quarter from last year. <span class="math inline">\(g=\frac{x_t - x_{t-4}}{x_{t-4}}\times 100.\)</span> This makes sense. As mentioned above, due to seasonal patterns, comparing two consecutive quarters directly does not make sense. The year-on-year growth rate directly tells us how fast the economy grows. However, by dividing the past values, it loses the absolute level information. For instance, it is hard to tell after the pandemic, whether or not the economy recovers from its pre-pandemic output level. Besides, it is sensitive to the values of last year. For example, due to the pandemic, the GDP for 2020 is exceptionally low, which makes growth rate for 2021 exceptionally high. This is undesirable, because it does not mean the economy in 2021 is actually good. We would like a growth rate that shirks off past burdens.</p>
-<p>That’s why we sometimes prefer (annualized) quarterly growth rate. <span class="math inline">\(g=\frac{x_t-x_{t-1}}{x_{t-1}}\times 400.\)</span> Due to seasonally patterns, two consecutive quarters are not comparable directly. A first quarter value is usually much lower than the fourth quarter of last year due to holidays, which does not necessarily mean the economy condition is getting worse. Since this pattern is the same every year, it is possible to remove the seasonal fluctuations. This is called <em>seasonally adjustment</em>. We won’t cover seasonally adjustment in detail, but the next section will give some intuitions on how this can possibly be done. After seasonally adjusting the time series, we can calculate the growth rate based on two consecutive values (annualized by multiplying <span class="math inline">\(4\)</span>). The bottom-right panel of <a href="#fig-gdpts">Figure&nbsp;<span>1.1</span></a> is the seasonally-adjusted quarterly growth. Note that it is no longer biased upward in 2021 as the YoY growth.</p>
-<p><strong>Seasonally-adjusted series</strong>: This is usually the data format we prefer in time series analysis. FRED reports both seasonally-adjusted and non-seasonally-adjusted series. Seasonal adjustment algorithm is a science in itself. Popular algorithms include X-13-ARIMA developed by the United States Census Bureau, TRAMO/SEATS developed by the Bank of Spain, and so on.</p>
+<section id="raw-data" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="raw-data">Raw data</h3>
+<p>We are not so interested in the raw data without any transformation, as it is hard to read information from it. Take the GDP as an example (<a href="#fig-gdpts">Figure&nbsp;<span>1.1</span></a>, upper-left). There is an overall upward trend. But we are more interested in: how much does the economy grow this year? Is it better or worse than last year? The answers are not obvious from the raw data. Besides, there are obvious seasonal fluctuations. Usually the first quarter has the lowest value in a whole year, due to holidays that significantly reduce the working days in the first quarter. But this does not necessarily mean the economic condition of the first quarter is worse than others. The seasonality prohibits us from sensibly comparing the values of two consecutive quarters.</p>
+</section>
+<section id="growth-rates" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="growth-rates">Growth rates</h3>
+<p>The headline GDP growth rates are usually reported by comparing the current quarter with the same quarter from last year: <span class="math inline">\(g=\frac{x_t - x_{t-4}}{x_{t-4}}\times 100.\)</span> As mentioned above, due to seasonal patterns, comparing two consecutive quarters does not make sense. The year-on-year growth rate tells us how fast the economy grows. However, it loses the information about absolute levels. That comes with sereval drawbacks. For instance, it is hard to tell whether the economy recovers to the pre-pandemic level after the shock. Due to the unprecedented impact of the pandemic, the GDP for 2020 is exceptionally low, which renders the growth rate for 2021 artifically high. This is undesirable, because it does not mean the economy in 2021 is actually good. We would like a growth rate that shirks off the excessive influence of past observations.</p>
+<p>That’s why we sometimes prefer (annualized) quarterly growth rate: <span class="math inline">\(g=\frac{x_t-x_{t-1}}{x_{t-1}}\times 400.\)</span> Due to seasonally patterns, two consecutive quarters are not comparable directly. But, since this pattern is the same every year, it is possible to remove the seasonal fluctuations. This is called <em>seasonally adjustment</em>. We will not cover the seasonal adjustment method here. But this is something that can be done. After seasonally adjusting the data, we can calculate the growth rate based on two consecutive values (annualized by multiplying <span class="math inline">\(4\)</span>). The bottom-right panel of <a href="#fig-gdpts">Figure&nbsp;<span>1.1</span></a> shows the seasonally-adjusted quarterly growth. Note that it is no longer biased upward in 2021 as the year-on-year growth rate.</p>
+</section>
+<section id="seasonally-adjusted-data" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="seasonally-adjusted-data">Seasonally-adjusted data</h3>
+<p>This is usually the data format we would prefer in time series analysis. <a href="https://fred.stlouisfed.org/">FRED</a> reports both seasonally-adjusted and non-seasonally-adjusted series. The method for seasonal adjustment is a science in itself. Popular algorithms include X-13-ARIMA developed by the United States Census Bureau, TRAMO/SEATS developed by the Bank of Spain, and so on.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-gdpts" class="quarto-figure quarto-figure-center anchored">
@@ -365,36 +417,24 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p><strong>Log levels and log growth rates</strong>: We like to work with log levels. A lot of economic time series exhibit exponential growth, such as GDP. Taking logs convert them to linear. Another amazing thing about logs is the difference of two log values can be interpreted as percentage growth. We know from Taylor expansion that for small values of <span class="math inline">\(\Delta x\)</span> : <span class="math inline">\(\ln(\Delta x +1) \approx \Delta x\)</span>. Therefore,</p>
+</section>
+<section id="logarithms" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="logarithms">Logarithms</h3>
+<p>We like to work with log values. Lots of economic time series exhibit exponential growth, such as GDP. Taking logs convert them to linear. Another amazing fact about logs is that the difference between two log values can be interpreted as percentage growth. To see this, by Taylor’s theorem, we have <span class="math inline">\(\ln(\Delta x +1) \approx \Delta x\)</span> for small values of <span class="math inline">\(\Delta x\)</span>. Therefore,</p>
 <p><span class="math display">\[
 \ln x_t - \ln x_{t-1} = \ln\left(\frac{x_t}{x_{t-1}}\right) = \ln\left(\frac{x_t-x_{t-1}}{x_{t-1}}+1\right) \approx \frac{x_t-x_{t-1}}{x_{t-1}}.
 \]</span></p>
-<p>So it is very handy to just difference the log levels to get the growth rates. Log difference can also be interpreted as the continuously compounded rate of change, if assuming</p>
+<p>So it is very handy to just difference the log levels to get the growth rates. Log-difference can also be interpreted as the continuously compounded rate of change:</p>
 <p><span class="math display">\[
 \frac{x_t}{x_{t-1}}=e^g \implies g = \ln x_t - \ln x_{t-1}.
 \]</span></p>
-<p>Log difference also has the property of summability: summing up a series of log differences gives the log level provided the initial level. It is not as handy if you want to recover the level values from a series of percentage growth.</p>
+<p>Log-difference also has the property of summability: summing up a sequence of log-differences gives back the log level provided the initial level. It is not as handy if you want to recover the levels from percentage growth.</p>
 <p><span class="math display">\[
 \ln x_t = x_0 + \sum_{j=1}^{t} (\ln x_j - \ln x_{j-1}).
 \]</span></p>
-<div class="callout-tip callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Exercise
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Buying vs.&nbsp;renting a home, which is better? Compute the NPV:</p>
-<p><span class="math display">\[
-\text{NPV}=\sum_{t=0}^T \frac{C_t}{(1+r)^t}=\int_0^T C(t) e^{-rt} dt.
-\]</span></p>
-</div>
-</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
