@@ -58,7 +58,6 @@ book:
         - 37_cp.qmd
         - 38_gib.qmd
         - 39_mh.qmd
-    - sum.qmd
     - ref.qmd
 
 format:
