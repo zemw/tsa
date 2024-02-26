@@ -1,49 +1,48 @@
 # Preface {.unnumbered}
 
-Empirical macroeconomics frequently involves the analysis of time series
-data, encompassing variables such as GDP, inflation, and interest rates,
-employing methodologies distinct from those utilized in cross-sectional
-studies. The goal of this book is to bridge the gap between introductory
-time series textbooks and theoretical econometrics. In the realm of
-empirical research, a rudimentary comprehension of the subject matter
-often proves insufficient. While computational tasks can be executed
-through simple computer commands, practitioners must go beyond
-surface-level in order to understand the intricacies and limitations of
-the involved techniques. Conversely, an exhaustive exploration of
-advanced econometric theories would be excessive for practical purposes.
-For instance, introductory textbooks would caution against applying OLS
-on non-stationary time series, citing the potential risk of spurious
-regression. Students often accept this as a rule of thumb without a
-grasp of its underlying rationale. Yet, delving into intricate topics
-such as Itô calculus is deemed unnecessary for empirical researchers.
+Empirical macroeconomics often involves the analysis of time series
+data, such as GDP, inflation, and interest rates, which are distinct
+from those utilized in cross-sectional studies. The goal of this book is
+to bridge the gap between introductory time series textbooks and
+theoretical econometrics. In modern applied research, a rudimentary
+comprehension of the subject often proves insufficient. Though
+computational tasks can be executed through simple computer commands,
+practitioners must go below the surface to understand the intricacies
+and limitations of the techniques involved. However, an exhaustive
+exploration of advanced econometric theories would be excessive for
+practical purposes. For instance, introductory textbooks would caution
+against running OLS on non-stationary time series, citing the risk of
+spurious regression. Students often accept this as a rule of thumb
+without a grasp of its underlying rationale. Yet, delving into intricate
+topics such as Itô calculus is unnecessary for empirical researchers.
 
-This book seeks to acquaint readers with essential time series topics
-crucial for understanding and conducting empirical research, with a
-specific focus on macroeconomic applications. In addition to introducing
-basic concepts and applications, such as running a regression and
-interpreting the result, the book endeavors to elevate comprehension to
-a deeper level by elucidating the "why" alongside the "what" and "how."
-However, the objective is not to provide an exhaustive treatment replete
-with formal proofs; rather, emphasis is placed on providing intuitive
-explanations. Consequently, readers may encounter instances of
-non-rigorous proofs where a more formal approach is deemed unnecessary
-for an understanding required by applied works. This book can be read as
-intermediary materials between undergraduate econometrics and more
-rigorous treatments of the subject, such as Hamilton's *Time Series
-Analysis*.
+This book seeks to acquaint readers with the time series topics
+essential for understanding and conducting empirical research, with a
+focus on macroeconomic applications. In addition to introducing basic
+concepts and applications, the book endeavors to elevate comprehension
+to a deeper level by elucidating the "why" alongside the "what" and
+"how." However, the objective is not to provide an exhaustive treatment
+replete with formal proofs; rather, emphasis is placed on providing
+intuitive explanations. Consequently, readers may encounter instances of
+informal proofs where a more formal approach is deemed unnecessary for
+applied works. This book can be read as intermediary materials between
+undergraduate econometrics and more rigorous treatments of the subject,
+such as Hamilton's *Time Series Analysis*.
 
 The materials presented are drawn from or influenced by various sources,
 which are listed in the References at the end of the book without being
-cited individually in the context. Regarding notations, I use lowercase
-letters for random variables, such as $x_t$ and $y_t$. Realizations of
-random variables are expressed as $x_1$, $x_2$, and so on. The context
-will make it clear whether I am referring to a random variable or its
-realizations. Capital letters are reserved for matrices, such as $A$ and
-$B$. Vectors and matrices are sometimes written in bold for emphasizing,
-such as $\boldsymbol X$ and $\boldsymbol y_t$, or in plain format as
-scalars if that does not lead to confusion. Greek letters are preferred
-for parameters, such as $\alpha$ and $\beta$. Estimators are indicated
-with a hat, such as $\hat{\alpha}$ and $\hat{\beta}$.
+cited individually in the context.
+
+Regarding notations, I use lowercase letters for random variables, such
+as $x_t$ and $y_t$. Realizations of random variables are expressed as
+$x_1$, $x_2$, and so on. The context will make it clear whether I am
+referring to a random variable or its realizations. Capital letters are
+reserved for matrices, such as $A$ and $B$. Vectors and matrices are
+sometimes written in bold for emphasizing, such as $\boldsymbol X$ and
+$\boldsymbol y$; but mostly, in plain format, $X$ and $y$, provided that
+they will not lead to confusion. Greek letters are preferred for
+parameters, such as $\alpha$ and $\beta$. Estimators are indicated with
+a hat, such as $\hat{\alpha}$ and $\hat{\beta}$.
 
 I use the statistical language R whenever programming is involved. I am
 aware that there are many time series solutions available in R. To avoid
