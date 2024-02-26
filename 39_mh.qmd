@@ -1,5 +1,7 @@
 # Metropolis--Hastings
 
+## Dependent Sampling
+
 We have mentioned, despite the posterior density is hard to compute, it
 is easy to determine the relative frequencies of the parameter values:
 
@@ -25,10 +27,12 @@ Dependent sampling naturally takes more samples to reach a reasonable
 approximation of the posterior than independent sampling. Because of the
 dependency, each move gives less information than independent sampling.
 
+## Random Walk Metropolis
+
 We now introduce one of the most famous MCMC algorithm:
 
 ::: {.callout-note icon="false"}
-## Random Walk Metropolis-Hastings
+## Algorithm (Random Walk Metropolis-Hastings)
 
 Choose an arbitrary point $\theta_t$ to be the first sample value in the
 posterior space. Propose the next value according to a random walk:
@@ -60,7 +64,7 @@ forever. It can be proved the algorithm converges to the posterior
 distribution. That is, if the algorithm reaches the posterior density,
 it stays there.
 
-There are several remarks regarding the algorithm.
+## Remarks
 
 **Step size**. The rate at which Metropolis converges to the posterior
 distribution is highly sensitive to the step size. If the step size is

@@ -1,5 +1,7 @@
 # Gibbs Sampling
 
+## Computational Bayes
+
 If we move away from conjugate priors, we are likely to have no
 closed-form solution for the posterior distribution. But we can
 approximate the posterior distribution by some computational algorithms.
@@ -8,16 +10,21 @@ Carlo (MCMC)** methods. That is, one can construct a Markov chain that
 has the desired distribution as its equilibrium distribution.
 
 One strategy to approximate the shape of a distribution is through
-random sampling. If we can draw random samples from a distribution, as
-the sample size grows, sampling frequency will approach the probability
-density. Properties of a distribution can also be estimated from finite
-samples, e.g. $\frac{1}{n}\sum_{i=1}^{n} x_i\to\mathbb{E}(x)$.
+**random sampling**. If we can draw random samples from a distribution,
+as the sample size grows, sampling frequency will approach the
+probability density. Properties of a distribution can also be estimated
+from finite samples, e.g.
+$\frac{1}{n}\sum_{i=1}^{n} x_i\to\mathbb{E}(x)$.
 
 The problem is how to draw samples from a distribution without knowing
 its PDF. It seems to be an impossible task. But what if the conditional
-PDF is easier to compute? Consider the example in @sec-blm with unknown
-variance. The joint distribution of $p(\beta,\sigma^2 | Y)$ is hard to
-come by. But the condition distribution is easier to compute:
+PDF is easier to compute?
+
+## Gibbs Sampler for Linear Regression Models
+
+Consider the example in @sec-blm with unknown variance. The joint
+distribution of $p(\beta,\sigma^2 | Y)$ is hard to come by. But the
+condition distribution is easier to compute:
 
 $$
 \begin{aligned}
@@ -33,7 +40,7 @@ $x \sim U(0,1)$), we can generate samples $\{(\beta,\sigma^2)\}$ by the
 following algorithm.
 
 ::: {.callout-note icon="false"}
-## Gibbs Sampler for the Linear Regression Model
+## Algorithm (Gibbs Sampling)
 
 Pick some initial value $\beta^{(0)}=a_0$ and $\sigma^{2(0)} = b_0$.
 Repeat the following steps for $i=1...N$:
@@ -52,6 +59,8 @@ would be statistically identical to sampling from the joint probability
 distribution. However, Gibbs sampling can be highly inefficient if the
 posterior variables are highly correlated.
 
+## Gibbs Sampler for General Models
+
 Here is the more general Gibbs algorithm. Suppose we have a model with
 $k$ parameters $\boldsymbol\theta=(\theta_1,\theta_2,\dots,\theta_k)$.
 Assume we can derive the exact expressions for each of the conditional
@@ -61,7 +70,7 @@ Further assume we can generate independent samples from each of them.
 Then the Gibbs sampler runs as follows.
 
 ::: {.callout-note icon="false"}
-## Gibbs Sampler for General Models
+## Algorithm (Gibbs Sampling)
 
 Initialize the algorithm with
 $(\theta_1^{(0)},\theta_2^{(0)},\dots,\theta_k^{(0)})$. Then repeat the

@@ -1,5 +1,7 @@
 # Linear Model {#sec-blm}
 
+## Linear Regression with Known $\sigma^2$
+
 Let's use the Bayesian principle to estimate a simple linear regression:
 
 $$
@@ -76,8 +78,10 @@ and the likelihood function that the posterior has a closed-form
 solution. Not many prior choice has this property. This is what we
 called a **conjugate prior**.
 
-For simplicity, we assume the variance $\sigma^2$ is known. In reality,
-if $\sigma^2$ is unknown, we also need to assign it a prior
+## Linear Regression with Unknown $\sigma^2$
+
+For simplicity, we have assumed the variance $\sigma^2$ is known. In
+reality, if $\sigma^2$ is unknown, we also need to assign it a prior
 distribution. A common choice is an inverse-Gamma distribution:
 
 $$
@@ -100,6 +104,8 @@ $$
 (\sigma^2 | \boldsymbol Y,\beta) \sim IG\left(\nu_0 + \frac{T}{2},
 S_0 +\frac{1}{2}\sum_{t=0}^{T} (y_t-x_t\beta)^2\right).
 $$
+
+## Credible Interval
 
 Once the posterior distribution is obtained, the question becomes how to
 report and interpret the results. Similar to conventional OLS results,

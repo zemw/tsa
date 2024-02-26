@@ -10,11 +10,7 @@ problem for frequentists. The benefit of using a Bayesian approach is
 that the priors can provide "shrinkage" over the parameters, that is
 strong priors for some parameters to reduce the burden of the data.
 
-The simplest form of prior distributions for VAR models is known as the
-**Minnesota prior** (Litterman 1986). In this framework, it is assumed
-that the VAR residual variance-covariance matrix $\Sigma$ is known. The
-only task is to estimate parameters $\beta$. The essence of the
-Minnesota prior is to shrink the parameters of longer lags to zero.
+## Vectorized Form
 
 For Bayesian inference, it is easier to work with the vectorized form of
 a VAR in @sec-var2:
@@ -62,12 +58,22 @@ $$
 \beta \sim N(\beta_0, \Omega_0)
 $$
 
-The key is to specify $\beta_0$ and $\Omega_0$, Litterman (1986)
-proposed the following strategy. As most observed macroeconomic
-variables seem to be characterized by a unit root, our prior belief
-should be that each endogenous variable included in the model presents a
-unit root in its first own lags, and the coefficients equal to zero for
-further lags and cross-variable coefficients.
+The key is to specify $\beta_0$ and $\Omega_0$. We now introduce one of
+the simplest and yet the most popular prior setting for VAR models.
+
+## Minnesota Prior
+
+The Minnesota prior is proposed by Litterman (1986). It is assumed that
+the VAR residual covariance matrix $\Sigma$ is known. The only prior
+required is for parameters $\beta$. The essence of the Minnesota prior
+is to shrink the parameters of longer lags to zero.
+
+The prior setting for $\beta_0$ is as following: as most observed
+macroeconomic variables seem to be characterized by a unit root, our
+prior belief should be that each endogenous variable included in the
+model presents a unit root in its first own lags, and the coefficients
+equal to zero for further lags and cross-variable coefficients.
+Therefore,
 
 $$
 \mathbb{E}[A_k^{(ij)}] = \begin{cases}
@@ -77,14 +83,13 @@ $$
 $$
 
 For stationary variables, the coefficient $1$ can be replaced by, say,
-$0.8$. Regarding the uncertainties of the prior, expressed in
-$\Omega_0$, it is assumed that no covariance exists between terms in
-$\beta$ so that $\Omega_0$ is diagonal. Furthermore, our prior shall
-become stronger (variance becomes smaller) for longer lags that they are
-closer to zero (i.e. shrinking longer lags to zero). Besides,
-correlations with lags on other variables are likely weaker than the
-correlations on their own lags (stronger shrinkage on coefficients
-relating to other variables).
+$0.8$. Regarding the uncertainty of our belief, expressed in $\Omega_0$,
+it is assumed that no covariance exists between terms in $\beta$ so that
+$\Omega_0$ is diagonal. Furthermore, our prior shall become stronger
+(variance becomes smaller) for longer lags that they are closer to zero
+(i.e. shrinking longer lags to zero). Besides, correlations with lags on
+other variables are likely weaker than the correlations on their own
+lags (stronger shrinkage on coefficients relating to other variables).
 
 $$
 \text{Var}[A_k^{(ij)}]=\lambda_1\lambda_2^{\mathbb{1}(i\neq j)}\frac{1}{k^{\lambda_3}}\frac{\sigma_i^2}{\sigma_j^2}
@@ -108,6 +113,8 @@ it beforehand. One method is to set the diagonal of $\Sigma$ equal to
 the residual variance of individual AR models run on each variable in
 the VAR. Alternatively, one can use the variance-covariance matrix of
 the VAR estimated by OLS.
+
+## The Posterior
 
 Once the prior is determined, we can derive the posterior as follows
 
