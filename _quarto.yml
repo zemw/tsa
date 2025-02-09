@@ -2,9 +2,12 @@ project:
   type: book
 
 book:
-  title: "Time Series Analysis for Economists"
-  author: "Z.WANG"
-  date: "25 Feb 2024"
+  title: "Time Series Analysis for Economics and Finance"
+  author: 
+    - name: "Zeming Wang (PhD)"
+      affiliations: "Southwest University of Finance and Economics"
+  date: "September 2025"
+  date-format: "MMMM YYYY"
   chapters:
     - index.qmd
     - part: "The Basics"

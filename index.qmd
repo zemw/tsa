@@ -1,6 +1,6 @@
 # Preface {.unnumbered}
 
-Empirical macroeconomics often involves the analysis of time series
+Empirical finance and economic studies often involves the analysis of time series
 data, such as GDP, inflation, and interest rates, which are distinct
 from those utilized in cross-sectional studies. The goal of this book is
 to bridge the gap between introductory time series textbooks and
