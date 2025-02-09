@@ -6,10 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Z.WANG">
-<meta name="dcterms.date" content="2024-02-25">
+<meta name="author" content="Zeming Wang (PhD)">
 
-<title>Time Series Analysis for Economists</title>
+<title>Time Series Analysis for Economics and Finance</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -72,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Time Series Analysis for Economists</h1>
+      <h1 class="quarto-secondary-nav-title">Time Series Analysis for Economics and Finance</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -85,7 +84,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Time Series Analysis for Economists</a> 
+      <a href="./">Time Series Analysis for Economics and Finance</a> 
     </div>
       </div>
       <div class="mt-2 flex-shrink-0 align-items-center">
@@ -378,24 +377,31 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Time Series Analysis for Economists</h1>
+<h1 class="title d-none d-lg-block">Time Series Analysis for Economics and Finance</h1>
 </div>
 
 
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    Zeming Wang (PhD) 
+  </div>
+    <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Southwest University of Finance and Economics
+          </p>
+      </div>
+    </div>
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Z.WANG </p>
-          </div>
-  </div>
-    
+      
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 25, 2024</p>
+      <p class="date">September 2025</p>
     </div>
   </div>
   
@@ -407,7 +413,7 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="preface" class="level1 unnumbered">
 <h1 class="unnumbered">Preface</h1>
-<p>Empirical macroeconomics often involves the analysis of time series data, such as GDP, inflation, and interest rates, which are distinct from those utilized in cross-sectional studies. The goal of this book is to bridge the gap between introductory time series textbooks and theoretical econometrics. In modern applied research, a rudimentary comprehension of the subject often proves insufficient. Though computational tasks can be executed through simple computer commands, practitioners must go below the surface to understand the intricacies and limitations of the techniques involved. However, an exhaustive exploration of advanced econometric theories would be excessive for practical purposes. For instance, introductory textbooks would caution against running OLS on non-stationary time series, citing the risk of spurious regression. Students often accept this as a rule of thumb without a grasp of its underlying rationale. Yet, delving into intricate topics such as Itô calculus is unnecessary for empirical researchers.</p>
+<p>Empirical finance and economic studies often involves the analysis of time series data, such as GDP, inflation, and interest rates, which are distinct from those utilized in cross-sectional studies. The goal of this book is to bridge the gap between introductory time series textbooks and theoretical econometrics. In modern applied research, a rudimentary comprehension of the subject often proves insufficient. Though computational tasks can be executed through simple computer commands, practitioners must go below the surface to understand the intricacies and limitations of the techniques involved. However, an exhaustive exploration of advanced econometric theories would be excessive for practical purposes. For instance, introductory textbooks would caution against running OLS on non-stationary time series, citing the risk of spurious regression. Students often accept this as a rule of thumb without a grasp of its underlying rationale. Yet, delving into intricate topics such as Itô calculus is unnecessary for empirical researchers.</p>
 <p>This book seeks to acquaint readers with the time series topics essential for understanding and conducting empirical research, with a focus on macroeconomic applications. In addition to introducing basic concepts and applications, the book endeavors to elevate comprehension to a deeper level by elucidating the “why” alongside the “what” and “how.” However, the objective is not to provide an exhaustive treatment replete with formal proofs; rather, emphasis is placed on providing intuitive explanations. Consequently, readers may encounter instances of informal proofs where a more formal approach is deemed unnecessary for applied works. This book can be read as intermediary materials between undergraduate econometrics and more rigorous treatments of the subject, such as Hamilton’s <em>Time Series Analysis</em>.</p>
 <p>The materials presented are drawn from or influenced by various sources, which are listed in the References at the end of the book without being cited individually in the context.</p>
 <p>Regarding notations, I use lowercase letters for random variables, such as <span class="math inline">\(x_t\)</span> and <span class="math inline">\(y_t\)</span>. Realizations of random variables are expressed as <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, and so on. The context will make it clear whether I am referring to a random variable or its realizations. Capital letters are reserved for matrices, such as <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>. Vectors and matrices are sometimes written in bold for emphasizing, such as <span class="math inline">\(\boldsymbol X\)</span> and <span class="math inline">\(\boldsymbol y\)</span>; but mostly, in plain format, <span class="math inline">\(X\)</span> and <span class="math inline">\(y\)</span>, provided that they will not lead to confusion. Greek letters are preferred for parameters, such as <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. Estimators are indicated with a hat, such as <span class="math inline">\(\hat{\alpha}\)</span> and <span class="math inline">\(\hat{\beta}\)</span>.</p>
