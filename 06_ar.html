@@ -577,9 +577,9 @@ Note
 \begin{aligned}
 \text{var}(y_t)
 &amp;= \text{var}\left[\sum_{j=0}^{\infty} \phi^j\epsilon_{t-j}\right]
-= \sum_{j=0}^{\infty} \phi^j\text{var}[\epsilon_{t-j}] \\
-&amp;= \sigma^2 \sum_{j=0}^{\infty} \phi^j
-=\frac{\sigma^2}{1-\phi}.
+= \sum_{j=0}^{\infty} \phi^{2j}\text{var}[\epsilon_{t-j}] \\
+&amp;= \sigma^2 \sum_{j=0}^{\infty} \phi^{2j}
+=\frac{\sigma^2}{1-\phi^2}.
 \end{aligned}
 \]</span></p>
 <p>For the covariances,</p>
@@ -589,7 +589,7 @@ Note
 = \mathbb{E}((\phi y_{t-1} + \epsilon_t)y_{t-1}) \\
 &amp;= \mathbb{E}(\phi y_{t-1}^2 + \epsilon_t y_{t-1}) \\
 &amp;= \phi\mathbb{E}(y_{t-1}^2) + 0 \\
-&amp;= \frac{\phi\sigma^2}{1-\phi};
+&amp;= \frac{\phi\sigma^2}{1-\phi^2};
 \end{aligned}
 \]</span></p>
 <p><span class="math display">\[
@@ -598,9 +598,9 @@ Note
 = \mathbb{E}((\phi y_{t-1} + \epsilon_t)y_{t-2}) \\
 &amp;= \mathbb{E}(\phi y_{t-1}y_{t-2} + \epsilon_t y_{t-2}) \\
 &amp;= \phi\mathbb{E}(y_{t-1}y_{t-2}) \\
-&amp;= \phi\gamma_1 = \frac{\phi^2\sigma^2}{1-\phi};\\
+&amp;= \phi\gamma_1 = \frac{\phi^2\sigma^2}{1-\phi^2};\\
 &amp;\;\vdots \\
-\gamma_j &amp;= \frac{\phi^j\sigma^2}{1-\phi}.
+\gamma_j &amp;= \frac{\phi^j\sigma^2}{1-\phi^2}.
 \end{aligned}
 \]</span></p>
 <p>All of them are independent of time <span class="math inline">\(t\)</span>. By <a href="04_st.html#def-covstationary">Definition&nbsp;<span>4.2</span></a>, the process is covariance stationary.</p>

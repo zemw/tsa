@@ -493,16 +493,17 @@ x_t = T_t \times S_t \times R_t.
 <p>Note that how the <span class="math inline">\(2\times4\)</span>-MA averages out the seasonality for time series with seasonal period <span class="math inline">\(4\)</span>, e.g.&nbsp;quarterly series. The formula puts equal weight on every quarter — the first and last terms refer the same quarter and their weights combined to <span class="math inline">\(\frac{1}{4}\)</span>.</p>
 <p>In general, we can use <span class="math inline">\(m\)</span>-MA to estimate the trend if the seasonal period is an odd number, and use <span class="math inline">\(2\times m\)</span>-MA if the seasonal period is an even number.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">readRDS</span>(<span class="st">"data/gdp.Rds"</span>)  <span class="co"># a `zoo` object</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gdp2x4MA <span class="ot">=</span> <span class="fu">ma</span>(<span class="fu">ma</span>(data<span class="sc">$</span>GDP,<span class="dv">4</span>),<span class="dv">2</span>) <span class="co"># from `forecast` package</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(<span class="fu">cbind</span>(data<span class="sc">$</span>GDP, gdp2x4MA), <span class="at">col=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)  <span class="co"># for the `ma` function</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> AirPassengers</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># compute 2x12 MA, since it is a monthly series</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>x_ma <span class="ot">=</span> <span class="fu">ma</span>(<span class="fu">ma</span>(x, <span class="dv">12</span>), <span class="dv">2</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the original series together with its moving average</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x); <span class="fu">lines</span>(x_ma, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-gdpma" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="02_dec_files/figure-html/fig-gdpma-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.1: Quarterly GDP with 2x4-MA estimate of the trend-cycle</figcaption><p></p>
-</figure>
-</div>
+<p><img src="02_dec_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -517,14 +518,12 @@ x_t = T_t \times S_t \times R_t.
 <li>Subtracting the seasonal component to get the remainder <span class="math inline">\(R_t = x_t-T_t-S_t\)</span>.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(data<span class="sc">$</span>GDP) <span class="sc">|&gt;</span> <span class="fu">decompose</span>() <span class="sc">|&gt;</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># classical decomposition</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(AirPassengers) <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">decompose</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fig-gdpdecomp" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="02_dec_files/figure-html/fig-gdpdecomp-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2.2: Classical multiplicative decomposition of quarterly GDP</figcaption><p></p>
-</figure>
-</div>
+<p><img src="02_dec_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The example performs additive decomposition to the logged quarterly GDP series. Note how the constant seasonal component is removed, leaving the smooth and nice-looking up-growing trend. The remainder component tells us the irregular ups and downs of the economy around the trend-cycle. Isn’t it amazing that a simple decomposition of the time series tells us a lot about the economy?</p>
@@ -532,21 +531,22 @@ x_t = T_t \times S_t \times R_t.
 <section id="seasonal-adjustment" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="seasonal-adjustment"><span class="header-section-number">2.4</span> Seasonal Adjustment</h2>
 <p>By decomposing a time series into trend, seasonality and remainder, it readily gives us a method for seasonal adjustment. Simply subtracting the seasonal component from the original data, or equivalently, summing up the trend and the remainder components, would give us the seasonally-adjusted series.</p>
-<p>The following example compares the seasonally-adjusted series using the classical decomposition with the state-of-the-art <a href="https://www.census.gov/data/software/x13as.html">X-13ARIMA-SEATS</a> algorithm. Despite the former is far more rudimentary than the latter, they look quite close if we simply eye-balling the plot. By taking first-order differences, we can see the series based on classical decomposition is more volatile, suggesting the classical decomposition is less robust to unusual values.</p>
+<p>The following example compares the seasonally-adjusted series using the classical decomposition with the state-of-the-art <a href="https://www.census.gov/data/software/x13as.html">X-13ARIMA-SEATS</a> algorithm. We can see the series based on classical decomposition is more volatile, suggesting the classical decomposition is less robust to unusual values.</p>
 <div class="cell" data-fig.asp="0.5">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>logdata <span class="ot">=</span> <span class="fu">log</span>(data) <span class="sc">|&gt;</span> <span class="fu">window</span>(<span class="at">start=</span><span class="dv">2000</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>seasadj <span class="ot">=</span> <span class="fu">as.ts</span>(logdata<span class="sc">$</span>GDP) <span class="sc">-</span> <span class="fu">decompose</span>(logdata<span class="sc">$</span>GDP)<span class="sc">$</span>seasonal</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">mar=</span><span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">4</span>))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(<span class="fu">cbind</span>(seasadj, logdata<span class="sc">$</span>GDPSA), <span class="at">col=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(<span class="fu">diff</span>(<span class="fu">cbind</span>(seasadj, logdata<span class="sc">$</span>GDPSA)), <span class="at">col=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">mar=</span><span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">4</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># seasonal adjustment based on classical decomposition</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">log</span>(AirPassengers)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>x_comp <span class="ot">&lt;-</span> <span class="fu">decompose</span>(x)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>x_sa_classic <span class="ot">=</span> x <span class="sc">-</span> x_comp<span class="sc">$</span>seasonal</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x_sa_classic, <span class="at">main =</span> <span class="st">"Classical SA"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># seasonal adjustment with X-13ARIMA-SEATS</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>x_seas <span class="ot">&lt;-</span> seasonal<span class="sc">::</span><span class="fu">seas</span>(x) </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>x_sa_x13 <span class="ot">&lt;-</span> seasonal<span class="sc">::</span><span class="fu">final</span>(x_seas)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x_sa_x13, <span class="at">main =</span> <span class="st">"X-13ARIMA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="02_dec_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Comparing classical decomposition and X-13</figcaption><p></p>
-</figure>
-</div>
+<p><img src="02_dec_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
