@@ -74,20 +74,17 @@ period is an odd number, and use $2\times m$-MA if the seasonal period
 is an even number.
 
 ```{r}
-#| include: false
-library(zoo)
-library(forecast)
+library(forecast)  # for the `ma` function
+
+x <- AirPassengers
+
+# compute 2x12 MA, since it is a monthly series
+x_ma = ma(ma(x, 12), 2)
+
+# plot the original series together with its moving average
+plot(x); lines(x_ma, col = "red")
 ```
 
-```{r}
-#| echo: true
-#| warning: false
-#| fig-cap: "Quarterly GDP with 2x4-MA estimate of the trend-cycle"
-#| label: fig-gdpma
-data = readRDS("data/gdp.Rds")  # a `zoo` object
-gdp2x4MA = ma(ma(data$GDP,4),2) # from `forecast` package
-ts.plot(cbind(data$GDP, gdp2x4MA), col=1:2)
-```
 
 ## Classical Decomposition
 
@@ -113,10 +110,10 @@ The algorithm for additive decomposition is as follows.
     $R_t = x_t-T_t-S_t$.
 
 ```{r}
-#| fig-cap: "Classical multiplicative decomposition of quarterly GDP"
-#| label: fig-gdpdecomp
-#| warning: false
-log(data$GDP) |> decompose() |> plot()
+# classical decomposition
+log(AirPassengers) |> 
+  decompose() |> 
+  plot()
 ```
 
 The example performs additive decomposition to the logged quarterly GDP
@@ -137,21 +134,23 @@ seasonally-adjusted series.
 The following example compares the seasonally-adjusted series using the
 classical decomposition with the state-of-the-art
 [X-13ARIMA-SEATS](https://www.census.gov/data/software/x13as.html)
-algorithm. Despite the former is far more rudimentary than the latter,
-they look quite close if we simply eye-balling the plot. By taking
-first-order differences, we can see the series based on classical
+algorithm. 
+We can see the series based on classical
 decomposition is more volatile, suggesting the classical decomposition
 is less robust to unusual values.
 
-```{r}
-#| echo: true
-#| warning: false
-#| fig-cap: "Comparing classical decomposition and X-13"
-#| fig-asp: 0.5
-logdata = log(data) |> window(start=2000)
-seasadj = as.ts(logdata$GDP) - decompose(logdata$GDP)$seasonal
-
+```{r, fig.asp=0.5}
 par(mfrow=c(1,2), mar=rep(2,4))
-ts.plot(cbind(seasadj, logdata$GDPSA), col=1:2)
-ts.plot(diff(cbind(seasadj, logdata$GDPSA)), col=1:2)
+
+# seasonal adjustment based on classical decomposition
+x <- log(AirPassengers)
+x_comp <- decompose(x)
+x_sa_classic = x - x_comp$seasonal
+plot(x_sa_classic, main = "Classical SA")
+
+# seasonal adjustment with X-13ARIMA-SEATS
+x_seas <- seasonal::seas(x) 
+x_sa_x13 <- seasonal::final(x_seas)
+plot(x_sa_x13, main = "X-13ARIMA")
 ```
+

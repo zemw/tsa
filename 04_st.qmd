@@ -67,14 +67,27 @@ stationary properties.
 ```{r}
 #| echo: false
 #| warning: false
-#| fig-cap: "Stationary and non-stationary time series (real life)"
+#| fig-cap: "Stationary and non-stationary time series (real data)"
 #| label: fig-stationary-real
-md = readRDS("data/md.Rds")
+
+library(AER)
+
+# load dataset
+data("USMacroSWM")
+data("USStocksSW")
+
+# compute growth rate (log-differencing)
+prod = diff(log(USMacroSWM[,'production']))
+exp = diff(log(USMacroSWM[,'expenditure']))
+cpi = diff(log(USMacroSWM[,'cpi']))
+ret = USStocksSW[,'returns']
+
+# make plot
 par(mfrow=c(2,2), mar=rep(2,4))
-plot(md$CPI, main="CPI", xlab='', ylab='')
-plot(md$Export, main="Export", xlab='', ylab='')
-plot(md$TBond1Y, main="Interest Rate", xlab='', ylab='')
-plot(md$SHSE, main="Stock Market", xlab='', ylab='')
+plot(prod, main = "Industrial Production")
+plot(exp, main = "Expenditure")
+plot(cpi, main = "Inflation")
+plot(ret, main = "Stock returns")
 ```
 
 ::: {#prp-neggamma}

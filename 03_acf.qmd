@@ -35,18 +35,18 @@ strongest for the first two lags. Longer lags are barely significant.
 There are spikes with 12-month and 24-month lags, indicating the
 seasonality is not fully removed from the series.
 
-```{r}
-#| include: false
-library(zoo)
+```{r, fig.asp=0.5}
+par(mfrow=c(1,2))
+
+# compute the daily return of DAX index
+x <- EuStockMarkets[, 'DAX']
+y <- x/lag(x,1)-1
+plot(y)
+
+# compute the ACF among daily returns
+acf(y)
 ```
 
-```{r}
-#| echo: true
-#| fig-cap: ACF for monthly export growth
-#| label: fig-acfexport
-data = readRDS("data/md.Rds")
-acf(data$Export, main='Autocorrelation')
-```
 
 ## Partial Autocorrelation
 
@@ -83,9 +83,8 @@ $$
 The estimated coefficient $\hat\phi_k$ is the partial autocorrelation
 after controlling the intermediate lags.
 
-```{r}
-#| echo: true
-#| fig-cap: PACF for monthly export growth
-#| label: fig-pacfexport
-pacf(data$Export, main='Partial Autocorrelation')
+```{r, fig.asp=0.5}
+par(mfrow=c(1,2))
+acf(y)
+pacf(y)
 ```

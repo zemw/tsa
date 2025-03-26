@@ -78,19 +78,24 @@ other words, ARMA models are effective in modelling stable patterns
 repeated over time, in so far as only 2nd-order moments are of concern.
 Even if the time series is not entirely stationary, if we model it with
 ARMA, it can be thought as extracting the stationary patterns.
-@fig-exparima demonstrates the ARIMA modelling of monthly export.
+@fig-exparima demonstrates the ARIMA modelling of real data.
 
 ```{r}
 #| echo: true
-#| fig-cap: "Monthly export modelled with ARIMA(2,0,1)"
+#| fig-cap: "Monthly sales modelled with ARIMA(2,0,1)"
 #| label: fig-exparima
 #| warning: false
-library(zoo)
-data = read.csv.zoo("data/md.csv", FUN = as.yearmon, regular = TRUE)
-y = data$Export
-mod = arima(y, order = c(2,0,1))
-yhat = y - mod$residuals
-plot(cbind(y, yhat), plot.type = "s", col = 1:2, ann = F)
+
+x <- BJsales # Sales data
+
+# model with ARIMA(1,1,1)
+mod <- arima(x, order = c(1,1,1))
+
+# fitted values
+fit <- fitted(mod)
+
+# make plot
+plot(x); lines(fit, col = "red")
 ```
 
 ## Causality and Invertibility\*

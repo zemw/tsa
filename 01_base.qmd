@@ -3,8 +3,8 @@
 ### Raw data {.unnumbered}
 
 We are not so interested in the raw data without any transformation, as
-it is hard to read information from it. Take the GDP as an example
-(@fig-gdpts, upper-left). There is an overall upward trend. But we are
+it is hard to read information from it. Take the upper-left panel below 
+as an example. There is an overall upward trend. But we are
 more interested in: how much does the economy grow this year? Is it
 better or worse than last year? The answers are not obvious from the raw
 data. Besides, there are obvious seasonal fluctuations. Usually the
@@ -38,7 +38,7 @@ fluctuations. This is called *seasonally adjustment*. We will not cover
 the seasonal adjustment method here. But this is something that can be
 done. After seasonally adjusting the data, we can calculate the growth
 rate based on two consecutive values (annualized by multiplying $4$).
-The bottom-right panel of @fig-gdpts shows the seasonally-adjusted
+The bottom-right panel shows the seasonally-adjusted
 quarterly growth. Note that it is no longer biased upward in 2021 as the
 year-on-year growth rate.
 
@@ -52,22 +52,27 @@ by the United States Census Bureau, TRAMO/SEATS developed by the Bank of
 Spain, and so on.
 
 ```{r}
-#| include: false
-library(zoo)
+
+par(mfrow=c(2,2), mar=rep(2,4))
+
+# raw data
+x <- AirPassengers
+plot(x)
+
+# year-over-year growth rate
+x_yoy <- x/lag(x,12) - 1
+plot(x_yoy)
+
+# seasonally-adjusted series
+x_sa <- seasonal::seas(x) |> seasonal::final()
+plot(x_sa)
+
+# monthly growth rate
+x_mom <- x_sa/lag(x_sa, 1) - 1
+plot(x_mom)
+
 ```
 
-```{r}
-#| echo: false
-#| warning: false
-#| fig-cap: "Quarterly GDP Time Series (Unit: RMB Billion or %)"
-#| label: fig-gdpts
-data = readRDS("data/gdp.Rds")
-par(mfrow=c(2,2), mar=rep(2,4))
-ts.plot(data$GDP)
-ts.plot(data[, c("GDP","GDPSA")], col=1:2)
-ts.plot(data$YoY)
-ts.plot(window(data$QoQ, start=2011, end=2022))
-```
 
 ### Logarithms {.unnumbered}
 
