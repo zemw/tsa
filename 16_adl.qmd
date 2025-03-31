@@ -156,7 +156,7 @@ orange juice. Cold weather is plausibly exogenous, which allows us the
 utilize the regression framework above to estimate the dynamic causal
 effect.
 
-```{r}
+```{r, message=FALSE}
 library(AER)
 library(dynlm)
 library(lmtest)
@@ -174,11 +174,10 @@ mod = dynlm(pchg ~ L(fdd, 0:6), data = sample)
 coeftest(mod, vcov. = NeweyWest)
 ```
 
-To plot the dynamic multiplier, the following code creates a custom
-function that manually plots the coefficients and the confidence
-intervals.
-
 ```{r}
+# To plot the dynamic multiplier, the following code creates 
+# a custom function that manually plots the coefficients and 
+# the confidence intervals
 plotDM <- function(mod, 
                    horizon = 0:5, 
                    vcov = "NeweyWest", 
@@ -252,10 +251,6 @@ sudden change of the price in the tiny window of monetary policy
 announcement captures the unexpected part of the monetary policy.
 
 ```{r}
-#| echo: true
-#| fig-cap: "Monetary Policy Shock and Interest Rate"
-#| label: fig-mpshocks
-
 # load US monthly data
 data = read.csv("data/usmd.csv") 
 
@@ -268,18 +263,18 @@ plot(cbind(ffr, mps), main = "Monetary Policy Shocks")
 ```
 
 We estimate the dynamic causal effect of monetary policy shocks on stock
-market returns. Despite we employ the simplest regression specification,
-our results differ noticeably when using changes in the FF rate directly
-versus using identified monetary policy shocks. In the regression using
-the FF rate, the coefficient is not statistically significant. One might
-tempt one to conclude that monetary policy has no impact on stock market
-returns based this result. However, this conclusion is misleading
-because common factors, such as overall economic conditions, influence
-both stock market returns and the FF rate. In our second
-experiment—where we regress stock market returns on the identified
-monetary policy shocks—we observe a much larger coefficient and a
-significant negative impact, especially in the month immediately
-following the shock.
+market returns. We employ the simplest regression specification. Note
+that there is quite a difference when using changes in the FF rate
+directly versus using identified monetary policy shocks. In the
+regression using the FF rate, the coefficient is not statistically
+significant. One might tempt one to conclude that monetary policy has no
+impact on stock market returns based this result. However, this
+conclusion is misleading because common factors, such as overall
+economic conditions, influence both stock market returns and the FF
+rate. In our second experiment—where we regress stock market returns on
+the identified monetary policy shocks—we observe a much larger
+coefficient and a significant negative impact, especially in the month
+immediately following the shock.
 
 ```{r}
 # monthly S&P 500 returns
