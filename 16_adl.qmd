@@ -157,10 +157,6 @@ utilize the regression framework above to estimate the dynamic causal
 effect.
 
 ```{r}
-#| warning: false
-#| message: false
-#| fig-cap: "Dynamic Effect of Freezing Days on Orange Juice Price"
-#| label: fig-frozen
 library(AER)
 library(dynlm)
 library(lmtest)
@@ -173,21 +169,40 @@ sample = ts.union(fdd = FrozenJuice[,'fdd'], pchg)
 
 # distributed lag model
 mod = dynlm(pchg ~ L(fdd, 0:6), data = sample)
-# confidence interval
-ci = coefci(mod, vcov. = NeweyWest)
 
-# plot dynamic multiplier
-{
-  plot(mod$coefficients[-1], # remove intercept
-       type = "l", 
-       col = 2, 
-       ylim = c(-0.4,1), 
-       xlab = "Lag", 
-       ylab = "Dynamic Multiplier")
-  abline(h = 0, lty = 2)
-  lines(ci[-1,1], col = 4)
-  lines(ci[-1,2], col = 4)
+# compute Newey-West standard error
+coeftest(mod, vcov. = NeweyWest)
+```
+
+To plot the dynamic multiplier, the following code creates a custom
+function that manually plots the coefficients and the confidence
+intervals.
+
+```{r}
+plotDM <- function(mod, 
+                   horizon = 0:5, 
+                   vcov = "NeweyWest", 
+                   col = "red") {
+  
+  # only Newey-West standard error is supported
+  if (vcov == "NeweyWest") {
+    ci = coefci(mod, vcov. = sandwich::NeweyWest)
+  } 
+  
+  # extract coefficients of the lagged regressors
+  plot(horizon, mod$coefficients[-1], type = "l", 
+       col = col, ylim = c(min(ci[-1,]), max(ci[-1,])), 
+       xlab = "Lags", ylab = "Dynamic Multiplier")
+  
+  # horizontal zero
+  abline(h = 0, col = "gray")
+  
+  # confidence intervals
+  lines(horizon, ci[-1,1], lty = 2, col = col)
+  lines(horizon, ci[-1,2], lty = 2, col = col)
 }
+
+plotDM(mod, horizon = 0:6)
 ```
 
 We can also use local projections. Note that local projections require
@@ -195,28 +210,25 @@ estimating multiple regressions. The coefficients from each of the
 regressions constitute the dynamic multiplier.
 
 ```{r}
-#| warning: false
-#| message: false
-#| fig-cap: "Local Projections of Freezing Days on Orange Juice Price"
-#| label: fig-frozenlp
 # apply local projection for horizons 0-6
 lps = sapply(0:6, function(h) {
+  
+  # regress future price change on fdd
   lp = dynlm(L(pchg, -h) ~ fdd, data = sample)
+  
+  # Newey-West confidence interval
   ci = coefci(lp, vcov. = NeweyWest)
+  
+  # extract coefficients and CIs
   c(lp$coefficients[-1], ci[-1,]) # remove intercept
 }) |> t() # transpose it
 
 # plot the LP coefficients
 {
-  plot(lps[,'fdd'], 
-       type = "l", 
-       col = 2, 
-       ylim = c(-0.4,1), 
-       xlab = "Horizon", 
-       ylab = "LP Coefficient")
-  abline(h = 0, lty = 2)
-  lines(lps[,'2.5 %'], col = 4)
-  lines(lps[,'97.5 %'], col = 4)
+  plot(0:6, lps[,'fdd'], type = "l", col = 2, ylim = c(-0.05,0.75), ann = F)
+  abline(h = 0, col = "gray")
+  lines(0:6, lps[,'2.5 %'], lty = 2, col = 2)
+  lines(0:6, lps[,'97.5 %'], lty = 2, col = 2)
 }
 ```
 
@@ -229,60 +241,64 @@ regressing output or inflation on interest rate does not give a
 plausible estimation of the causal effect of monetary policy, due to the
 endogeneity problem. Thus, we need to isolate the exogenous part of the
 monetary policy from observed variables. The method to achieve this is
-an active research field in itself. We here demonstrate the monetary
-policy shock for China constructed by Das and Song (2023).
+an active research field in itself.
 
-The authors utilize the high-frequency price changes of interest rate
-swap around the window of monetary policy announcement to approximate
-the monetary policy shock. The rationale of this construction is that,
-the price of the financial instrument reflects the expected interest
-rate by market participants based on the economic conditions. Therefore,
-the sudden change of the price in the tiny window of monetary policy
+We may utilize the high-frequency price changes of fed fund futures
+around the window of monetary policy announcement to approximate the
+monetary policy shock. The rationale of this construction is that, the
+price of the financial instrument reflects the expected interest rate by
+market participants based on the economic conditions. Therefore, the
+sudden change of the price in the tiny window of monetary policy
 announcement captures the unexpected part of the monetary policy.
 
 ```{r}
 #| echo: true
-#| fig-cap: "Monetary Policy Shock and Lending Rate"
+#| fig-cap: "Monetary Policy Shock and Interest Rate"
 #| label: fig-mpshocks
-library(zoo)
 
-mp = readRDS("data/mpshocks.Rds") # monetary policy shock
-md = readRDS("data/md.Rds") # monthly data
+# load US monthly data
+data = read.csv("data/usmd.csv") 
 
-plot(na.exclude(cbind(mp$shock_1y, md$LoanRate1Y)), 
-     main="", xlab="", ylab=c("Loan Rate", "MP Shock"))
+# convert to time series
+ffr = ts(data[, 'FEDFUNDS'], start = c(1990,1), frequency = 12)
+mps = ts(data[, 'MPS'], start = c(1990,1), frequency = 12)
+
+# interest rate changes and MP shocs are different
+plot(cbind(ffr, mps), main = "Monetary Policy Shocks")
 ```
 
-We estimate the dynamic causal effect of monetary policy shock on
-inflation using the constructed MP shocks. It shows that a tightening of
-monetary policy implies a gradual cooling down of inflation. The price
-level starts to decline roughly half a year after the initial tightening
-shock. However, the confidence interval is wide, suggesting an
-insignificant estimation of the policy effect. The result does not
-provide very strong evidence underlining the effectiveness of monetary
-policy to control inflation.
+We estimate the dynamic causal effect of monetary policy shocks on stock
+market returns. Despite we employ the simplest regression specification,
+our results differ noticeably when using changes in the FF rate directly
+versus using identified monetary policy shocks. In the regression using
+the FF rate, the coefficient is not statistically significant. One might
+tempt one to conclude that monetary policy has no impact on stock market
+returns based this result. However, this conclusion is misleading
+because common factors, such as overall economic conditions, influence
+both stock market returns and the FF rate. In our second
+experiment—where we regress stock market returns on the identified
+monetary policy shocks—we observe a much larger coefficient and a
+significant negative impact, especially in the month immediately
+following the shock.
 
 ```{r}
-#| echo: true
-#| fig-cap: "Dynamic response of inflation on monetary policy shocks"
-#| label: fig-infmp
-sample = na.exclude(cbind(cpi=md$CPI, mp))
+# monthly S&P 500 returns
+ret = data[, 'SP500'] |> 
+  ts(start = c(1990,1), frequency = 12) |> 
+  log() |> 
+  diff()
 
-# distributed lag model
-mod = dynlm(cpi ~ L(shock_1y, 0:12), sample)
-# confidence interval
-ci = coefci(mod, vcov. = NeweyWest)
+# regression on FF rate changes
+mod_1 = dynlm(ret ~ L(d(ffr), 0:6)) 
 
 # plot dynamic multiplier
-{
-  plot(mod$coefficients[-1], # remove intercept
-       type = "l", 
-       col = 2, 
-       ylim = c(-1,1.5), 
-       xlab = "Lag", 
-       ylab = "Dynamic Multiplier")
-  abline(h = 0, lty = 2)
-  lines(ci[-1,1], col = 4)
-  lines(ci[-1,2], col = 4)
-}
+plotDM(mod_1, horizon = 0:6)
+```
+
+```{r}
+# regression with MP shocks
+mod_2 = dynlm(ret ~ L(mps, 0:6)) 
+
+# plot dynamic multiplier
+plotDM(mod_2, horizon = 0:6, col = "blue")
 ```
