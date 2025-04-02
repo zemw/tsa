@@ -88,4 +88,47 @@ $$
 \frac{\partial\ell}{\partial\sigma^2}=0 \implies \hat\sigma^2 =\frac{1}{T} (\boldsymbol{y-X\hat\phi})' (\boldsymbol{\hat\Gamma\hat\Gamma'})^{-1} (\boldsymbol{y-X\hat\phi})
 $$
 
-Thia allows us to focus our search only on $\boldsymbol\phi$.
+This allows us to focus our search only on $\boldsymbol\phi$.
+
+```{r}
+#' --------------------------------
+#'  MLE Estimation for MA(1)
+#' --------------------------------
+
+# Simulate an MA(1) process 
+y = arima.sim(list(ma=0.5), n=200)
+
+# Negative log-likelihood function for MA(1)
+neg_log_likelihood <- function(params, y) {
+  theta <- params[1]
+  sigma <- abs(params[2])  # Ensure sigma > 0
+  n <- length(y)
+  
+  # Initialize residuals
+  e_hat <- numeric(n)
+  e_hat[1] <- y[1] #/ (1 + theta^2)
+  
+  for (t in 2:n) {
+    e_hat[t] <- y[t] - theta * e_hat[t - 1]
+  }
+  
+  ll <- -n/2 * log(2*pi*sigma^2) - sum(e_hat^2) / (2*sigma^2)
+  
+  return(-ll)  # Return negative log-likelihood
+}
+
+# Initial guesses for theta and sigma
+init_params <- c(0.1, 1)
+
+# Run MLE using optim
+result <- optim(par = init_params,
+                fn = neg_log_likelihood,
+                y = y)
+
+# Estimated parameters
+theta_hat <- result$par[1]
+sigma_hat <- abs(result$par[2])
+
+cat("Estimated theta:", theta_hat, "\n")
+cat("Estimated sigma:", sigma_hat, "\n")
+```
