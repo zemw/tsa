@@ -587,99 +587,41 @@ y_{t+1} = \psi_1\epsilon_t + u_{t+1}.
 <p>Directly observable exogenous shocks are rare. Here we use an example from Stock and Watson’s textbook, which explores the dynamic causal effect of cold weather on orange juice prices. Cold weather is bad for orange production. Orange trees cannot withstand freezing temperatures that last for more than a few hours. Florida accounts for more than 98 percent of U.S. production of frozen concentrated orange juice. Therefore, the frozen weather in Florida would reduce the supply and orange juice and raise the price. The dataset includes the number of freezing degree days in Florida and the average producer price for orange juice. Cold weather is plausibly exogenous, which allows us the utilize the regression framework above to estimate the dynamic causal effect.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dynlm)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"FrozenJuice"</span>) <span class="co"># load data</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># compute percentage change on price</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>pchg <span class="ot">=</span> <span class="dv">100</span><span class="sc">*</span><span class="fu">diff</span>(<span class="fu">log</span>(FrozenJuice[, <span class="st">'price'</span>]))</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">=</span> <span class="fu">ts.union</span>(<span class="at">fdd =</span> FrozenJuice[,<span class="st">'fdd'</span>], pchg)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ARDL)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"FrozenJuice"</span>) <span class="co"># load data</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># compute percentage change on price</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>FJ <span class="ot">&lt;-</span> <span class="fu">transform</span>(FrozenJuice, </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">price =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fu">diff</span>(<span class="fu">log</span>(price))) <span class="sc">*</span> <span class="dv">100</span>, </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">ppi =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fu">diff</span>(<span class="fu">log</span>(ppi))) <span class="sc">*</span> <span class="dv">100</span>)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># distributed lag model</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">dynlm</span>(pchg <span class="sc">~</span> <span class="fu">L</span>(fdd, <span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>), <span class="at">data =</span> sample)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">ardl</span>(price <span class="sc">~</span> fdd, FJ, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">6</span>))</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># compute Newey-West standard error</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(mod, <span class="at">vcov. =</span> NeweyWest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-t test of coefficients:
-
-              Estimate Std. Error t value  Pr(&gt;|t|)    
-(Intercept)  -0.418188   0.227219 -1.8405 0.0661952 .  
-L(fdd, 0:6)0  0.484907   0.135850  3.5694 0.0003865 ***
-L(fdd, 0:6)1  0.139460   0.084986  1.6410 0.1013277    
-L(fdd, 0:6)2  0.057297   0.057063  1.0041 0.3157410    
-L(fdd, 0:6)3  0.068637   0.043709  1.5703 0.1168703    
-L(fdd, 0:6)4  0.035142   0.028405  1.2372 0.2165036    
-L(fdd, 0:6)5  0.048680   0.028938  1.6822 0.0930485 .  
-L(fdd, 0:6)6  0.040545   0.045168  0.8976 0.3697343    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To plot the dynamic multiplier, the following code creates </span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># a custom function that manually plots the coefficients and </span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># the confidence intervals</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>plotDM <span class="ot">&lt;-</span> <span class="cf">function</span>(mod, </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">horizon =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>, </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">vcov =</span> <span class="st">"NeweyWest"</span>, </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">col =</span> <span class="st">"red"</span>) {</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># only Newey-West standard error is supported</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (vcov <span class="sc">==</span> <span class="st">"NeweyWest"</span>) {</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    ci <span class="ot">=</span> <span class="fu">coefci</span>(mod, <span class="at">vcov. =</span> sandwich<span class="sc">::</span>NeweyWest)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  } </span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># extract coefficients of the lagged regressors</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(horizon, mod<span class="sc">$</span>coefficients[<span class="sc">-</span><span class="dv">1</span>], <span class="at">type =</span> <span class="st">"l"</span>, </span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> col, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fu">min</span>(ci[<span class="sc">-</span><span class="dv">1</span>,]), <span class="fu">max</span>(ci[<span class="sc">-</span><span class="dv">1</span>,])), </span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">"Lags"</span>, <span class="at">ylab =</span> <span class="st">"Dynamic Multiplier"</span>)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># horizontal zero</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"gray"</span>)</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># confidence intervals</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(horizon, ci[<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>], <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> col)</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(horizon, ci[<span class="sc">-</span><span class="dv">1</span>,<span class="dv">2</span>], <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> col)</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">plotDM</span>(mod, <span class="at">horizon =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># plot dynamic multipliers</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">multipliers</span>(mod, <span class="at">type =</span> <span class="dv">6</span>, <span class="at">se =</span> <span class="cn">TRUE</span>) [<span class="sc">-</span><span class="dv">1</span>] <span class="sc">|&gt;</span> </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_delay</span>(<span class="at">facets_ncol =</span> <span class="dv">1</span>, <span class="at">interval =</span> <span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="16_adl_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="16_adl_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>We can also use local projections. Note that local projections require estimating multiple regressions. The coefficients from each of the regressions constitute the dynamic multiplier.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># apply local projection for horizons 0-6</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>lps <span class="ot">=</span> <span class="fu">sapply</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>, <span class="cf">function</span>(h) {</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># regress future price change on fdd</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  lp <span class="ot">=</span> <span class="fu">dynlm</span>(<span class="fu">L</span>(pchg, <span class="sc">-</span>h) <span class="sc">~</span> fdd, <span class="at">data =</span> sample)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Newey-West confidence interval</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  ci <span class="ot">=</span> <span class="fu">coefci</span>(lp, <span class="at">vcov. =</span> NeweyWest)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># extract coefficients and CIs</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(lp<span class="sc">$</span>coefficients[<span class="sc">-</span><span class="dv">1</span>], ci[<span class="sc">-</span><span class="dv">1</span>,]) <span class="co"># remove intercept</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span> <span class="fu">t</span>() <span class="co"># transpose it</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the LP coefficients</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>, lps[,<span class="st">'fdd'</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="dv">2</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.05</span>,<span class="fl">0.75</span>), <span class="at">ann =</span> F)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"gray"</span>)</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>, lps[,<span class="st">'2.5 %'</span>], <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="dv">2</span>)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>, lps[,<span class="st">'97.5 %'</span>], <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="dv">2</span>)</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lpirfs)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>lp <span class="ot">&lt;-</span> <span class="fu">lp_lin</span>(FJ[<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">1</span>)], <span class="at">lags_endog_lin =</span> <span class="dv">1</span>, <span class="at">trend =</span> <span class="dv">0</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">shock_type =</span> <span class="dv">1</span>, <span class="at">confint =</span> <span class="fl">1.96</span>, <span class="at">hor =</span> <span class="dv">6</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_lin</span>(lp)[[<span class="dv">3</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="16_adl_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="16_adl_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -690,15 +632,33 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>Most structural shocks in economics are not directly observed, such as monetary policy shocks, or fiscal policy shocks, yet they are of profound interest of researchers. As we have explained before, regressing output or inflation on interest rate does not give a plausible estimation of the causal effect of monetary policy, due to the endogeneity problem. Thus, we need to isolate the exogenous part of the monetary policy from observed variables. The method to achieve this is an active research field in itself.</p>
 <p>We may utilize the high-frequency price changes of fed fund futures around the window of monetary policy announcement to approximate the monetary policy shock. The rationale of this construction is that, the price of the financial instrument reflects the expected interest rate by market participants based on the economic conditions. Therefore, the sudden change of the price in the tiny window of monetary policy announcement captures the unexpected part of the monetary policy.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load US monthly data</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"data/usmd.csv"</span>) </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to time series</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>ffr <span class="ot">=</span> <span class="fu">ts</span>(data[, <span class="st">'FEDFUNDS'</span>], <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1990</span>,<span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>mps <span class="ot">=</span> <span class="fu">ts</span>(data[, <span class="st">'MPS'</span>], <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1990</span>,<span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># interest rate changes and MP shocs are different</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cbind</span>(ffr, mps), <span class="at">main =</span> <span class="st">"Monetary Policy Shocks"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load US monthly data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">read.csv</span>(<span class="st">"data/usmd.csv"</span>) </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># interest rate changes and MP shocs are different</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>(data[<span class="fu">c</span>(<span class="st">'FEDFUNDS'</span>, <span class="st">'MPS'</span>)], <span class="at">main =</span> <span class="st">"Monetary Policy Shocks"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16_adl_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We estimate the dynamic causal effect of monetary policy shocks on stock market returns. We employ the simplest regression specification. Note that there is quite a difference when using changes in the FF rate directly versus using identified monetary policy shocks. In the regression using the FF rate, the coefficient is not statistically significant. One might tempt one to conclude that monetary policy has no impact on stock market returns based this result. However, this conclusion is misleading because common factors, such as overall economic conditions, influence both stock market returns and the FF rate. In our second experiment—where we regress stock market returns on the identified monetary policy shocks—we observe a much larger coefficient and a significant negative impact, especially in the month immediately following the shock.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># transform to stationary</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>data_diff <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">subset</span>(<span class="at">select =</span> <span class="fu">c</span>(<span class="st">"SP500"</span>, <span class="st">"FEDFUNDS"</span>, <span class="st">"MPS"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(<span class="at">SP500 =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fu">diff</span>(<span class="fu">log</span>(SP500))),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">FEDFUNDS =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fu">diff</span>(FEDFUNDS)))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># regression on FF rate changes</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>mod_ff <span class="ot">=</span> <span class="fu">ardl</span>(SP500 <span class="sc">~</span> FEDFUNDS, data_diff, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">6</span>)) </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># plot dynamic multiplier</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">multipliers</span>(mod_ff, <span class="at">type =</span> <span class="dv">9</span>, <span class="at">se =</span> <span class="cn">TRUE</span>) [<span class="sc">-</span><span class="dv">1</span>] <span class="sc">|&gt;</span> </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_delay</span>(<span class="at">facets_ncol =</span> <span class="dv">1</span>, <span class="at">interval =</span> <span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -707,37 +667,17 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 </div>
-<p>We estimate the dynamic causal effect of monetary policy shocks on stock market returns. We employ the simplest regression specification. Note that there is quite a difference when using changes in the FF rate directly versus using identified monetary policy shocks. In the regression using the FF rate, the coefficient is not statistically significant. One might tempt one to conclude that monetary policy has no impact on stock market returns based this result. However, this conclusion is misleading because common factors, such as overall economic conditions, influence both stock market returns and the FF rate. In our second experiment—where we regress stock market returns on the identified monetary policy shocks—we observe a much larger coefficient and a significant negative impact, especially in the month immediately following the shock.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># monthly S&amp;P 500 returns</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ret <span class="ot">=</span> data[, <span class="st">'SP500'</span>] <span class="sc">|&gt;</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ts</span>(<span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1990</span>,<span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">diff</span>()</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># regression on FF rate changes</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>mod_1 <span class="ot">=</span> <span class="fu">dynlm</span>(ret <span class="sc">~</span> <span class="fu">L</span>(<span class="fu">d</span>(ffr), <span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>)) </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># plot dynamic multiplier</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plotDM</span>(mod_1, <span class="at">horizon =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># regression on MP shocks</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mod_mps <span class="ot">=</span> <span class="fu">ardl</span>(SP500 <span class="sc">~</span> MPS, data_diff, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">6</span>)) </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># plot dynamic multiplier</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">multipliers</span>(mod_mps, <span class="at">type =</span> <span class="dv">9</span>, <span class="at">se =</span> <span class="cn">TRUE</span>) [<span class="sc">-</span><span class="dv">1</span>] <span class="sc">|&gt;</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_delay</span>(<span class="at">facets_ncol =</span> <span class="dv">1</span>, <span class="at">interval =</span> <span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="16_adl_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># regression with MP shocks</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mod_2 <span class="ot">=</span> <span class="fu">dynlm</span>(ret <span class="sc">~</span> <span class="fu">L</span>(mps, <span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>)) </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># plot dynamic multiplier</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plotDM</span>(mod_2, <span class="at">horizon =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="16_adl_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
