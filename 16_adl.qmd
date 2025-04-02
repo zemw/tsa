@@ -157,23 +157,51 @@ utilize the regression framework above to estimate the dynamic causal
 effect.
 
 ```{r, message=FALSE}
-
 library(AER)
-library(ARDL)
+library(dynlm)
+library(lmtest)
 
 data("FrozenJuice") # load data
 
 # compute percentage change on price
-FJ <- transform(FrozenJuice, 
-                price = c(NA, diff(log(price))) * 100, 
-                ppi = c(NA, diff(log(ppi))) * 100)
+pchg = 100*diff(log(FrozenJuice[, 'price']))
+sample = ts.union(fdd = FrozenJuice[,'fdd'], pchg)
 
 # distributed lag model
-mod = ardl(price ~ fdd, FJ, order = c(1,6))
+mod = dynlm(pchg ~ L(fdd, 0:6), data = sample)
 
-# plot dynamic multipliers
-multipliers(mod, type = 6, se = TRUE) [-1] |> 
-  plot_delay(facets_ncol = 1, interval = 0.95)
+# compute Newey-West standard error
+coeftest(mod, vcov. = NeweyWest)
+```
+
+```{r}
+# To plot the dynamic multiplier, the following code creates 
+# a custom function that manually plots the coefficients and 
+# the confidence intervals
+plotDM <- function(mod, 
+                   horizon = 0:5, 
+                   vcov = "NeweyWest", 
+                   col = "red") {
+  
+  # only Newey-West standard error is supported
+  if (vcov == "NeweyWest") {
+    ci = coefci(mod, vcov. = sandwich::NeweyWest)
+  } 
+  
+  # extract coefficients of the lagged regressors
+  plot(horizon, mod$coefficients[-1], type = "l", 
+       col = col, ylim = c(min(ci[-1,]), max(ci[-1,])), 
+       xlab = "Lags", ylab = "Dynamic Multiplier")
+  
+  # horizontal zero
+  abline(h = 0, col = "gray")
+  
+  # confidence intervals
+  lines(horizon, ci[-1,1], lty = 2, col = col)
+  lines(horizon, ci[-1,2], lty = 2, col = col)
+}
+
+plotDM(mod, horizon = 0:6)
 ```
 
 We can also use local projections. Note that local projections require
@@ -181,12 +209,26 @@ estimating multiple regressions. The coefficients from each of the
 regressions constitute the dynamic multiplier.
 
 ```{r}
-library(lpirfs)
-
-lp <- lp_lin(FJ[c(3,1)], lags_endog_lin = 1, trend = 0,
-             shock_type = 1, confint = 1.96, hor = 6)
+# apply local projection for horizons 0-6
+lps = sapply(0:6, function(h) {
   
-plot_lin(lp)[[3]]
+  # regress future price change on fdd
+  lp = dynlm(L(pchg, -h) ~ fdd, data = sample)
+  
+  # Newey-West confidence interval
+  ci = coefci(lp, vcov. = NeweyWest)
+  
+  # extract coefficients and CIs
+  c(lp$coefficients[-1], ci[-1,]) # remove intercept
+}) |> t() # transpose it
+
+# plot the LP coefficients
+{
+  plot(0:6, lps[,'fdd'], type = "l", col = 2, ylim = c(-0.05,0.75), ann = F)
+  abline(h = 0, col = "gray")
+  lines(0:6, lps[,'2.5 %'], lty = 2, col = 2)
+  lines(0:6, lps[,'97.5 %'], lty = 2, col = 2)
+}
 ```
 
 ## Example of Constructed Structural Shocks
@@ -212,8 +254,12 @@ announcement captures the unexpected part of the monetary policy.
 # load US monthly data
 data = read.csv("data/usmd.csv") 
 
+# convert to time series
+ffr = ts(data[, 'FEDFUNDS'], start = c(1990,1), frequency = 12)
+mps = ts(data[, 'MPS'], start = c(1990,1), frequency = 12)
+
 # interest rate changes and MP shocs are different
-plot.ts(data[c('FEDFUNDS', 'MPS')], main = "Monetary Policy Shocks")
+plot(cbind(ffr, mps), main = "Monetary Policy Shocks")
 ```
 
 We estimate the dynamic causal effect of monetary policy shocks on stock
@@ -231,25 +277,23 @@ coefficient and a significant negative impact, especially in the month
 immediately following the shock.
 
 ```{r}
-# transform to stationary
-data_diff <- data |> 
-  subset(select = c("SP500", "FEDFUNDS", "MPS")) |> 
-  transform(SP500 = c(NA, diff(log(SP500))),
-            FEDFUNDS = c(NA, diff(FEDFUNDS)))
+# monthly S&P 500 returns
+ret = data[, 'SP500'] |> 
+  ts(start = c(1990,1), frequency = 12) |> 
+  log() |> 
+  diff()
 
 # regression on FF rate changes
-mod_ff = ardl(SP500 ~ FEDFUNDS, data_diff, order = c(1,6)) 
+mod_1 = dynlm(ret ~ L(d(ffr), 0:6)) 
 
 # plot dynamic multiplier
-multipliers(mod_ff, type = 9, se = TRUE) [-1] |> 
-  plot_delay(facets_ncol = 1, interval = 0.95)
+plotDM(mod_1, horizon = 0:6)
 ```
 
 ```{r}
-# regression on MP shocks
-mod_mps = ardl(SP500 ~ MPS, data_diff, order = c(1,6)) 
+# regression with MP shocks
+mod_2 = dynlm(ret ~ L(mps, 0:6)) 
 
 # plot dynamic multiplier
-multipliers(mod_mps, type = 9, se = TRUE) [-1] |> 
-  plot_delay(facets_ncol = 1, interval = 0.95)
+plotDM(mod_2, horizon = 0:6, col = "blue")
 ```
