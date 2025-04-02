@@ -270,10 +270,11 @@ patterns in the past data can be extrapolated by the ARMA model.
 #| fig-cap: "ARMA forecast for monthly inflation"
 #| label: fig-fccpi
 library(forecast)
-data = readRDS("data/md.Rds")
-data$CPI |>
-  auto.arima() |> 
-  forecast(h=20) |>
+
+# ARIMA is good for data with covariance patterns
+AirPassengers |> 
+  arima(order = c(2,1,1), seasonal = c(0,1,0)) |> 
+  forecast(h=36) |>
   autoplot()
 ```
 
@@ -282,8 +283,11 @@ data$CPI |>
 #| warning: false
 #| fig-cap: "ARMA forecast for stock market index"
 #| label: fig-fcshse
-data$SHSE |>
-  auto.arima() |> 
-  forecast(h=20) |>
+
+# ARIMA provides little information for random walk process
+EuStockMarkets[,'DAX'] |>
+  window(start = 1997) |> 
+  arima(order = c(2,1,1)) |> 
+  forecast(h=30) |>
   autoplot()
 ```
