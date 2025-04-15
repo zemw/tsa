@@ -513,9 +513,9 @@ window.Quarto = {
 
 <p>It is said, all stationary series are alike, but each non-stationary series is non-stationary in its own way (remember Leo Tolstoy’s famous quote: <em>all happy families are alike; each unhappy family is unhappy in its own way.</em>)</p>
 <p>In all previous chapters, we have been working on stationary processes. We have shown that similar regression techniques and asymptotic results hold for stationary processes as for <span class="math inline">\(iid\)</span> observations, albeit not exactly the same. If a time series is not stationary, we transform it to stationary by taking differences.</p>
-<p>This chapter is devoted to study non-stationary time series. Special attention is given to unit root processes. We will see the theories involving non-stationary processes are entirely different from those applied to stationary processes. This makes unit root analysis an rather independent topic. The obsession with unit root in academia have faded away in recent decades (I do not know if this assessment is accurate). Despite the topic posses immense theoretical interest, it does not seem to provide proportionate value for applied studies. Nonetheless, the topic is indispensable for a comprehensive understanding of time series analysis.</p>
-<p>We will focus on two types of non-stationary processes: trend-stationary processes and unit root processes, which are the most common types of non-stationary series we would encounter in economic and finance. Non-stationary series with exponential growth can be transformed into linear trend, hence is not of particular interest. We will start with the relatively easy tread-stationary processes, and spend most of the paragraphs on unit root processes.</p>
-<p>We start by pointing out that, it is very dangerous to blindly include non-stationary variables in a regression. To illustrate this, we simulate two random walks:</p>
+<p>This chapter is devoted to study non-stationary time series. Special attention is given to unit root processes. We will see the theories involving non-stationary processes are entirely different from those applied to stationary processes. This makes unit root analysis an rather independent topic.</p>
+<p>The obsession with unit root in academia have faded away in recent decades (I do not know if this assessment is accurate). Despite the topic posses immense theoretical interest, it does not seem to provide proportionate value for applied studies. Nonetheless, the topic is indispensable for a comprehensive understanding of time series analysis.</p>
+<p>We start by pointing out that, it is very dangerous to blindly include non-stationary variables in a regression. To illustrate this, consider two random walks:</p>
 <p><span class="math display">\[
 \begin{aligned}
 x_{t} &amp;= x_{t-1} + \epsilon_{t},\quad\epsilon_{t}\overset{iid}\sim N(0,\sigma_X^2)\\
@@ -524,14 +524,17 @@ y_{t} &amp;= y_{t-1} + \eta_{t},\quad\eta_{t}\overset{iid}\sim N(0,\sigma_Y^2)
 \]</span></p>
 <p><span class="math inline">\(\epsilon_t\)</span> and <span class="math inline">\(\eta_t\)</span> are independent to each other.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">cumsum</span>(<span class="fu">rnorm</span>(<span class="dv">200</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">cumsum</span>(<span class="fu">rnorm</span>(<span class="dv">200</span>))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ts.plot</span>(<span class="fu">cbind</span>(x,y), <span class="at">col=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># generate two random walk processes</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="fu">cumsum</span>(<span class="fu">rnorm</span>(<span class="dv">200</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> <span class="fu">cumsum</span>(<span class="fu">rnorm</span>(<span class="dv">200</span>))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.ts</span>(<span class="fu">cbind</span>(x,y), <span class="at">main=</span><span class="st">"Two Random Walks"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="18_sp_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="18_sp_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -541,54 +544,110 @@ y_{t} &amp;= y_{t-1} + \eta_{t},\quad\eta_{t}\overset{iid}\sim N(0,\sigma_Y^2)
 y_t = \alpha + \beta x_t + u_t
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(<span class="fu">lm</span>(y <span class="sc">~</span> x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(y <span class="sc">~</span> x) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-t test of coefficients:
+Call:
+lm(formula = y ~ x)
 
-             Estimate Std. Error t value  Pr(&gt;|t|)    
-(Intercept)  5.895196   0.510099  11.557 &lt; 2.2e-16 ***
-x           -0.267537   0.075726  -3.533 0.0005113 ***
+Residuals:
+   Min     1Q Median     3Q    Max 
+-6.831 -3.904  1.021  3.223  9.731 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  3.23975    0.56584   5.726 3.78e-08 ***
+x            0.15324    0.06886   2.225   0.0272 *  
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.049 on 198 degrees of freedom
+Multiple R-squared:  0.0244,    Adjusted R-squared:  0.01948 
+F-statistic: 4.953 on 1 and 198 DF,  p-value: 0.02718</code></pre>
 </div>
 </div>
 <p>Note that if we difference the two series to stationary, the spurious correlation disappears.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(<span class="fu">lm</span>(<span class="fu">diff</span>(y) <span class="sc">~</span> <span class="fu">diff</span>(x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(<span class="fu">diff</span>(y) <span class="sc">~</span> <span class="fu">diff</span>(x)) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-t test of coefficients:
+Call:
+lm(formula = diff(y) ~ diff(x))
 
-             Estimate Std. Error t value Pr(&gt;|t|)
-(Intercept)  0.068500   0.066740  1.0264   0.3060
-diff(x)     -0.074427   0.065236 -1.1409   0.2553</code></pre>
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.93078 -0.55055 -0.02841  0.67557  2.58926 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)  0.03963    0.07203    0.55    0.583
+diff(x)     -0.02171    0.07756   -0.28    0.780
+
+Residual standard error: 1.015 on 197 degrees of freedom
+Multiple R-squared:  0.0003974, Adjusted R-squared:  -0.004677 
+F-statistic: 0.07831 on 1 and 197 DF,  p-value: 0.7799</code></pre>
 </div>
 </div>
-<p>If we approximate the distribution of the <span class="math inline">\(t\)</span>-value for <span class="math inline">\(\hat\beta\)</span> with run Monte Carlo simulations, we would find the distribution is not Gaussian and has much heavier tails. That means we would much more likely to find significant results with spurious regression.</p>
+<p>If we simulate many random walks, we would observe that a large percentage of the regressions report statistically significant relationships even though the series are independent.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Monte Carlo simulation</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>tvalue <span class="ot">=</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>, <span class="cf">function</span>(i) {</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">=</span> <span class="fu">cumsum</span>(<span class="fu">rnorm</span>(<span class="dv">200</span>))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">=</span> <span class="fu">cumsum</span>(<span class="fu">rnorm</span>(<span class="dv">200</span>))</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># extract t-value</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="fu">lm</span>(y<span class="sc">~</span>x))<span class="sc">$</span>coef[<span class="st">'x'</span>,<span class="st">'t value'</span>]</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the density with Gaussian curve</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(tvalue, <span class="at">prob =</span> <span class="cn">TRUE</span>, <span class="at">breaks =</span> <span class="dv">40</span>, <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">20</span>,<span class="dv">20</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,.<span class="dv">4</span>))</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  range <span class="ot">=</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">20</span>, <span class="dv">20</span>, <span class="at">by =</span> .<span class="dv">2</span>)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(range, <span class="fu">dnorm</span>(range), <span class="at">col =</span> <span class="dv">2</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="18_sp_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation parameters</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span>         <span class="co"># Number of observations in each random walk</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>num_sim <span class="ot">&lt;-</span> <span class="dv">1000</span>  <span class="co"># Number of simulations</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>sig_count <span class="ot">&lt;-</span> <span class="dv">0</span>   <span class="co"># Counter for significant p-values</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>pvals <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_sim)  <span class="co"># To store p-values</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop over simulations</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>num_sim) {</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generate two independent random walks of length n</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(<span class="fu">rnorm</span>(n))</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(<span class="fu">rnorm</span>(n))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Run linear regression of y on x</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  pval <span class="ot">&lt;-</span> <span class="fu">summary</span>(model)<span class="sc">$</span>coefficients[<span class="dv">2</span>, <span class="dv">4</span>]</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  pvals[i] <span class="ot">&lt;-</span> pval</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate percentage of simulations with p-value &lt; 0.05</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>sig_percent <span class="ot">&lt;-</span> <span class="fu">mean</span>(pvals <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Percentage of significant regressions:"</span>, sig_percent, <span class="st">"%"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Percentage of significant regressions: 77 %"</code></pre>
 </div>
 </div>
+<p>This example gives you a quantitative feel for how frequently spurious results can occur. What’s more interesting, however, is that we can eliminate this spurious strong correlation by including lags of dependent and independent variables —</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute lags for x and y</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>y_lag <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">lag</span>(y)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>x_lag <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">lag</span>(x)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Regression with lags</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(y <span class="sc">~</span> y_lag <span class="sc">+</span> x <span class="sc">+</span> x_lag) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ y_lag + x + x_lag)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.6094 -0.6136  0.0433  0.7026  2.4059 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  0.34804    0.32558   1.069    0.288    
+y_lag        0.91403    0.03597  25.413   &lt;2e-16 ***
+x            0.12296    0.11279   1.090    0.278    
+x_lag       -0.05127    0.11040  -0.464    0.643    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.076 on 95 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared:  0.9206,    Adjusted R-squared:  0.9181 
+F-statistic: 367.3 on 3 and 95 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
-<p>Therefore, the conventional statistical inference against non-stationary series is totally misleading. The rest of the chapter will demystify the nature of spurious regression and discuss how we can properly deal with non-stationary time series.</p>
+</div>
+<p>Non-stationary time series can cause troubles, but they are also fascinating topics to explore. In what follows, we will focus on two types of non-stationary processes: trend-stationary processes and unit root processes, which are the most common types of non-stationary series we would encounter in economic and finance. Non-stationary series with exponential growth can be transformed into linear trend, hence is not of particular interest. We will start with the relatively easy tread-stationary processes, and spend most of the paragraphs on unit root processes.</p>
 
 
 
