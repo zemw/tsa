@@ -15,24 +15,17 @@ This chapter is devoted to study non-stationary time series. Special
 attention is given to unit root processes. We will see the theories
 involving non-stationary processes are entirely different from those
 applied to stationary processes. This makes unit root analysis an rather
-independent topic. The obsession with unit root in academia have faded
-away in recent decades (I do not know if this assessment is accurate).
-Despite the topic posses immense theoretical interest, it does not seem
-to provide proportionate value for applied studies. Nonetheless, the
-topic is indispensable for a comprehensive understanding of time series
-analysis.
+independent topic.
 
-We will focus on two types of non-stationary processes: trend-stationary
-processes and unit root processes, which are the most common types of
-non-stationary series we would encounter in economic and finance.
-Non-stationary series with exponential growth can be transformed into
-linear trend, hence is not of particular interest. We will start with
-the relatively easy tread-stationary processes, and spend most of the
-paragraphs on unit root processes.
+The obsession with unit root in academia have faded away in recent
+decades (I do not know if this assessment is accurate). Despite the
+topic posses immense theoretical interest, it does not seem to provide
+proportionate value for applied studies. Nonetheless, the topic is
+indispensable for a comprehensive understanding of time series analysis.
 
 We start by pointing out that, it is very dangerous to blindly include
-non-stationary variables in a regression. To illustrate this, we
-simulate two random walks:
+non-stationary variables in a regression. To illustrate this, consider
+two random walks:
 
 $$
 \begin{aligned}
@@ -44,15 +37,13 @@ $$
 $\epsilon_t$ and $\eta_t$ are independent to each other.
 
 ```{r}
-#| include: false
-library(lmtest)
-```
+set.seed(1)
 
-```{r}
-set.seed(2024)
+# generate two random walk processes
 x = cumsum(rnorm(200))
 y = cumsum(rnorm(200))
-ts.plot(cbind(x,y), col=1:2)
+
+plot.ts(cbind(x,y), main="Two Random Walks")
 ```
 
 We would expect the two series completely uncorrelated, as they are two
@@ -65,38 +56,65 @@ y_t = \alpha + \beta x_t + u_t
 $$
 
 ```{r}
-coeftest(lm(y ~ x))
+lm(y ~ x) |> summary()
 ```
 
 Note that if we difference the two series to stationary, the spurious
 correlation disappears.
 
 ```{r}
-coeftest(lm(diff(y) ~ diff(x)))
+lm(diff(y) ~ diff(x)) |> summary()
 ```
 
-If we approximate the distribution of the $t$-value for $\hat\beta$ with
-run Monte Carlo simulations, we would find the distribution is not
-Gaussian and has much heavier tails. That means we would much more
-likely to find significant results with spurious regression.
+If we simulate many random walks, we would observe that a large
+percentage of the regressions report statistically significant
+relationships even though the series are independent.
 
 ```{r}
-# Monte Carlo simulation
-tvalue = sapply(1:1000, function(i) {
-  x = cumsum(rnorm(200))
-  y = cumsum(rnorm(200))
-  # extract t-value
-  summary(lm(y~x))$coef['x','t value']
-})
-# plot the density with Gaussian curve
-{
-  hist(tvalue, prob = TRUE, breaks = 40, xlim=c(-20,20), ylim = c(0,.4))
-  range = seq(-20, 20, by = .2)
-  lines(range, dnorm(range), col = 2)
+# Simulation parameters
+n <- 100         # Number of observations in each random walk
+num_sim <- 1000  # Number of simulations
+sig_count <- 0   # Counter for significant p-values
+pvals <- numeric(num_sim)  # To store p-values
+
+# Loop over simulations
+for (i in 1:num_sim) {
+  # Generate two independent random walks of length n
+  x <- cumsum(rnorm(n))
+  y <- cumsum(rnorm(n))
+  
+  # Run linear regression of y on x
+  model <- lm(y ~ x)
+  pval <- summary(model)$coefficients[2, 4]
+  pvals[i] <- pval
 }
+
+# Calculate percentage of simulations with p-value < 0.05
+sig_percent <- mean(pvals < 0.05) * 100
+print(paste("Percentage of significant regressions:", sig_percent, "%"))
+
 ```
 
-Therefore, the conventional statistical inference against non-stationary
-series is totally misleading. The rest of the chapter will demystify the
-nature of spurious regression and discuss how we can properly deal with
-non-stationary time series.
+This example gives you a quantitative feel for how frequently spurious
+results can occur. What's more interesting, however, is that we can
+eliminate this spurious strong correlation by including lags of
+dependent and independent variables —
+
+```{r}
+# Compute lags for x and y
+y_lag = dplyr::lag(y)
+x_lag = dplyr::lag(x)
+
+# Regression with lags
+lm(y ~ y_lag + x + x_lag) |> summary()
+```
+
+Non-stationary time series can cause troubles, but they are also
+fascinating topics to explore. In what follows, we will focus on two
+types of non-stationary processes: trend-stationary processes and unit
+root processes, which are the most common types of non-stationary series
+we would encounter in economic and finance. Non-stationary series with
+exponential growth can be transformed into linear trend, hence is not of
+particular interest. We will start with the relatively easy
+tread-stationary processes, and spend most of the paragraphs on unit
+root processes.
