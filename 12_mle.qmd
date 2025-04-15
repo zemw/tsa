@@ -129,6 +129,6 @@ result <- optim(par = init_params,
 theta_hat <- result$par[1]
 sigma_hat <- abs(result$par[2])
 
-cat("Estimated theta:", theta_hat, "\n")
-cat("Estimated sigma:", sigma_hat, "\n")
+cat("Estimated theta:", theta_hat)
+cat("Estimated sigma:", sigma_hat)
 ```
