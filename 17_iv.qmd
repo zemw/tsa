@@ -63,3 +63,28 @@ The IV estimator is consistent if $\boldsymbol w_t$ absorbs all past
 shocks that could potentially correlated with $z_t$. In a broad sense,
 the validity of the instrument variable with additional controls
 requires that the controls span the space of all structural shocks.
+
+```{r}
+library(lpirfs)
+
+# Load data
+ag_data <- na.omit(ag_data)
+
+# Endogenous data (government spending, tax, GDP)
+endog <- ag_data[,3:5]
+
+# Variable to shock with (government spending)
+gov <- ag_data[,3]
+
+# Government spending shock identified by 
+# Ramey and Zubairy (2018) using military news
+gov_shock <- ag_data[,7]
+
+# Estimate linear model via 2SLS
+results <- lp_lin_iv(endog, lags_endog_lin = 4,
+                     shock = gov, instrum = gov_shock, use_twosls = T,
+                     trend = 0, confint = 1.96, hor = 18)
+
+# Show all responses
+plot_lin(results)[[3]]
+```
